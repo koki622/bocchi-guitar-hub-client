@@ -1,22 +1,41 @@
-import 'package:bocchi_guitar_hub_client/infrastructure/model/job_status.dart';
-import 'package:bocchi_guitar_hub_client/infrastructure/model/song.dart';
+import 'package:bocchi_guitar_hub_client/infrastructure/model/remote_job/job_status.dart';
+import 'package:bocchi_guitar_hub_client/infrastructure/model/song/song.dart';
+import 'package:bocchi_guitar_hub_client/infrastructure/model/song_elements/beat/beat.dart';
+import 'package:bocchi_guitar_hub_client/infrastructure/model/song_elements/chord/chord.dart';
+import 'package:bocchi_guitar_hub_client/infrastructure/model/song_elements/lyric/lyric.dart';
+import 'package:bocchi_guitar_hub_client/infrastructure/model/song_elements/section/section.dart';
+import 'package:bocchi_guitar_hub_client/infrastructure/model/song_elements/separated_audio/separated_audio.dart';
 import 'package:bocchi_guitar_hub_client/presentation/file_picker_screen.dart';
+import 'package:bocchi_guitar_hub_client/presentation/test_list_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hive/hive.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 import 'core/constant/reference/hive_box.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  var dir = await getApplicationDocumentsDirectory();
-  Hive.init(dir.path);
+  await Hive.initFlutter();
   Hive.registerAdapter(SongDataImplAdapter());
   Hive.registerAdapter(JobStatusDataImplAdapter());
-
+  Hive.registerAdapter(SeparatedAudioDataImplAdapter());
+  Hive.registerAdapter(ChordsDataImplAdapter());
+  Hive.registerAdapter(ChordDataAdapter());
+  Hive.registerAdapter(BeatsDataImplAdapter());
+  Hive.registerAdapter(BeatDataAdapter());
+  Hive.registerAdapter(SectionsDataImplAdapter());
+  Hive.registerAdapter(SectionDataAdapter());
+  Hive.registerAdapter(LyricsDataImplAdapter());
+  Hive.registerAdapter(LyricDataAdapter());
+  Hive.registerAdapter(LyricWordDataAdapter());
   await Hive.openBox<SongData>(HiveBoxConstant.songBoxName);
   await Hive.openBox<JobStatusData>(HiveBoxConstant.jobStatusBoxName);
+  await Hive.openBox<SeparatedAudioData>(HiveBoxConstant.separatedAudioBoxName);
+  await Hive.openBox<ChordsData>(HiveBoxConstant.chordsBoxName);
+  await Hive.openBox<BeatsData>(HiveBoxConstant.beatsBoxName);
+  await Hive.openBox<SectionsData>(HiveBoxConstant.sectionsBoxName);
+  await Hive.openBox<LyricsData>(HiveBoxConstant.lyricsBoxName);
+
   runApp(ProviderScope(
     child: MyApp(),
   ));
@@ -30,7 +49,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: FilePickerScreen(), // ファイルピッカー画面を指定
+      //home: FilePickerScreen(), // ファイルピッカー画面を指定
+      home: TestListView(),
     );
   }
 }

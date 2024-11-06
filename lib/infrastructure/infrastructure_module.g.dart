@@ -37,6 +37,85 @@ final jobStatusDatasourceProvider = AutoDisposeProvider<JobStatusHive>.internal(
 );
 
 typedef JobStatusDatasourceRef = AutoDisposeProviderRef<JobStatusHive>;
+String _$separatedAudioDatasourceHash() =>
+    r'8f88dab22c13ad9d86a8ecb299e71aefbd657125';
+
+/// See also [separatedAudioDatasource].
+@ProviderFor(separatedAudioDatasource)
+final separatedAudioDatasourceProvider =
+    AutoDisposeProvider<SeparatedAudioHive>.internal(
+  separatedAudioDatasource,
+  name: r'separatedAudioDatasourceProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$separatedAudioDatasourceHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef SeparatedAudioDatasourceRef
+    = AutoDisposeProviderRef<SeparatedAudioHive>;
+String _$chordsDatasourceHash() => r'd7bd029f784d3d5e8a4925a2dcae5bb943fad2a9';
+
+/// See also [chordsDatasource].
+@ProviderFor(chordsDatasource)
+final chordsDatasourceProvider = AutoDisposeProvider<ChordsHive>.internal(
+  chordsDatasource,
+  name: r'chordsDatasourceProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$chordsDatasourceHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef ChordsDatasourceRef = AutoDisposeProviderRef<ChordsHive>;
+String _$beatsDatasourceHash() => r'70b3df3f3398c1536b1591b6d894a196fa44723d';
+
+/// See also [beatsDatasource].
+@ProviderFor(beatsDatasource)
+final beatsDatasourceProvider = AutoDisposeProvider<BeatsHive>.internal(
+  beatsDatasource,
+  name: r'beatsDatasourceProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$beatsDatasourceHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef BeatsDatasourceRef = AutoDisposeProviderRef<BeatsHive>;
+String _$sectionsDatasourceHash() =>
+    r'4dc0f3356515316e71b746862e835318cd8cfc92';
+
+/// See also [sectionsDatasource].
+@ProviderFor(sectionsDatasource)
+final sectionsDatasourceProvider = AutoDisposeProvider<SectionsHive>.internal(
+  sectionsDatasource,
+  name: r'sectionsDatasourceProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$sectionsDatasourceHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef SectionsDatasourceRef = AutoDisposeProviderRef<SectionsHive>;
+String _$lyricsDatasourceHash() => r'8866e7d2385292c36987736c32b7b9a5884141ee';
+
+/// See also [lyricsDatasource].
+@ProviderFor(lyricsDatasource)
+final lyricsDatasourceProvider = AutoDisposeProvider<LyricsHive>.internal(
+  lyricsDatasource,
+  name: r'lyricsDatasourceProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$lyricsDatasourceHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef LyricsDatasourceRef = AutoDisposeProviderRef<LyricsHive>;
 String _$songWebapiDatasourceHash() =>
     r'7829ce22574e354ef46f3a8dd5a5ae36b63965e7';
 
@@ -85,5 +164,23 @@ final remoteJobRepositoryProvider =
 );
 
 typedef RemoteJobRepositoryRef = AutoDisposeProviderRef<RemoteJobRepository>;
+String _$songElementsRepositoryHash() =>
+    r'1906d80ff39a7be2ca2223d78d8b08357722fd7f';
+
+/// See also [songElementsRepository].
+@ProviderFor(songElementsRepository)
+final songElementsRepositoryProvider =
+    AutoDisposeProvider<SongElementsRepository>.internal(
+  songElementsRepository,
+  name: r'songElementsRepositoryProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$songElementsRepositoryHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef SongElementsRepositoryRef
+    = AutoDisposeProviderRef<SongElementsRepository>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

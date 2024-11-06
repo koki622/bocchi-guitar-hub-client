@@ -1,19 +1,17 @@
 import 'dart:async';
 
-import 'package:bocchi_guitar_hub_client/core/enum/analysis_status.dart';
 import 'package:bocchi_guitar_hub_client/core/enum/remote_job.dart';
 import 'package:bocchi_guitar_hub_client/core/exception/http_exceptions.dart';
 import 'package:bocchi_guitar_hub_client/core/exception/remote_job_exceptions.dart';
-import 'package:bocchi_guitar_hub_client/domain/song/entity/remote_job_status.dart';
-import 'package:bocchi_guitar_hub_client/domain/song/entity/song.dart';
+import 'package:bocchi_guitar_hub_client/domain/entity/remote_job/remote_job_status.dart';
+import 'package:bocchi_guitar_hub_client/domain/entity/song/song.dart';
 import 'package:bocchi_guitar_hub_client/infrastructure/datasource/database/job_status_datasource.dart';
 import 'package:bocchi_guitar_hub_client/infrastructure/datasource/database/song_datasource.dart';
 import 'package:bocchi_guitar_hub_client/infrastructure/datasource/webapi/song_webapi.dart';
-import 'package:bocchi_guitar_hub_client/infrastructure/model/job_status.dart';
-import 'package:bocchi_guitar_hub_client/infrastructure/model/song.dart';
+import 'package:bocchi_guitar_hub_client/infrastructure/model/remote_job/job_status.dart';
 import 'package:http/http.dart';
 
-import '../../domain/song/repository/remote_job_repository.dart';
+import '../../domain/repository/remote_job_repository.dart';
 
 class RemoteJobRepositoryImpl implements RemoteJobRepository {
   final JobStatusHive _jobStatusHive;
@@ -26,30 +24,24 @@ class RemoteJobRepositoryImpl implements RemoteJobRepository {
   @override
   Stream<RemoteJobStatus> requestRemoteJob(
       {required Song song, required RemoteJobType remoteJobType}) async* {
-    String endpoint = remoteJobType.endpoint + song.audioFileId;
+    String? audioFileId = song.audioFileId;
+    if (audioFileId == null) {
+      throw Exception('audioFileId is Null');
+    }
+    String endpoint = remoteJobType.endpoint + audioFileId;
 
     Stream<JobStatusData> response = _songWebapi.sendRequestJob(endpoint);
     try {
       await for (JobStatusData jobStatusData in response) {
-        yield jobStatusData.toEntity(analysisType: remoteJobType.analysisType);
+        yield jobStatusData.toEntity(remoteJobType);
 
         // データベースにジョブのステータスを随時記録
         _jobStatusHive.create(jobStatusData, song.songId);
       }
-
-      // ジョブが成功したら現在のステータスの進行を更新
-      _songHive.update(
-          SongData.fromEntity(
-              song.copyWith(analysisStatusType: AnalysisStatusType.completed)),
-          song.songId);
     } on HttpException catch (e) {
       throw RequestFailedException('Request Failed exception: $e');
     } on ClientException catch (e) {
       // ジョブのリクエストには成功したが、接続が失われた場合
-      _songHive.update(
-          SongData.fromEntity(song.copyWith(
-              analysisStatusType: AnalysisStatusType.interrupted)),
-          song.songId);
       throw ServerDisconnectedException('Server Disconnected exception: $e');
     } on JobFailedException {
       // ジョブが失敗した場合、何もしない

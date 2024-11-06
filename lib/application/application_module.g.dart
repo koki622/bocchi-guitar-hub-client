@@ -6,7 +6,7 @@ part of 'application_module.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$songUsecaseHash() => r'f0efc05ae4c5467f558adafc2969a9e1b02c6ed0';
+String _$songUsecaseHash() => r'd97c43b78e6affa43c8f21da92d76eeaa03f9ba4';
 
 /// See also [songUsecase].
 @ProviderFor(songUsecase)
