@@ -5,16 +5,16 @@ class ProcessTypeStrings {
   static const Map<ProcessType, String> displayNames = {
     ProcessType.init: '初期処理',
     ProcessType.uploading: 'アップロード',
-    ProcessType.separating: '分離処理',
-    ProcessType.compression: '分離処理結果のzip圧縮処理',
-    ProcessType.chordAnalysis: 'コード分析',
+    ProcessType.separating: '音源分離処理',
+    ProcessType.compression: '分離音源を圧縮',
+    ProcessType.chordAnalysis: 'コード解析',
     ProcessType.extractingSpectrograms: 'スペクトログラム抽出',
-    ProcessType.structureAnalysis: '音楽構造分析',
-    ProcessType.lyricAnalysis: '歌詞分析',
-    ProcessType.downloadSeparationResult: '結果のダウンロード（分離結果）',
-    ProcessType.downloadChordAnalysisResult: '結果のダウンロード（コード分析）',
-    ProcessType.downloadStructureAnalysisResult: '結果のダウンロード（音楽構造分析）',
-    ProcessType.downloadLyricAnalysisResult: '結果のダウンロード（歌詞分析）',
+    ProcessType.structureAnalysis: '音楽構造解析',
+    ProcessType.lyricAnalysis: '歌詞解析',
+    ProcessType.downloadSeparationResult: '分離音源のダウンロード',
+    ProcessType.downloadChordAnalysisResult: 'コード解析結果のダウンロード',
+    ProcessType.downloadStructureAnalysisResult: '音楽構造解析結果のダウンロード',
+    ProcessType.downloadLyricAnalysisResult: '歌詞解析結果のダウンロード',
   };
 }
 
