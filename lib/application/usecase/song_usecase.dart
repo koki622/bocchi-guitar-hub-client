@@ -98,6 +98,15 @@ class SongUsecase {
   Future<Song> _downloadJson(
       {required Song song, required DownloadJsonType downloadJsonType}) async {
     final processType = downloadJsonType.processType;
+
+    Song processingSong = song.copyWith(
+        processType: processType,
+        processStatusType: ProcessStatusType.processing);
+
+    // 処理前にステータスを更新
+    await _songRepository.updateSong(songId: song.songId, song: processingSong);
+    _songsNotifier.upsertSong(processingSong);
+
     ProcessStatusType processStatusType = ProcessStatusType.failed;
     Song resultSong;
 
@@ -124,6 +133,15 @@ class SongUsecase {
       {required Song song,
       required DownloadZipFileType downloadZipFileType}) async {
     final processType = downloadZipFileType.processType;
+
+    Song processingSong = song.copyWith(
+        processType: processType,
+        processStatusType: ProcessStatusType.processing);
+
+    // 処理前にステータスを更新
+    await _songRepository.updateSong(songId: song.songId, song: processingSong);
+    _songsNotifier.upsertSong(processingSong);
+
     ProcessStatusType processStatusType = ProcessStatusType.failed;
     Song resultSong;
 
@@ -151,7 +169,7 @@ class SongUsecase {
         processType: processType,
         processStatusType: ProcessStatusType.processing);
 
-    // 処理中にステータスを更新
+    // 処理前にステータスを更新
     await _songRepository.updateSong(songId: song.songId, song: processingSong);
     _songsNotifier.upsertSong(processingSong);
 
