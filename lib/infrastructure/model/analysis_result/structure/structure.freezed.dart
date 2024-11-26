@@ -20,6 +20,8 @@ StructureResponse _$StructureResponseFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$StructureResponse {
+  @JsonKey(name: 'bpm')
+  int get bpm => throw _privateConstructorUsedError;
   @JsonKey(name: 'beats')
   List<double> get beats => throw _privateConstructorUsedError;
   @JsonKey(name: 'beat_positions')
@@ -44,7 +46,8 @@ abstract class $StructureResponseCopyWith<$Res> {
       _$StructureResponseCopyWithImpl<$Res, StructureResponse>;
   @useResult
   $Res call(
-      {@JsonKey(name: 'beats') List<double> beats,
+      {@JsonKey(name: 'bpm') int bpm,
+      @JsonKey(name: 'beats') List<double> beats,
       @JsonKey(name: 'beat_positions') List<double> beatPositions,
       @JsonKey(name: 'segments') List<SegmentResponse> segments});
 }
@@ -64,11 +67,16 @@ class _$StructureResponseCopyWithImpl<$Res, $Val extends StructureResponse>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? bpm = null,
     Object? beats = null,
     Object? beatPositions = null,
     Object? segments = null,
   }) {
     return _then(_value.copyWith(
+      bpm: null == bpm
+          ? _value.bpm
+          : bpm // ignore: cast_nullable_to_non_nullable
+              as int,
       beats: null == beats
           ? _value.beats
           : beats // ignore: cast_nullable_to_non_nullable
@@ -94,7 +102,8 @@ abstract class _$$StructureResponseImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: 'beats') List<double> beats,
+      {@JsonKey(name: 'bpm') int bpm,
+      @JsonKey(name: 'beats') List<double> beats,
       @JsonKey(name: 'beat_positions') List<double> beatPositions,
       @JsonKey(name: 'segments') List<SegmentResponse> segments});
 }
@@ -112,11 +121,16 @@ class __$$StructureResponseImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? bpm = null,
     Object? beats = null,
     Object? beatPositions = null,
     Object? segments = null,
   }) {
     return _then(_$StructureResponseImpl(
+      bpm: null == bpm
+          ? _value.bpm
+          : bpm // ignore: cast_nullable_to_non_nullable
+              as int,
       beats: null == beats
           ? _value._beats
           : beats // ignore: cast_nullable_to_non_nullable
@@ -137,7 +151,8 @@ class __$$StructureResponseImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$StructureResponseImpl implements _StructureResponse {
   const _$StructureResponseImpl(
-      {@JsonKey(name: 'beats') required final List<double> beats,
+      {@JsonKey(name: 'bpm') required this.bpm,
+      @JsonKey(name: 'beats') required final List<double> beats,
       @JsonKey(name: 'beat_positions')
       required final List<double> beatPositions,
       @JsonKey(name: 'segments') required final List<SegmentResponse> segments})
@@ -148,6 +163,9 @@ class _$StructureResponseImpl implements _StructureResponse {
   factory _$StructureResponseImpl.fromJson(Map<String, dynamic> json) =>
       _$$StructureResponseImplFromJson(json);
 
+  @override
+  @JsonKey(name: 'bpm')
+  final int bpm;
   final List<double> _beats;
   @override
   @JsonKey(name: 'beats')
@@ -177,7 +195,7 @@ class _$StructureResponseImpl implements _StructureResponse {
 
   @override
   String toString() {
-    return 'StructureResponse(beats: $beats, beatPositions: $beatPositions, segments: $segments)';
+    return 'StructureResponse(bpm: $bpm, beats: $beats, beatPositions: $beatPositions, segments: $segments)';
   }
 
   @override
@@ -185,6 +203,7 @@ class _$StructureResponseImpl implements _StructureResponse {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$StructureResponseImpl &&
+            (identical(other.bpm, bpm) || other.bpm == bpm) &&
             const DeepCollectionEquality().equals(other._beats, _beats) &&
             const DeepCollectionEquality()
                 .equals(other._beatPositions, _beatPositions) &&
@@ -195,6 +214,7 @@ class _$StructureResponseImpl implements _StructureResponse {
   @override
   int get hashCode => Object.hash(
       runtimeType,
+      bpm,
       const DeepCollectionEquality().hash(_beats),
       const DeepCollectionEquality().hash(_beatPositions),
       const DeepCollectionEquality().hash(_segments));
@@ -218,7 +238,8 @@ class _$StructureResponseImpl implements _StructureResponse {
 
 abstract class _StructureResponse implements StructureResponse {
   const factory _StructureResponse(
-      {@JsonKey(name: 'beats') required final List<double> beats,
+      {@JsonKey(name: 'bpm') required final int bpm,
+      @JsonKey(name: 'beats') required final List<double> beats,
       @JsonKey(name: 'beat_positions')
       required final List<double> beatPositions,
       @JsonKey(name: 'segments')
@@ -227,6 +248,9 @@ abstract class _StructureResponse implements StructureResponse {
   factory _StructureResponse.fromJson(Map<String, dynamic> json) =
       _$StructureResponseImpl.fromJson;
 
+  @override
+  @JsonKey(name: 'bpm')
+  int get bpm;
   @override
   @JsonKey(name: 'beats')
   List<double> get beats;

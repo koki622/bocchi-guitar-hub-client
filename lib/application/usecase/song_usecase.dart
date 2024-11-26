@@ -1,16 +1,15 @@
 import 'package:bocchi_guitar_hub_client/application/notifier/songs_notifier.dart';
-import 'package:bocchi_guitar_hub_client/core/enum/download_json.dart';
-import 'package:bocchi_guitar_hub_client/core/enum/download_zip_file.dart';
 import 'package:bocchi_guitar_hub_client/core/enum/job_status.dart';
 import 'package:bocchi_guitar_hub_client/core/enum/process.dart';
+import 'package:bocchi_guitar_hub_client/core/enum/process_step.dart';
 import 'package:bocchi_guitar_hub_client/core/enum/process_status.dart';
-import 'package:bocchi_guitar_hub_client/core/enum/remote_job.dart';
 import 'package:bocchi_guitar_hub_client/core/exception/remote_job_exceptions.dart';
 import 'package:bocchi_guitar_hub_client/domain/entity/remote_job/remote_job_status.dart';
 import 'package:bocchi_guitar_hub_client/domain/entity/song/song.dart';
 import 'package:bocchi_guitar_hub_client/domain/repository/remote_job_repository.dart';
 import 'package:bocchi_guitar_hub_client/domain/repository/song_elements_repository.dart';
 import 'package:bocchi_guitar_hub_client/domain/repository/song_repository.dart';
+import 'package:path/path.dart';
 
 class SongUsecase {
   final SongsNotifier _songsNotifier;
@@ -47,42 +46,52 @@ class SongUsecase {
     Song currentSong = song.copyWith();
     while (true) {
       // 次に実行すべきプロセスを得る
-      ProcessType? nextProcess =
+      ProcessStep? nextProcess =
           currentSong.processType.nextProcess(currentSong.processStatusType);
 
       if (nextProcess == null) break;
       try {
-        switch (nextProcess.category) {
-          case ProcessCategory.init:
-            throw Exception('${ProcessCategory.init}はここでの使用が想定されていません');
-
-          case ProcessCategory.upload:
-            Song resultSong = await _upload(song: song);
-            currentSong = resultSong.copyWith();
-            break;
-
-          case ProcessCategory.remoteJob:
-            Song resultSong = await _remoteJob(
-                song: currentSong,
-                remoteJobType: RemoteJobType.fromProcessType(nextProcess));
-            currentSong = resultSong.copyWith();
-            break;
-
-          case ProcessCategory.downloadZip:
-            Song resultSong = await _downloadZip(
-                song: currentSong,
-                downloadZipFileType:
-                    DownloadZipFileType.fromProcessType(nextProcess));
-            currentSong = resultSong.copyWith();
-            break;
-
-          case ProcessCategory.downloadJson:
-            Song resultSong = await _downloadJson(
-                song: currentSong,
-                downloadJsonType:
-                    DownloadJsonType.fromProcessType(nextProcess));
-            currentSong = resultSong.copyWith();
-            break;
+        if (nextProcess.process.runtimeType == InitType) {
+          throw Exception('${ProcessStep.init}はここでの使用が想定されていません');
+        } else if (nextProcess.process.runtimeType == UploadType) {
+          Song resultSong = await _upload(
+              song: song,
+              processType: nextProcess,
+              uploadType: nextProcess.process as UploadType);
+          currentSong = resultSong.copyWith();
+        } else if (nextProcess.process.runtimeType == BulkRemoteJobType) {
+          Song resultSong = await _bulkRemoteJob(
+              song: currentSong,
+              processType: nextProcess,
+              bulkRemoteJobType: nextProcess.process as BulkRemoteJobType);
+          currentSong = resultSong.copyWith();
+        } else if (nextProcess.process.runtimeType == RemoteJobType) {
+          Song resultSong = await _remoteJob(
+              song: currentSong,
+              processType: nextProcess,
+              remoteJobType: nextProcess.process as RemoteJobType);
+          currentSong = resultSong.copyWith();
+        } else if (nextProcess.process.runtimeType == DownloadZipFileType) {
+          Song resultSong = await _downloadZip(
+              song: currentSong,
+              processType: nextProcess,
+              downloadZipFileType: nextProcess.process as DownloadZipFileType);
+          currentSong = resultSong.copyWith();
+        } else if (nextProcess.process.runtimeType == DownloadAudioFileType) {
+          Song resultSong = await _downloadAudioFile(
+              song: currentSong,
+              processType: nextProcess,
+              downloadAudioFileType:
+                  nextProcess.process as DownloadAudioFileType);
+          currentSong = resultSong.copyWith();
+        } else if (nextProcess.process.runtimeType == DownloadJsonType) {
+          Song resultSong = await _downloadJson(
+              song: currentSong,
+              processType: nextProcess,
+              downloadJsonType: nextProcess.process as DownloadJsonType);
+          currentSong = resultSong.copyWith();
+        } else {
+          throw Exception('${nextProcess.process}の使用は想定されていません');
         }
 
         if (currentSong.processStatusType != ProcessStatusType.completed) {
@@ -95,17 +104,27 @@ class SongUsecase {
     }
   }
 
-  Future<Song> _downloadJson(
-      {required Song song, required DownloadJsonType downloadJsonType}) async {
-    final processType = downloadJsonType.processType;
+  Future<Song> _updateSongProcess(
+      // 曲の処理状況を更新する
+      {required Song song,
+      required ProcessStep processType,
+      required ProcessStatusType processStatusType}) async {
+    Song updateSong = song.copyWith(
+        processType: processType, processStatusType: processStatusType);
+    await _songRepository.updateSong(songId: song.songId, song: updateSong);
+    _songsNotifier.upsertSong(updateSong);
 
-    Song processingSong = song.copyWith(
+    return updateSong;
+  }
+
+  Future<Song> _downloadJson(
+      {required Song song,
+      required ProcessStep processType,
+      required DownloadJsonType downloadJsonType}) async {
+    await _updateSongProcess(
+        song: song,
         processType: processType,
         processStatusType: ProcessStatusType.processing);
-
-    // 処理前にステータスを更新
-    await _songRepository.updateSong(songId: song.songId, song: processingSong);
-    _songsNotifier.upsertSong(processingSong);
 
     ProcessStatusType processStatusType = ProcessStatusType.failed;
     Song resultSong;
@@ -120,10 +139,40 @@ class SongUsecase {
       processStatusType = ProcessStatusType.failed;
       rethrow;
     } finally {
-      resultSong = song.copyWith(
-          processType: processType, processStatusType: processStatusType);
-      await _songRepository.updateSong(songId: song.songId, song: resultSong);
-      _songsNotifier.upsertSong(resultSong);
+      resultSong = await _updateSongProcess(
+          song: song,
+          processType: processType,
+          processStatusType: processStatusType);
+    }
+
+    return resultSong;
+  }
+
+  Future<Song> _downloadAudioFile(
+      {required Song song,
+      required ProcessStep processType,
+      required DownloadAudioFileType downloadAudioFileType}) async {
+    await _updateSongProcess(
+        song: song,
+        processType: processType,
+        processStatusType: ProcessStatusType.processing);
+
+    ProcessStatusType processStatusType = ProcessStatusType.failed;
+    Song resultSong;
+
+    try {
+      // ダウンロード
+      await _songElementsRepository.downloadAudioFileType(
+          song: song, downloadAudioFileType: downloadAudioFileType);
+      processStatusType = ProcessStatusType.completed;
+    } catch (e) {
+      processStatusType = ProcessStatusType.failed;
+      rethrow;
+    } finally {
+      resultSong = await _updateSongProcess(
+          song: song,
+          processType: processType,
+          processStatusType: processStatusType);
     }
 
     return resultSong;
@@ -131,16 +180,12 @@ class SongUsecase {
 
   Future<Song> _downloadZip(
       {required Song song,
+      required ProcessStep processType,
       required DownloadZipFileType downloadZipFileType}) async {
-    final processType = downloadZipFileType.processType;
-
-    Song processingSong = song.copyWith(
+    await _updateSongProcess(
+        song: song,
         processType: processType,
         processStatusType: ProcessStatusType.processing);
-
-    // 処理前にステータスを更新
-    await _songRepository.updateSong(songId: song.songId, song: processingSong);
-    _songsNotifier.upsertSong(processingSong);
 
     ProcessStatusType processStatusType = ProcessStatusType.failed;
     Song resultSong;
@@ -154,30 +199,30 @@ class SongUsecase {
       processStatusType = ProcessStatusType.failed;
       rethrow;
     } finally {
-      resultSong = song.copyWith(
-          processType: processType, processStatusType: processStatusType);
-      await _songRepository.updateSong(songId: song.songId, song: resultSong);
-      _songsNotifier.upsertSong(resultSong);
+      resultSong = await _updateSongProcess(
+          song: song,
+          processType: processType,
+          processStatusType: processStatusType);
     }
 
     return resultSong;
   }
 
-  Future<Song> _upload({required Song song}) async {
-    const processType = ProcessType.uploading;
-    Song processingSong = song.copyWith(
+  Future<Song> _upload(
+      {required Song song,
+      required ProcessStep processType,
+      required UploadType uploadType}) async {
+    await _updateSongProcess(
+        song: song,
         processType: processType,
         processStatusType: ProcessStatusType.processing);
-
-    // 処理前にステータスを更新
-    await _songRepository.updateSong(songId: song.songId, song: processingSong);
-    _songsNotifier.upsertSong(processingSong);
 
     ProcessStatusType processStatusType = ProcessStatusType.failed;
     String? audioFileId;
     Song resultSong;
     try {
-      Song uploadedSong = await _songRepository.uploadSong(song: song);
+      Song uploadedSong =
+          await _songRepository.uploadSong(song: song, uploadType: uploadType);
 
       // 処理に成功
       audioFileId = uploadedSong.audioFileId;
@@ -187,35 +232,55 @@ class SongUsecase {
       processStatusType = ProcessStatusType.failed;
     } finally {
       // 最終結果のデータ用意
-      resultSong = song.copyWith(
-          audioFileId: audioFileId,
+      resultSong = await _updateSongProcess(
+          song: song.copyWith(audioFileId: audioFileId),
           processType: processType,
           processStatusType: processStatusType);
-      // 最終結果のデータを更新
-      await _songRepository.updateSong(songId: song.songId, song: resultSong);
-      _songsNotifier.upsertSong(resultSong);
     }
 
     return resultSong;
   }
 
   Future<Song> _remoteJob(
-      {required Song song, required RemoteJobType remoteJobType}) async {
+      {required Song song,
+      required ProcessStep processType,
+      required RemoteJobType remoteJobType}) async {
+    final resultSong = await _remoteJobHandle(song, processType);
+    return resultSong;
+  }
+
+  Future<Song> _bulkRemoteJob(
+      {required Song song,
+      required ProcessStep processType,
+      required BulkRemoteJobType bulkRemoteJobType}) async {
+    final resultSong = await _remoteJobHandle(song, processType);
+    return resultSong;
+  }
+
+  Future<Song> _remoteJobHandle(Song song, ProcessStep processType) async {
     ProcessStatusType lastProcessStatusType = ProcessStatusType.failed;
     Song resultSong;
+    Stream<RemoteJobStatus> response;
     try {
-      Stream<RemoteJobStatus> response = _remoteJobRepository.requestRemoteJob(
-          song: song, remoteJobType: remoteJobType);
-
+      if (processType.process.runtimeType == RemoteJobType) {
+        response = _remoteJobRepository.requestRemoteJob(
+            song: song, remoteJobType: processType.process as RemoteJobType);
+      } else if (processType.process.runtimeType == BulkRemoteJobType) {
+        response = _remoteJobRepository.requestBulkRemoteJob(
+            song: song,
+            bulkRemoteJobType: processType.process as BulkRemoteJobType);
+      } else {
+        throw ArgumentError('ここで$processTypeが入ることは想定されていません');
+      }
       await for (RemoteJobStatus jobStatus in response) {
-        print('ジョブのステータス: $jobStatus');
-
         ProcessStatusType? processStatusType;
         switch (jobStatus.jobStatus) {
           case JobStatusType.jobSuccess:
             //processStatusType = ProcessStatusType.completed;
             lastProcessStatusType = ProcessStatusType.completed;
             break;
+          case JobStatusType.jobCompleted:
+            lastProcessStatusType = ProcessStatusType.completed;
           case JobStatusType.jobFailed:
             //processStatusType = ProcessStatusType.failed;
             break;
@@ -228,13 +293,10 @@ class SongUsecase {
             break;
         }
         if (processStatusType != null) {
-          Song updatedSong = song.copyWith(
-              processType: remoteJobType.processType,
+          await _updateSongProcess(
+              song: song,
+              processType: processType,
               processStatusType: processStatusType);
-
-          await _songRepository.updateSong(
-              songId: song.songId, song: updatedSong);
-          _songsNotifier.upsertSong(updatedSong);
         }
       }
     } on RequestFailedException catch (e) {
@@ -247,11 +309,10 @@ class SongUsecase {
       lastProcessStatusType = ProcessStatusType.failed;
       throw Exception(e);
     } finally {
-      resultSong = song.copyWith(
-          processType: remoteJobType.processType,
+      resultSong = await _updateSongProcess(
+          song: song,
+          processType: processType,
           processStatusType: lastProcessStatusType);
-      _songRepository.updateSong(songId: song.songId, song: resultSong);
-      _songsNotifier.upsertSong(resultSong);
     }
     return resultSong;
   }

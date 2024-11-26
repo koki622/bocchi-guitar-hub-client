@@ -2,6 +2,7 @@ import 'package:bocchi_guitar_hub_client/domain/repository/remote_job_repository
 import 'package:bocchi_guitar_hub_client/domain/repository/song_elements_repository.dart';
 import 'package:bocchi_guitar_hub_client/infrastructure/datasource/database/beat_datasource.dart';
 import 'package:bocchi_guitar_hub_client/infrastructure/datasource/database/chord_datasource.dart';
+import 'package:bocchi_guitar_hub_client/infrastructure/datasource/database/click_sound_datasource.dart';
 import 'package:bocchi_guitar_hub_client/infrastructure/datasource/database/job_status_datasource.dart';
 import 'package:bocchi_guitar_hub_client/infrastructure/datasource/database/lyric_datasource.dart';
 import 'package:bocchi_guitar_hub_client/infrastructure/datasource/database/section_datasource.dart';
@@ -53,6 +54,11 @@ LyricsHive lyricsDatasource(LyricsDatasourceRef ref) {
 }
 
 @riverpod
+ClickSoundHive clickSoundDatasource(ClickSoundDatasourceRef ref) {
+  return ClickSoundHive();
+}
+
+@riverpod
 SongWebapi songWebapiDatasource(SongWebapiDatasourceRef ref) {
   return SongWebapi();
 }
@@ -79,5 +85,6 @@ SongElementsRepository songElementsRepository(SongElementsRepositoryRef ref) {
       ref.watch(beatsDatasourceProvider),
       ref.watch(sectionsDatasourceProvider),
       ref.watch(lyricsDatasourceProvider),
+      ref.watch(clickSoundDatasourceProvider),
       ref.watch(songWebapiDatasourceProvider));
 }

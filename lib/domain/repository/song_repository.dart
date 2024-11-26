@@ -1,3 +1,4 @@
+import 'package:bocchi_guitar_hub_client/core/enum/process.dart';
 import 'package:bocchi_guitar_hub_client/domain/entity/song/song.dart';
 
 abstract interface class SongRepository {
@@ -7,7 +8,7 @@ abstract interface class SongRepository {
   Future<Song> addSong({required NewSong newSong});
 
   // 曲をサーバにアップロードする
-  Future<Song> uploadSong({required Song song});
+  Future<Song> uploadSong({required Song song, required UploadType uploadType});
 
   Future<void> deleteSong({required Song song});
 

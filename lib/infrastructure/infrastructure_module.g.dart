@@ -116,6 +116,23 @@ final lyricsDatasourceProvider = AutoDisposeProvider<LyricsHive>.internal(
 );
 
 typedef LyricsDatasourceRef = AutoDisposeProviderRef<LyricsHive>;
+String _$clickSoundDatasourceHash() =>
+    r'c08075aed1032ec15fce4bef3332c0d7b7f0672a';
+
+/// See also [clickSoundDatasource].
+@ProviderFor(clickSoundDatasource)
+final clickSoundDatasourceProvider =
+    AutoDisposeProvider<ClickSoundHive>.internal(
+  clickSoundDatasource,
+  name: r'clickSoundDatasourceProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$clickSoundDatasourceHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef ClickSoundDatasourceRef = AutoDisposeProviderRef<ClickSoundHive>;
 String _$songWebapiDatasourceHash() =>
     r'7829ce22574e354ef46f3a8dd5a5ae36b63965e7';
 
@@ -165,7 +182,7 @@ final remoteJobRepositoryProvider =
 
 typedef RemoteJobRepositoryRef = AutoDisposeProviderRef<RemoteJobRepository>;
 String _$songElementsRepositoryHash() =>
-    r'1906d80ff39a7be2ca2223d78d8b08357722fd7f';
+    r'29a720fa2c29f3a7f5e97afc6a8feda59d8ccd21';
 
 /// See also [songElementsRepository].
 @ProviderFor(songElementsRepository)

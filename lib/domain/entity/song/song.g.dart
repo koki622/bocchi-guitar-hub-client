@@ -13,7 +13,7 @@ _$SongImpl _$$SongImplFromJson(Map<String, dynamic> json) => _$SongImpl(
       filePath: json['filePath'] as String,
       directoryPath: json['directoryPath'] as String,
       createdAt: DateTime.parse(json['createdAt'] as String),
-      processType: $enumDecode(_$ProcessTypeEnumMap, json['processType']),
+      processType: $enumDecode(_$ProcessStepEnumMap, json['processType']),
       processStatusType:
           $enumDecode(_$ProcessStatusTypeEnumMap, json['processStatusType']),
     );
@@ -26,25 +26,29 @@ Map<String, dynamic> _$$SongImplToJson(_$SongImpl instance) =>
       'filePath': instance.filePath,
       'directoryPath': instance.directoryPath,
       'createdAt': instance.createdAt.toIso8601String(),
-      'processType': _$ProcessTypeEnumMap[instance.processType]!,
+      'processType': _$ProcessStepEnumMap[instance.processType]!,
       'processStatusType':
           _$ProcessStatusTypeEnumMap[instance.processStatusType]!,
     };
 
-const _$ProcessTypeEnumMap = {
-  ProcessType.init: 'init',
-  ProcessType.uploading: 'uploading',
-  ProcessType.separating: 'separating',
-  ProcessType.compression: 'compression',
-  ProcessType.chordAnalysis: 'chordAnalysis',
-  ProcessType.extractingSpectrograms: 'extractingSpectrograms',
-  ProcessType.structureAnalysis: 'structureAnalysis',
-  ProcessType.lyricAnalysis: 'lyricAnalysis',
-  ProcessType.downloadSeparationResult: 'downloadSeparationResult',
-  ProcessType.downloadChordAnalysisResult: 'downloadChordAnalysisResult',
-  ProcessType.downloadStructureAnalysisResult:
+const _$ProcessStepEnumMap = {
+  ProcessStep.init: 'init',
+  ProcessStep.uploading: 'uploading',
+  ProcessStep.bulkRemoteJob: 'bulkRemoteJob',
+  ProcessStep.downloadVocalsStem: 'downloadVocalsStem',
+  ProcessStep.downloadDrumsStem: 'downloadDrumsStem',
+  ProcessStep.downloadBassStem: 'downloadBassStem',
+  ProcessStep.downloadGuitarStem: 'downloadGuitarStem',
+  ProcessStep.downloadPianoStem: 'downloadPianoStem',
+  ProcessStep.downloadOtherStem: 'downloadOtherStem',
+  ProcessStep.downloadClickSoundNormal: 'downloadClickSoundNormal',
+  ProcessStep.downloadClickSound2x: 'downloadClickSound2x',
+  ProcessStep.downloadClickSoundHalf: 'downloadClickSoundHalf',
+  ProcessStep.downloadChordSound: 'downloadChordSound',
+  ProcessStep.downloadChordAnalysisResult: 'downloadChordAnalysisResult',
+  ProcessStep.downloadStructureAnalysisResult:
       'downloadStructureAnalysisResult',
-  ProcessType.downloadLyricAnalysisResult: 'downloadLyricAnalysisResult',
+  ProcessStep.downloadLyricAnalysisResult: 'downloadLyricAnalysisResult',
 };
 
 const _$ProcessStatusTypeEnumMap = {

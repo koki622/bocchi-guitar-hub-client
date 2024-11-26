@@ -57,14 +57,17 @@ class ChordsDataImplAdapter extends TypeAdapter<_$ChordsDataImpl> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return _$ChordsDataImpl(
-      chords: (fields[0] as List).cast<ChordData>(),
+      chords: (fields[0] as List?)?.cast<ChordData>(),
+      soundFilePath: fields[1] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, _$ChordsDataImpl obj) {
     writer
+      ..writeByte(2)
       ..writeByte(1)
+      ..write(obj.soundFilePath)
       ..writeByte(0)
       ..write(obj.chords);
   }

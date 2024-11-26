@@ -17,7 +17,9 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$ChordsData {
   @HiveField(0)
-  List<ChordData> get chords => throw _privateConstructorUsedError;
+  List<ChordData>? get chords => throw _privateConstructorUsedError;
+  @HiveField(1)
+  String? get soundFilePath => throw _privateConstructorUsedError;
 
   /// Create a copy of ChordsData
   /// with the given fields replaced by the non-null parameter values.
@@ -32,7 +34,9 @@ abstract class $ChordsDataCopyWith<$Res> {
           ChordsData value, $Res Function(ChordsData) then) =
       _$ChordsDataCopyWithImpl<$Res, ChordsData>;
   @useResult
-  $Res call({@HiveField(0) List<ChordData> chords});
+  $Res call(
+      {@HiveField(0) List<ChordData>? chords,
+      @HiveField(1) String? soundFilePath});
 }
 
 /// @nodoc
@@ -50,13 +54,18 @@ class _$ChordsDataCopyWithImpl<$Res, $Val extends ChordsData>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? chords = null,
+    Object? chords = freezed,
+    Object? soundFilePath = freezed,
   }) {
     return _then(_value.copyWith(
-      chords: null == chords
+      chords: freezed == chords
           ? _value.chords
           : chords // ignore: cast_nullable_to_non_nullable
-              as List<ChordData>,
+              as List<ChordData>?,
+      soundFilePath: freezed == soundFilePath
+          ? _value.soundFilePath
+          : soundFilePath // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -69,7 +78,9 @@ abstract class _$$ChordsDataImplCopyWith<$Res>
       __$$ChordsDataImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({@HiveField(0) List<ChordData> chords});
+  $Res call(
+      {@HiveField(0) List<ChordData>? chords,
+      @HiveField(1) String? soundFilePath});
 }
 
 /// @nodoc
@@ -85,13 +96,18 @@ class __$$ChordsDataImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? chords = null,
+    Object? chords = freezed,
+    Object? soundFilePath = freezed,
   }) {
     return _then(_$ChordsDataImpl(
-      chords: null == chords
+      chords: freezed == chords
           ? _value._chords
           : chords // ignore: cast_nullable_to_non_nullable
-              as List<ChordData>,
+              as List<ChordData>?,
+      soundFilePath: freezed == soundFilePath
+          ? _value.soundFilePath
+          : soundFilePath // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -100,21 +116,29 @@ class __$$ChordsDataImplCopyWithImpl<$Res>
 
 @HiveType(typeId: HiveBoxConstant.chordsBoxTypeId)
 class _$ChordsDataImpl implements _ChordsData {
-  const _$ChordsDataImpl({@HiveField(0) required final List<ChordData> chords})
+  const _$ChordsDataImpl(
+      {@HiveField(0) final List<ChordData>? chords,
+      @HiveField(1) this.soundFilePath})
       : _chords = chords;
 
-  final List<ChordData> _chords;
+  final List<ChordData>? _chords;
   @override
   @HiveField(0)
-  List<ChordData> get chords {
+  List<ChordData>? get chords {
+    final value = _chords;
+    if (value == null) return null;
     if (_chords is EqualUnmodifiableListView) return _chords;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_chords);
+    return EqualUnmodifiableListView(value);
   }
 
   @override
+  @HiveField(1)
+  final String? soundFilePath;
+
+  @override
   String toString() {
-    return 'ChordsData(chords: $chords)';
+    return 'ChordsData(chords: $chords, soundFilePath: $soundFilePath)';
   }
 
   @override
@@ -122,12 +146,14 @@ class _$ChordsDataImpl implements _ChordsData {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ChordsDataImpl &&
-            const DeepCollectionEquality().equals(other._chords, _chords));
+            const DeepCollectionEquality().equals(other._chords, _chords) &&
+            (identical(other.soundFilePath, soundFilePath) ||
+                other.soundFilePath == soundFilePath));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(_chords));
+  int get hashCode => Object.hash(
+      runtimeType, const DeepCollectionEquality().hash(_chords), soundFilePath);
 
   /// Create a copy of ChordsData
   /// with the given fields replaced by the non-null parameter values.
@@ -140,11 +166,15 @@ class _$ChordsDataImpl implements _ChordsData {
 
 abstract class _ChordsData implements ChordsData {
   const factory _ChordsData(
-      {@HiveField(0) required final List<ChordData> chords}) = _$ChordsDataImpl;
+      {@HiveField(0) final List<ChordData>? chords,
+      @HiveField(1) final String? soundFilePath}) = _$ChordsDataImpl;
 
   @override
   @HiveField(0)
-  List<ChordData> get chords;
+  List<ChordData>? get chords;
+  @override
+  @HiveField(1)
+  String? get soundFilePath;
 
   /// Create a copy of ChordsData
   /// with the given fields replaced by the non-null parameter values.

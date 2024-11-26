@@ -1,6 +1,6 @@
 import 'package:bocchi_guitar_hub_client/core/constant/reference/hive_box.dart';
-import 'package:bocchi_guitar_hub_client/core/enum/process.dart';
 import 'package:bocchi_guitar_hub_client/core/enum/process_status.dart';
+import 'package:bocchi_guitar_hub_client/core/enum/process_step.dart';
 import 'package:bocchi_guitar_hub_client/domain/entity/song/song.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive/hive.dart';
@@ -41,6 +41,6 @@ extension SongDataX on SongData {
       filePath: filePath,
       directoryPath: directoryPath,
       createdAt: createdAt,
-      processType: ProcessType.values.byName(processType),
+      processType: ProcessStep.values.byName(processType),
       processStatusType: ProcessStatusType.values.byName(processStatusType));
 }

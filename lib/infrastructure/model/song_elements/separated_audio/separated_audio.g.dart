@@ -18,12 +18,12 @@ class SeparatedAudioDataImplAdapter
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return _$SeparatedAudioDataImpl(
-      vocalsPath: fields[0] as String,
-      drumsPath: fields[1] as String,
-      bassPath: fields[2] as String,
-      guitarPath: fields[3] as String,
-      pianoPath: fields[4] as String,
-      otherPath: fields[5] as String,
+      vocalsPath: fields[0] as String?,
+      drumsPath: fields[1] as String?,
+      bassPath: fields[2] as String?,
+      guitarPath: fields[3] as String?,
+      pianoPath: fields[4] as String?,
+      otherPath: fields[5] as String?,
     );
   }
 

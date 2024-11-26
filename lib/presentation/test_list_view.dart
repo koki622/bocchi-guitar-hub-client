@@ -1,15 +1,10 @@
-import 'dart:convert';
-
 import 'package:bocchi_guitar_hub_client/application/application_module.dart';
 import 'package:bocchi_guitar_hub_client/application/notifier/song_elements_notifier.dart';
 import 'package:bocchi_guitar_hub_client/application/notifier/songs_notifier.dart';
-import 'package:bocchi_guitar_hub_client/application/usecase/song_usecase.dart';
 import 'package:bocchi_guitar_hub_client/core/constant/text/process.dart';
-import 'package:bocchi_guitar_hub_client/core/enum/process.dart';
+import 'package:bocchi_guitar_hub_client/core/enum/process_step.dart';
 import 'package:bocchi_guitar_hub_client/core/enum/process_status.dart';
-import 'package:bocchi_guitar_hub_client/core/enum/remote_job.dart';
-import 'package:bocchi_guitar_hub_client/domain/entity/song/song.dart';
-import 'package:bocchi_guitar_hub_client/infrastructure/infrastructure_module.dart';
+import 'package:bocchi_guitar_hub_client/presentation/soloud_screen.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -42,11 +37,11 @@ class TestListView extends ConsumerWidget {
                         final song = songs[songId]; // 曲情報を取得
                         return ListTile(
                           title: Text(
-                              '${song?.title} ${ProcessTypeStrings.displayNames[song?.processType]}${ProcessStatusTypeStrings.displayNames[song?.processStatusType]}'),
+                              '${song?.title} ${ProcessStepStrings.displayNames[song?.processType]}${ProcessStatusTypeStrings.displayNames[song?.processStatusType]}'),
                           trailing: song != null &&
                                   song.processType ==
-                                      ProcessType
-                                          .values.last && // 最後のProcessTypeか
+                                      ProcessStep
+                                          .values.last && // 最後のProcessStepか
                                   song.processStatusType ==
                                       ProcessStatusType
                                           .completed // completedであるか
@@ -147,48 +142,54 @@ class TestListView extends ConsumerWidget {
                                 )
                               : const SizedBox.shrink(), // 条件を満たさない場合、何も表示しない
 
-                          onTap: () {
-                            // ProcessTypeが最後のProcessTypeで、processStatusTypeがcompletedの場合のみタップ可能
+                          onTap: () async {
                             if (song != null &&
-                                song.processType ==
-                                    ProcessType
-                                        .values.last && // 最後のProcessTypeか
+                                song.processType == ProcessStep.values.last &&
                                 song.processStatusType ==
                                     ProcessStatusType.completed) {
-                              // completedであるか
+                              // ローディング中に状態を更新
                               showDialog(
                                 context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    content: SingleChildScrollView(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                              'Chord: ${ref.watch(chordNotifierProvider(song)).toString()}'),
-                                          Text(
-                                              'Beat: ${ref.watch(beatNotifierProvider(song)).toString()}'),
-                                          Text(
-                                              'Section: ${ref.watch(sectionNotifierProvider(song)).toString()}'),
-                                          Text(
-                                              'Separated Audio: ${ref.watch(separatedAudioNotifierProvider(song)).toString()}'),
-                                          Text(
-                                              'Lyric: ${utf8.decode(ref.watch(lyricNotifierProvider(song)).toString().codeUnits)}'),
-                                        ],
+                                barrierDismissible: false,
+                                builder: (context) => const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              );
+
+                              try {
+                                // 非同期データを取得
+                                final separatedAudio = await ref.read(
+                                    separatedAudioNotifierProvider(song)
+                                        .future);
+                                final clickSound = await ref.read(
+                                    clickSoundNotifierProvider(song).future);
+                                final chordSound = await ref.read(
+                                    chordSoundNotifierProvider(song).future);
+                                // データ取得後に画面遷移
+                                if (context.mounted) {
+                                  Navigator.pop(context); // ローディングダイアログを閉じる
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => MultiTrackPlayer(
+                                        separatedAudio: separatedAudio,
+                                        clickSound: clickSound,
+                                        chordSound: chordSound,
                                       ),
                                     ),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: const Text('閉じる'),
-                                      ),
-                                    ],
                                   );
-                                },
-                              );
+                                }
+                              } catch (error) {
+                                // エラー時の処理
+                                if (context.mounted) {
+                                  Navigator.pop(context); // ローディングダイアログを閉じる
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                        content: Text(
+                                            'Error loading audio: $error')),
+                                  );
+                                }
+                              }
                             }
                           },
                         );

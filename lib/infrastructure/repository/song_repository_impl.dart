@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:bocchi_guitar_hub_client/core/constant/reference/file_extensions.dart';
 import 'package:bocchi_guitar_hub_client/core/constant/reference/webapi.dart';
 import 'package:bocchi_guitar_hub_client/core/enum/process.dart';
+import 'package:bocchi_guitar_hub_client/core/enum/process_step.dart';
 import 'package:bocchi_guitar_hub_client/core/enum/process_status.dart';
 import 'package:bocchi_guitar_hub_client/domain/entity/song/song.dart';
 import 'package:bocchi_guitar_hub_client/domain/exception.dart';
@@ -46,8 +47,8 @@ class SongRepositoryImpl implements SongRepository {
   Future<Song> addSong({required NewSong newSong}) async {
     const uuid = Uuid();
 
-    // アプリケーションドキュメントディレクトリを取得
-    var applicationDirectory = await getApplicationDocumentsDirectory();
+    // アプリケーションサポートディレクトリを取得
+    var applicationDirectory = await getApplicationSupportDirectory();
 
     // 曲を管理するディレクトリを作成
     final directory = Directory(p.join(applicationDirectory.path, uuid.v4()));
@@ -70,7 +71,7 @@ class SongRepositoryImpl implements SongRepository {
       // データベースに曲情報を登録
       SongData unuploadedSongData = SongData(
           title: newSong.title,
-          processType: ProcessType.init.name,
+          processType: ProcessStep.init.name,
           processStatusType: ProcessStatusType.completed.name,
           filePath: filePath,
           directoryPath: directory.path,
@@ -83,7 +84,8 @@ class SongRepositoryImpl implements SongRepository {
   }
 
   @override
-  Future<Song> uploadSong({required Song song}) async {
+  Future<Song> uploadSong(
+      {required Song song, required UploadType uploadType}) async {
     String filePath = song.filePath;
 
     // 拡張子を取得
@@ -96,8 +98,8 @@ class SongRepositoryImpl implements SongRepository {
     }
 
     // 音声ファイルをサーバーにアップロード
-    var response = await _songWebapi.uploadFile(
-        WebapiEndpointConstant.uploadAudioFile, filePath, mediaType);
+    var response =
+        await _songWebapi.uploadFile(uploadType.endpoint, filePath, mediaType);
 
     String? audioFileId = response['audiofile_id'];
     if (audioFileId == null) {
@@ -106,10 +108,8 @@ class SongRepositoryImpl implements SongRepository {
 
     try {
       // 曲情報にaudioFileIdを追加して更新
-      SongData songData = SongData.fromEntity(song).copyWith(
-          audioFileId: audioFileId,
-          processType: ProcessType.uploading.name,
-          processStatusType: ProcessStatusType.completed.name);
+      SongData songData =
+          SongData.fromEntity(song).copyWith(audioFileId: audioFileId);
       await _songHive.update(songData, song.songId);
 
       return songData.toEntity(song.songId);

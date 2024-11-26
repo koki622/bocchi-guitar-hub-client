@@ -11,7 +11,8 @@ part 'beat.g.dart';
 class BeatsData with _$BeatsData {
   @HiveType(typeId: HiveBoxConstant.beatsBoxTypeId)
   const factory BeatsData({
-    @HiveField(0) required List<BeatData> beats,
+    @HiveField(0) required int bpm,
+    @HiveField(1) required List<BeatData> beats,
   }) = _BeatsData;
 
   // StructureResponseからBeatsDataに変換するメソッド
@@ -24,7 +25,7 @@ class BeatsData with _$BeatsData {
       return BeatData(beatPosition: position, beatTime: time);
     }).toList();
 
-    return BeatsData(beats: beatsList);
+    return BeatsData(bpm: response.bpm, beats: beatsList);
   }
 }
 

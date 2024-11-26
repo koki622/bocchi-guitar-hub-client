@@ -17,21 +17,24 @@ class JobStatusDataImplAdapter extends TypeAdapter<_$JobStatusDataImpl> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return _$JobStatusDataImpl(
-      jobId: fields[0] as String,
-      jobStatus: fields[1] as String,
-      queuePosition: fields[2] as int,
+      jobName: fields[0] as String,
+      jobId: fields[1] as String,
+      jobStatus: fields[2] as String,
+      queuePosition: fields[3] as int,
     );
   }
 
   @override
   void write(BinaryWriter writer, _$JobStatusDataImpl obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(4)
       ..writeByte(0)
-      ..write(obj.jobId)
+      ..write(obj.jobName)
       ..writeByte(1)
-      ..write(obj.jobStatus)
+      ..write(obj.jobId)
       ..writeByte(2)
+      ..write(obj.jobStatus)
+      ..writeByte(3)
       ..write(obj.queuePosition);
   }
 
@@ -52,6 +55,7 @@ class JobStatusDataImplAdapter extends TypeAdapter<_$JobStatusDataImpl> {
 
 _$JobStatusDataImpl _$$JobStatusDataImplFromJson(Map<String, dynamic> json) =>
     _$JobStatusDataImpl(
+      jobName: json['job_name'] as String,
       jobId: json['job_id'] as String,
       jobStatus: json['job_status'] as String,
       queuePosition: (json['queue_position'] as num?)?.toInt() ?? -1,
@@ -59,6 +63,7 @@ _$JobStatusDataImpl _$$JobStatusDataImplFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$$JobStatusDataImplToJson(_$JobStatusDataImpl instance) =>
     <String, dynamic>{
+      'job_name': instance.jobName,
       'job_id': instance.jobId,
       'job_status': instance.jobStatus,
       'queue_position': instance.queuePosition,

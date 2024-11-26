@@ -8,20 +8,18 @@ class JobStatusHive {
       Hive.box<JobStatusData>(HiveBoxConstant.jobStatusBoxName);
 
   Future<void> create(JobStatusData jobStatus, int songId) async {
-    // songId と jobStatusを組み合わせてキーを作成
-    String key = '${songId}_${jobStatus.jobStatus}';
-    await _box.put(key, jobStatus);
+    await _box.put(songId, jobStatus);
   }
 
-  Future<void> delete(String key) async {
+  Future<void> delete(int key) async {
     await _box.delete(key);
   }
 
-  Future<void> update(JobStatusData jobStatus, String key) async {
+  Future<void> update(JobStatusData jobStatus, int key) async {
     await _box.put(key, jobStatus);
   }
 
-  JobStatusData? readJobStatus(String key) {
+  JobStatusData? readJobStatus(int key) {
     return _box.get(key);
   }
 

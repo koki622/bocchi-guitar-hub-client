@@ -24,4 +24,7 @@ class HiveBoxConstant {
   static const lyricsBoxTypeId = 9;
   static const lyricTypeId = 10;
   static const lyricWordTypeId = 11;
+
+  static const clickSoundBoxName = 'clickSoundBox';
+  static const clickSoundBoxTypeId = 12;
 }

@@ -7,7 +7,7 @@ part of 'song_elements_notifier.dart';
 // **************************************************************************
 
 String _$separatedAudioNotifierHash() =>
-    r'cee0c433505b51242437b0f6d20ae1df40733661';
+    r'26615275f524a74a3eebdf4a2543b5819e75de77';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -31,10 +31,10 @@ class _SystemHash {
 }
 
 abstract class _$SeparatedAudioNotifier
-    extends BuildlessAutoDisposeNotifier<SeparatedAudio> {
+    extends BuildlessAutoDisposeAsyncNotifier<SeparatedAudio> {
   late final Song song;
 
-  SeparatedAudio build(
+  FutureOr<SeparatedAudio> build(
     Song song,
   );
 }
@@ -44,7 +44,7 @@ abstract class _$SeparatedAudioNotifier
 const separatedAudioNotifierProvider = SeparatedAudioNotifierFamily();
 
 /// See also [SeparatedAudioNotifier].
-class SeparatedAudioNotifierFamily extends Family<SeparatedAudio> {
+class SeparatedAudioNotifierFamily extends Family<AsyncValue<SeparatedAudio>> {
   /// See also [SeparatedAudioNotifier].
   const SeparatedAudioNotifierFamily();
 
@@ -82,8 +82,9 @@ class SeparatedAudioNotifierFamily extends Family<SeparatedAudio> {
 }
 
 /// See also [SeparatedAudioNotifier].
-class SeparatedAudioNotifierProvider extends AutoDisposeNotifierProviderImpl<
-    SeparatedAudioNotifier, SeparatedAudio> {
+class SeparatedAudioNotifierProvider
+    extends AutoDisposeAsyncNotifierProviderImpl<SeparatedAudioNotifier,
+        SeparatedAudio> {
   /// See also [SeparatedAudioNotifier].
   SeparatedAudioNotifierProvider(
     Song song,
@@ -114,7 +115,7 @@ class SeparatedAudioNotifierProvider extends AutoDisposeNotifierProviderImpl<
   final Song song;
 
   @override
-  SeparatedAudio runNotifierBuild(
+  FutureOr<SeparatedAudio> runNotifierBuild(
     covariant SeparatedAudioNotifier notifier,
   ) {
     return notifier.build(
@@ -139,8 +140,8 @@ class SeparatedAudioNotifierProvider extends AutoDisposeNotifierProviderImpl<
   }
 
   @override
-  AutoDisposeNotifierProviderElement<SeparatedAudioNotifier, SeparatedAudio>
-      createElement() {
+  AutoDisposeAsyncNotifierProviderElement<SeparatedAudioNotifier,
+      SeparatedAudio> createElement() {
     return _SeparatedAudioNotifierProviderElement(this);
   }
 
@@ -159,18 +160,308 @@ class SeparatedAudioNotifierProvider extends AutoDisposeNotifierProviderImpl<
 }
 
 mixin SeparatedAudioNotifierRef
-    on AutoDisposeNotifierProviderRef<SeparatedAudio> {
+    on AutoDisposeAsyncNotifierProviderRef<SeparatedAudio> {
   /// The parameter `song` of this provider.
   Song get song;
 }
 
 class _SeparatedAudioNotifierProviderElement
-    extends AutoDisposeNotifierProviderElement<SeparatedAudioNotifier,
+    extends AutoDisposeAsyncNotifierProviderElement<SeparatedAudioNotifier,
         SeparatedAudio> with SeparatedAudioNotifierRef {
   _SeparatedAudioNotifierProviderElement(super.provider);
 
   @override
   Song get song => (origin as SeparatedAudioNotifierProvider).song;
+}
+
+String _$clickSoundNotifierHash() =>
+    r'ceda10225420956e603811470021d59ad07d20c2';
+
+abstract class _$ClickSoundNotifier
+    extends BuildlessAutoDisposeAsyncNotifier<ClickSound> {
+  late final Song song;
+
+  FutureOr<ClickSound> build(
+    Song song,
+  );
+}
+
+/// See also [ClickSoundNotifier].
+@ProviderFor(ClickSoundNotifier)
+const clickSoundNotifierProvider = ClickSoundNotifierFamily();
+
+/// See also [ClickSoundNotifier].
+class ClickSoundNotifierFamily extends Family<AsyncValue<ClickSound>> {
+  /// See also [ClickSoundNotifier].
+  const ClickSoundNotifierFamily();
+
+  /// See also [ClickSoundNotifier].
+  ClickSoundNotifierProvider call(
+    Song song,
+  ) {
+    return ClickSoundNotifierProvider(
+      song,
+    );
+  }
+
+  @override
+  ClickSoundNotifierProvider getProviderOverride(
+    covariant ClickSoundNotifierProvider provider,
+  ) {
+    return call(
+      provider.song,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'clickSoundNotifierProvider';
+}
+
+/// See also [ClickSoundNotifier].
+class ClickSoundNotifierProvider extends AutoDisposeAsyncNotifierProviderImpl<
+    ClickSoundNotifier, ClickSound> {
+  /// See also [ClickSoundNotifier].
+  ClickSoundNotifierProvider(
+    Song song,
+  ) : this._internal(
+          () => ClickSoundNotifier()..song = song,
+          from: clickSoundNotifierProvider,
+          name: r'clickSoundNotifierProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$clickSoundNotifierHash,
+          dependencies: ClickSoundNotifierFamily._dependencies,
+          allTransitiveDependencies:
+              ClickSoundNotifierFamily._allTransitiveDependencies,
+          song: song,
+        );
+
+  ClickSoundNotifierProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.song,
+  }) : super.internal();
+
+  final Song song;
+
+  @override
+  FutureOr<ClickSound> runNotifierBuild(
+    covariant ClickSoundNotifier notifier,
+  ) {
+    return notifier.build(
+      song,
+    );
+  }
+
+  @override
+  Override overrideWith(ClickSoundNotifier Function() create) {
+    return ProviderOverride(
+      origin: this,
+      override: ClickSoundNotifierProvider._internal(
+        () => create()..song = song,
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        song: song,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeAsyncNotifierProviderElement<ClickSoundNotifier, ClickSound>
+      createElement() {
+    return _ClickSoundNotifierProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ClickSoundNotifierProvider && other.song == song;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, song.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin ClickSoundNotifierRef on AutoDisposeAsyncNotifierProviderRef<ClickSound> {
+  /// The parameter `song` of this provider.
+  Song get song;
+}
+
+class _ClickSoundNotifierProviderElement
+    extends AutoDisposeAsyncNotifierProviderElement<ClickSoundNotifier,
+        ClickSound> with ClickSoundNotifierRef {
+  _ClickSoundNotifierProviderElement(super.provider);
+
+  @override
+  Song get song => (origin as ClickSoundNotifierProvider).song;
+}
+
+String _$chordSoundNotifierHash() =>
+    r'dd95d59af7db94baa6c74c39eb0f9393624ee338';
+
+abstract class _$ChordSoundNotifier
+    extends BuildlessAutoDisposeAsyncNotifier<ChordSound> {
+  late final Song song;
+
+  FutureOr<ChordSound> build(
+    Song song,
+  );
+}
+
+/// See also [ChordSoundNotifier].
+@ProviderFor(ChordSoundNotifier)
+const chordSoundNotifierProvider = ChordSoundNotifierFamily();
+
+/// See also [ChordSoundNotifier].
+class ChordSoundNotifierFamily extends Family<AsyncValue<ChordSound>> {
+  /// See also [ChordSoundNotifier].
+  const ChordSoundNotifierFamily();
+
+  /// See also [ChordSoundNotifier].
+  ChordSoundNotifierProvider call(
+    Song song,
+  ) {
+    return ChordSoundNotifierProvider(
+      song,
+    );
+  }
+
+  @override
+  ChordSoundNotifierProvider getProviderOverride(
+    covariant ChordSoundNotifierProvider provider,
+  ) {
+    return call(
+      provider.song,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'chordSoundNotifierProvider';
+}
+
+/// See also [ChordSoundNotifier].
+class ChordSoundNotifierProvider extends AutoDisposeAsyncNotifierProviderImpl<
+    ChordSoundNotifier, ChordSound> {
+  /// See also [ChordSoundNotifier].
+  ChordSoundNotifierProvider(
+    Song song,
+  ) : this._internal(
+          () => ChordSoundNotifier()..song = song,
+          from: chordSoundNotifierProvider,
+          name: r'chordSoundNotifierProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$chordSoundNotifierHash,
+          dependencies: ChordSoundNotifierFamily._dependencies,
+          allTransitiveDependencies:
+              ChordSoundNotifierFamily._allTransitiveDependencies,
+          song: song,
+        );
+
+  ChordSoundNotifierProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.song,
+  }) : super.internal();
+
+  final Song song;
+
+  @override
+  FutureOr<ChordSound> runNotifierBuild(
+    covariant ChordSoundNotifier notifier,
+  ) {
+    return notifier.build(
+      song,
+    );
+  }
+
+  @override
+  Override overrideWith(ChordSoundNotifier Function() create) {
+    return ProviderOverride(
+      origin: this,
+      override: ChordSoundNotifierProvider._internal(
+        () => create()..song = song,
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        song: song,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeAsyncNotifierProviderElement<ChordSoundNotifier, ChordSound>
+      createElement() {
+    return _ChordSoundNotifierProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ChordSoundNotifierProvider && other.song == song;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, song.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin ChordSoundNotifierRef on AutoDisposeAsyncNotifierProviderRef<ChordSound> {
+  /// The parameter `song` of this provider.
+  Song get song;
+}
+
+class _ChordSoundNotifierProviderElement
+    extends AutoDisposeAsyncNotifierProviderElement<ChordSoundNotifier,
+        ChordSound> with ChordSoundNotifierRef {
+  _ChordSoundNotifierProviderElement(super.provider);
+
+  @override
+  Song get song => (origin as ChordSoundNotifierProvider).song;
 }
 
 String _$chordNotifierHash() => r'9f6ea3defb77e63438daa61c999b1b48bfe9794a';

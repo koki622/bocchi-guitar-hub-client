@@ -3,7 +3,8 @@ enum JobStatusType implements Comparable<JobStatusType> {
   queued(value: 'queued', message: 'queued'),
   processingSoon(value: 'processingSoon', message: 'processing soon'),
   jobSuccess(value: 'jobSuccess', message: 'job success'),
-  jobFailed(value: 'jobFailed', message: 'job failed');
+  jobFailed(value: 'jobFailed', message: 'job failed'),
+  jobCompleted(value: 'jobCompleted', message: 'job completed');
 
   const JobStatusType({required this.value, required this.message});
 

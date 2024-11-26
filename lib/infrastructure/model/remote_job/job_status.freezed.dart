@@ -20,14 +20,17 @@ JobStatusData _$JobStatusDataFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$JobStatusData {
-  @JsonKey(name: 'job_id')
+  @JsonKey(name: 'job_name')
   @HiveField(0)
+  String get jobName => throw _privateConstructorUsedError;
+  @JsonKey(name: 'job_id')
+  @HiveField(1)
   String get jobId => throw _privateConstructorUsedError;
   @JsonKey(name: 'job_status')
-  @HiveField(1)
+  @HiveField(2)
   String get jobStatus => throw _privateConstructorUsedError;
   @JsonKey(name: 'queue_position', defaultValue: -1)
-  @HiveField(2)
+  @HiveField(3)
   int get queuePosition => throw _privateConstructorUsedError;
 
   /// Serializes this JobStatusData to a JSON map.
@@ -47,10 +50,11 @@ abstract class $JobStatusDataCopyWith<$Res> {
       _$JobStatusDataCopyWithImpl<$Res, JobStatusData>;
   @useResult
   $Res call(
-      {@JsonKey(name: 'job_id') @HiveField(0) String jobId,
-      @JsonKey(name: 'job_status') @HiveField(1) String jobStatus,
+      {@JsonKey(name: 'job_name') @HiveField(0) String jobName,
+      @JsonKey(name: 'job_id') @HiveField(1) String jobId,
+      @JsonKey(name: 'job_status') @HiveField(2) String jobStatus,
       @JsonKey(name: 'queue_position', defaultValue: -1)
-      @HiveField(2)
+      @HiveField(3)
       int queuePosition});
 }
 
@@ -69,11 +73,16 @@ class _$JobStatusDataCopyWithImpl<$Res, $Val extends JobStatusData>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? jobName = null,
     Object? jobId = null,
     Object? jobStatus = null,
     Object? queuePosition = null,
   }) {
     return _then(_value.copyWith(
+      jobName: null == jobName
+          ? _value.jobName
+          : jobName // ignore: cast_nullable_to_non_nullable
+              as String,
       jobId: null == jobId
           ? _value.jobId
           : jobId // ignore: cast_nullable_to_non_nullable
@@ -99,10 +108,11 @@ abstract class _$$JobStatusDataImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: 'job_id') @HiveField(0) String jobId,
-      @JsonKey(name: 'job_status') @HiveField(1) String jobStatus,
+      {@JsonKey(name: 'job_name') @HiveField(0) String jobName,
+      @JsonKey(name: 'job_id') @HiveField(1) String jobId,
+      @JsonKey(name: 'job_status') @HiveField(2) String jobStatus,
       @JsonKey(name: 'queue_position', defaultValue: -1)
-      @HiveField(2)
+      @HiveField(3)
       int queuePosition});
 }
 
@@ -119,11 +129,16 @@ class __$$JobStatusDataImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? jobName = null,
     Object? jobId = null,
     Object? jobStatus = null,
     Object? queuePosition = null,
   }) {
     return _then(_$JobStatusDataImpl(
+      jobName: null == jobName
+          ? _value.jobName
+          : jobName // ignore: cast_nullable_to_non_nullable
+              as String,
       jobId: null == jobId
           ? _value.jobId
           : jobId // ignore: cast_nullable_to_non_nullable
@@ -145,31 +160,36 @@ class __$$JobStatusDataImplCopyWithImpl<$Res>
 @HiveType(typeId: HiveBoxConstant.jobStatusBoxTypeId)
 class _$JobStatusDataImpl implements _JobStatusData {
   const _$JobStatusDataImpl(
-      {@JsonKey(name: 'job_id') @HiveField(0) required this.jobId,
-      @JsonKey(name: 'job_status') @HiveField(1) required this.jobStatus,
+      {@JsonKey(name: 'job_name') @HiveField(0) required this.jobName,
+      @JsonKey(name: 'job_id') @HiveField(1) required this.jobId,
+      @JsonKey(name: 'job_status') @HiveField(2) required this.jobStatus,
       @JsonKey(name: 'queue_position', defaultValue: -1)
-      @HiveField(2)
+      @HiveField(3)
       required this.queuePosition});
 
   factory _$JobStatusDataImpl.fromJson(Map<String, dynamic> json) =>
       _$$JobStatusDataImplFromJson(json);
 
   @override
-  @JsonKey(name: 'job_id')
+  @JsonKey(name: 'job_name')
   @HiveField(0)
+  final String jobName;
+  @override
+  @JsonKey(name: 'job_id')
+  @HiveField(1)
   final String jobId;
   @override
   @JsonKey(name: 'job_status')
-  @HiveField(1)
+  @HiveField(2)
   final String jobStatus;
   @override
   @JsonKey(name: 'queue_position', defaultValue: -1)
-  @HiveField(2)
+  @HiveField(3)
   final int queuePosition;
 
   @override
   String toString() {
-    return 'JobStatusData(jobId: $jobId, jobStatus: $jobStatus, queuePosition: $queuePosition)';
+    return 'JobStatusData(jobName: $jobName, jobId: $jobId, jobStatus: $jobStatus, queuePosition: $queuePosition)';
   }
 
   @override
@@ -177,6 +197,7 @@ class _$JobStatusDataImpl implements _JobStatusData {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$JobStatusDataImpl &&
+            (identical(other.jobName, jobName) || other.jobName == jobName) &&
             (identical(other.jobId, jobId) || other.jobId == jobId) &&
             (identical(other.jobStatus, jobStatus) ||
                 other.jobStatus == jobStatus) &&
@@ -186,7 +207,8 @@ class _$JobStatusDataImpl implements _JobStatusData {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, jobId, jobStatus, queuePosition);
+  int get hashCode =>
+      Object.hash(runtimeType, jobName, jobId, jobStatus, queuePosition);
 
   /// Create a copy of JobStatusData
   /// with the given fields replaced by the non-null parameter values.
@@ -206,28 +228,33 @@ class _$JobStatusDataImpl implements _JobStatusData {
 
 abstract class _JobStatusData implements JobStatusData {
   const factory _JobStatusData(
-      {@JsonKey(name: 'job_id') @HiveField(0) required final String jobId,
+      {@JsonKey(name: 'job_name') @HiveField(0) required final String jobName,
+      @JsonKey(name: 'job_id') @HiveField(1) required final String jobId,
       @JsonKey(name: 'job_status')
-      @HiveField(1)
+      @HiveField(2)
       required final String jobStatus,
       @JsonKey(name: 'queue_position', defaultValue: -1)
-      @HiveField(2)
+      @HiveField(3)
       required final int queuePosition}) = _$JobStatusDataImpl;
 
   factory _JobStatusData.fromJson(Map<String, dynamic> json) =
       _$JobStatusDataImpl.fromJson;
 
   @override
-  @JsonKey(name: 'job_id')
+  @JsonKey(name: 'job_name')
   @HiveField(0)
+  String get jobName;
+  @override
+  @JsonKey(name: 'job_id')
+  @HiveField(1)
   String get jobId;
   @override
   @JsonKey(name: 'job_status')
-  @HiveField(1)
+  @HiveField(2)
   String get jobStatus;
   @override
   @JsonKey(name: 'queue_position', defaultValue: -1)
-  @HiveField(2)
+  @HiveField(3)
   int get queuePosition;
 
   /// Create a copy of JobStatusData

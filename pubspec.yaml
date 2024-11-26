@@ -51,6 +51,13 @@ dependencies:
   path: ^1.9.0
   hive_flutter: ^1.1.0
   archive: ^3.6.1
+  flutter_hooks: ^0.20.5
+  hooks_riverpod: ^2.6.1
+  audioplayers: ^6.1.0
+  just_audio: ^0.9.42
+  just_audio_windows: ^0.2.2
+  audio_session: ^0.1.21
+  flutter_soloud: ^2.1.7
 
 dev_dependencies:
   flutter_test:

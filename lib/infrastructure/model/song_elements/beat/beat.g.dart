@@ -54,15 +54,18 @@ class BeatsDataImplAdapter extends TypeAdapter<_$BeatsDataImpl> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return _$BeatsDataImpl(
-      beats: (fields[0] as List).cast<BeatData>(),
+      bpm: fields[0] as int,
+      beats: (fields[1] as List).cast<BeatData>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, _$BeatsDataImpl obj) {
     writer
-      ..writeByte(1)
+      ..writeByte(2)
       ..writeByte(0)
+      ..write(obj.bpm)
+      ..writeByte(1)
       ..write(obj.beats);
   }
 

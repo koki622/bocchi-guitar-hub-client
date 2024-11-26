@@ -12,32 +12,47 @@ part 'separated_audio.g.dart';
 class SeparatedAudioData with _$SeparatedAudioData {
   @HiveType(typeId: HiveBoxConstant.separatedAudioBoxTypeId)
   const factory SeparatedAudioData({
-    @HiveField(0) required String vocalsPath,
-    @HiveField(1) required String drumsPath,
-    @HiveField(2) required String bassPath,
-    @HiveField(3) required String guitarPath,
-    @HiveField(4) required String pianoPath,
-    @HiveField(5) required String otherPath,
+    @HiveField(0) String? vocalsPath,
+    @HiveField(1) String? drumsPath,
+    @HiveField(2) String? bassPath,
+    @HiveField(3) String? guitarPath,
+    @HiveField(4) String? pianoPath,
+    @HiveField(5) String? otherPath,
   }) = _SeparatedAudioData;
 }
 
 extension SeparatedAudioDataX on SeparatedAudioData {
-  SeparatedAudio toEntity() => SeparatedAudio(
-      vocalsPath: vocalsPath,
-      drumsPath: drumsPath,
-      bassPath: bassPath,
-      guitarPath: guitarPath,
-      pianoPath: pianoPath,
-      otherPath: otherPath);
+  Future<SeparatedAudio> toEntity() async {
+    if (await allFilesExist()) {
+      return SeparatedAudio(
+          vocalsPath: vocalsPath!,
+          drumsPath: drumsPath!,
+          bassPath: bassPath!,
+          guitarPath: guitarPath!,
+          pianoPath: pianoPath!,
+          otherPath: otherPath!);
+    } else {
+      throw Exception('全パート別音源のダウンロードが完了していません');
+    }
+  }
 
   // 各ファイルが存在するか確認するメソッド
   Future<bool> allFilesExist() async {
-    return await _fileExists(vocalsPath) &&
-        await _fileExists(drumsPath) &&
-        await _fileExists(bassPath) &&
-        await _fileExists(guitarPath) &&
-        await _fileExists(pianoPath) &&
-        await _fileExists(otherPath);
+    if (vocalsPath != null &&
+        drumsPath != null &&
+        bassPath != null &&
+        guitarPath != null &&
+        pianoPath != null &&
+        otherPath != null) {
+      return await _fileExists(vocalsPath!) &&
+          await _fileExists(drumsPath!) &&
+          await _fileExists(bassPath!) &&
+          await _fileExists(guitarPath!) &&
+          await _fileExists(pianoPath!) &&
+          await _fileExists(otherPath!);
+    } else {
+      return false;
+    }
   }
 
   Future<bool> _fileExists(String path) async {

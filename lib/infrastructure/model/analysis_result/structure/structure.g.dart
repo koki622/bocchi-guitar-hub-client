@@ -9,6 +9,7 @@ part of 'structure.dart';
 _$StructureResponseImpl _$$StructureResponseImplFromJson(
         Map<String, dynamic> json) =>
     _$StructureResponseImpl(
+      bpm: (json['bpm'] as num).toInt(),
       beats: (json['beats'] as List<dynamic>)
           .map((e) => (e as num).toDouble())
           .toList(),
@@ -23,6 +24,7 @@ _$StructureResponseImpl _$$StructureResponseImplFromJson(
 Map<String, dynamic> _$$StructureResponseImplToJson(
         _$StructureResponseImpl instance) =>
     <String, dynamic>{
+      'bpm': instance.bpm,
       'beats': instance.beats,
       'beat_positions': instance.beatPositions,
       'segments': instance.segments,

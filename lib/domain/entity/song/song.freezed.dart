@@ -26,7 +26,7 @@ mixin _$Song {
   String get filePath => throw _privateConstructorUsedError;
   String get directoryPath => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
-  ProcessType get processType => throw _privateConstructorUsedError;
+  ProcessStep get processType => throw _privateConstructorUsedError;
   ProcessStatusType get processStatusType => throw _privateConstructorUsedError;
 
   /// Serializes this Song to a JSON map.
@@ -50,7 +50,7 @@ abstract class $SongCopyWith<$Res> {
       String filePath,
       String directoryPath,
       DateTime createdAt,
-      ProcessType processType,
+      ProcessStep processType,
       ProcessStatusType processStatusType});
 }
 
@@ -106,7 +106,7 @@ class _$SongCopyWithImpl<$Res, $Val extends Song>
       processType: null == processType
           ? _value.processType
           : processType // ignore: cast_nullable_to_non_nullable
-              as ProcessType,
+              as ProcessStep,
       processStatusType: null == processStatusType
           ? _value.processStatusType
           : processStatusType // ignore: cast_nullable_to_non_nullable
@@ -129,7 +129,7 @@ abstract class _$$SongImplCopyWith<$Res> implements $SongCopyWith<$Res> {
       String filePath,
       String directoryPath,
       DateTime createdAt,
-      ProcessType processType,
+      ProcessStep processType,
       ProcessStatusType processStatusType});
 }
 
@@ -182,7 +182,7 @@ class __$$SongImplCopyWithImpl<$Res>
       processType: null == processType
           ? _value.processType
           : processType // ignore: cast_nullable_to_non_nullable
-              as ProcessType,
+              as ProcessStep,
       processStatusType: null == processStatusType
           ? _value.processStatusType
           : processStatusType // ignore: cast_nullable_to_non_nullable
@@ -220,7 +220,7 @@ class _$SongImpl implements _Song {
   @override
   final DateTime createdAt;
   @override
-  final ProcessType processType;
+  final ProcessStep processType;
   @override
   final ProcessStatusType processStatusType;
 
@@ -279,7 +279,7 @@ abstract class _Song implements Song {
       required final String filePath,
       required final String directoryPath,
       required final DateTime createdAt,
-      required final ProcessType processType,
+      required final ProcessStep processType,
       required final ProcessStatusType processStatusType}) = _$SongImpl;
 
   factory _Song.fromJson(Map<String, dynamic> json) = _$SongImpl.fromJson;
@@ -297,7 +297,7 @@ abstract class _Song implements Song {
   @override
   DateTime get createdAt;
   @override
-  ProcessType get processType;
+  ProcessStep get processType;
   @override
   ProcessStatusType get processStatusType;
 

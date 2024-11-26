@@ -6,6 +6,7 @@ part 'structure.g.dart';
 @freezed
 class StructureResponse with _$StructureResponse {
   const factory StructureResponse({
+    @JsonKey(name: 'bpm') required int bpm,
     @JsonKey(name: 'beats') required List<double> beats,
     @JsonKey(name: 'beat_positions') required List<double> beatPositions,
     @JsonKey(name: 'segments') required List<SegmentResponse> segments,

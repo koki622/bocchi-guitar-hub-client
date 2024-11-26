@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:bocchi_guitar_hub_client/core/constant/reference/hive_box.dart';
 import 'package:bocchi_guitar_hub_client/domain/entity/song_elements/chord/chord.dart';
+import 'package:bocchi_guitar_hub_client/domain/entity/song_elements/chord/chord_sound.dart';
 import 'package:bocchi_guitar_hub_client/infrastructure/model/analysis_result/chord/chord.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive/hive.dart';
@@ -11,7 +14,8 @@ part 'chord.g.dart';
 class ChordsData with _$ChordsData {
   @HiveType(typeId: HiveBoxConstant.chordsBoxTypeId)
   const factory ChordsData({
-    @HiveField(0) required List<ChordData> chords,
+    @HiveField(0) List<ChordData>? chords,
+    @HiveField(1) String? soundFilePath,
   }) = _ChordsData;
 
   // ChordsResponseをChordsDataに変換するメソッド
@@ -30,13 +34,37 @@ class ChordsData with _$ChordsData {
 }
 
 extension ChordsDataX on ChordsData {
-  List<Chord> toEntityList() {
-    return chords
+  List<Chord> toChordEntityList() {
+    if (chords == null) {
+      throw Exception('コードの解析結果が存在しません');
+    }
+    return chords!
         .map((chordData) => Chord(
             chord: chordData.chord,
             time: chordData.time,
             duration: chordData.duration))
         .toList();
+  }
+
+  Future<ChordSound> toChordSoundEntity() async {
+    if (await allFilesExist()) {
+      return ChordSound(filePath: soundFilePath!);
+    } else {
+      throw Exception('コード音声が存在しません');
+    }
+  }
+
+  // 各ファイルが存在するか確認するメソッド
+  Future<bool> allFilesExist() async {
+    if (soundFilePath != null) {
+      return await _fileExists(soundFilePath!);
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> _fileExists(String path) async {
+    return await File(path).exists();
   }
 }
 

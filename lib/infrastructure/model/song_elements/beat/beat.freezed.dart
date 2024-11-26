@@ -17,6 +17,8 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$BeatsData {
   @HiveField(0)
+  int get bpm => throw _privateConstructorUsedError;
+  @HiveField(1)
   List<BeatData> get beats => throw _privateConstructorUsedError;
 
   /// Create a copy of BeatsData
@@ -31,7 +33,7 @@ abstract class $BeatsDataCopyWith<$Res> {
   factory $BeatsDataCopyWith(BeatsData value, $Res Function(BeatsData) then) =
       _$BeatsDataCopyWithImpl<$Res, BeatsData>;
   @useResult
-  $Res call({@HiveField(0) List<BeatData> beats});
+  $Res call({@HiveField(0) int bpm, @HiveField(1) List<BeatData> beats});
 }
 
 /// @nodoc
@@ -49,9 +51,14 @@ class _$BeatsDataCopyWithImpl<$Res, $Val extends BeatsData>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? bpm = null,
     Object? beats = null,
   }) {
     return _then(_value.copyWith(
+      bpm: null == bpm
+          ? _value.bpm
+          : bpm // ignore: cast_nullable_to_non_nullable
+              as int,
       beats: null == beats
           ? _value.beats
           : beats // ignore: cast_nullable_to_non_nullable
@@ -68,7 +75,7 @@ abstract class _$$BeatsDataImplCopyWith<$Res>
       __$$BeatsDataImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({@HiveField(0) List<BeatData> beats});
+  $Res call({@HiveField(0) int bpm, @HiveField(1) List<BeatData> beats});
 }
 
 /// @nodoc
@@ -84,9 +91,14 @@ class __$$BeatsDataImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? bpm = null,
     Object? beats = null,
   }) {
     return _then(_$BeatsDataImpl(
+      bpm: null == bpm
+          ? _value.bpm
+          : bpm // ignore: cast_nullable_to_non_nullable
+              as int,
       beats: null == beats
           ? _value._beats
           : beats // ignore: cast_nullable_to_non_nullable
@@ -99,12 +111,17 @@ class __$$BeatsDataImplCopyWithImpl<$Res>
 
 @HiveType(typeId: HiveBoxConstant.beatsBoxTypeId)
 class _$BeatsDataImpl implements _BeatsData {
-  const _$BeatsDataImpl({@HiveField(0) required final List<BeatData> beats})
+  const _$BeatsDataImpl(
+      {@HiveField(0) required this.bpm,
+      @HiveField(1) required final List<BeatData> beats})
       : _beats = beats;
 
-  final List<BeatData> _beats;
   @override
   @HiveField(0)
+  final int bpm;
+  final List<BeatData> _beats;
+  @override
+  @HiveField(1)
   List<BeatData> get beats {
     if (_beats is EqualUnmodifiableListView) return _beats;
     // ignore: implicit_dynamic_type
@@ -113,7 +130,7 @@ class _$BeatsDataImpl implements _BeatsData {
 
   @override
   String toString() {
-    return 'BeatsData(beats: $beats)';
+    return 'BeatsData(bpm: $bpm, beats: $beats)';
   }
 
   @override
@@ -121,12 +138,13 @@ class _$BeatsDataImpl implements _BeatsData {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$BeatsDataImpl &&
+            (identical(other.bpm, bpm) || other.bpm == bpm) &&
             const DeepCollectionEquality().equals(other._beats, _beats));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(_beats));
+  int get hashCode => Object.hash(
+      runtimeType, bpm, const DeepCollectionEquality().hash(_beats));
 
   /// Create a copy of BeatsData
   /// with the given fields replaced by the non-null parameter values.
@@ -139,10 +157,14 @@ class _$BeatsDataImpl implements _BeatsData {
 
 abstract class _BeatsData implements BeatsData {
   const factory _BeatsData(
-      {@HiveField(0) required final List<BeatData> beats}) = _$BeatsDataImpl;
+      {@HiveField(0) required final int bpm,
+      @HiveField(1) required final List<BeatData> beats}) = _$BeatsDataImpl;
 
   @override
   @HiveField(0)
+  int get bpm;
+  @override
+  @HiveField(1)
   List<BeatData> get beats;
 
   /// Create a copy of BeatsData

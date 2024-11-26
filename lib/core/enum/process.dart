@@ -1,72 +1,197 @@
-// 処理タイプの分類
-import 'package:bocchi_guitar_hub_client/core/enum/process_status.dart';
+import 'package:bocchi_guitar_hub_client/core/constant/reference/audiofile.dart';
+import 'package:bocchi_guitar_hub_client/core/constant/reference/webapi.dart';
 
-enum ProcessCategory {
-  init,
-  upload,
-  remoteJob,
-  downloadJson,
-  downloadZip,
+abstract interface class ProcessInterface {}
+
+enum InitType implements ProcessInterface { init }
+
+enum UploadType implements ProcessInterface {
+  upload(endpoint: WebapiEndpointConstant.uploadAudioFile);
+
+  const UploadType({required this.endpoint});
+
+  final String endpoint;
 }
 
-// 解析処理の進捗
-enum ProcessType implements Comparable<ProcessType> {
-  // 初期
-  init(ProcessCategory.init),
-  // アップロード
-  uploading(ProcessCategory.upload),
+enum DownloadJsonType implements ProcessInterface {
+  downloadChordAnalysisResult(
+      endpoint: WebapiEndpointConstant.downloadChordAnalysisResult,
+      queryParams: WebapiQueryParametersConstant.downloadChordAnalysisResult),
 
-  // 分離処理
-  separating(ProcessCategory.remoteJob),
+  downloadStructureAnalysisResult(
+      endpoint: WebapiEndpointConstant.downloadStructureAnalysisResult,
+      queryParams:
+          WebapiQueryParametersConstant.downloadStructureAnalysisResult),
 
-  // 分離処理結果のzip圧縮処理
-  compression(ProcessCategory.remoteJob),
+  downloadLyricAnalysisResult(
+      endpoint: WebapiEndpointConstant.downloadLyricAnalysisResult,
+      queryParams: null);
 
-  // コード分析
-  chordAnalysis(ProcessCategory.remoteJob),
+  const DownloadJsonType({required this.endpoint, this.queryParams});
 
-  // スペクトログラム抽出
-  extractingSpectrograms(ProcessCategory.remoteJob),
+  final String endpoint;
+  final Map<String, String>? queryParams;
+}
 
-  // 音楽構造分析
-  structureAnalysis(ProcessCategory.remoteJob),
+enum DownloadAudioFileCategory {
+  separatedAudio,
+  clickSound,
+  chordSound,
+}
 
-  // 歌詞分析
-  lyricAnalysis(ProcessCategory.remoteJob),
+enum DownloadAudioFileType implements ProcessInterface {
+  // パート別音源
+  downloadVocalsStem(
+      endpoint: WebapiEndpointConstant.downloadStem,
+      queryParams: WebapiQueryParametersConstant.downloadVocalsStem,
+      saveFileName: AudioFilename.vocals,
+      saveDirectoryName: AudioDirectoryName.separatedDirectoryName,
+      category: DownloadAudioFileCategory.separatedAudio),
+  downloadDrumsStem(
+      endpoint: WebapiEndpointConstant.downloadStem,
+      queryParams: WebapiQueryParametersConstant.downloadDrumsStem,
+      saveFileName: AudioFilename.drums,
+      saveDirectoryName: AudioDirectoryName.separatedDirectoryName,
+      category: DownloadAudioFileCategory.separatedAudio),
+  downloadBassStem(
+      endpoint: WebapiEndpointConstant.downloadStem,
+      queryParams: WebapiQueryParametersConstant.downloadBassStem,
+      saveFileName: AudioFilename.bass,
+      saveDirectoryName: AudioDirectoryName.separatedDirectoryName,
+      category: DownloadAudioFileCategory.separatedAudio),
+  downloadGuitarStem(
+      endpoint: WebapiEndpointConstant.downloadStem,
+      queryParams: WebapiQueryParametersConstant.downloadGuitarStem,
+      saveFileName: AudioFilename.guitar,
+      saveDirectoryName: AudioDirectoryName.separatedDirectoryName,
+      category: DownloadAudioFileCategory.separatedAudio),
+  downloadPianoStem(
+      endpoint: WebapiEndpointConstant.downloadStem,
+      queryParams: WebapiQueryParametersConstant.downloadPianoStem,
+      saveFileName: AudioFilename.piano,
+      saveDirectoryName: AudioDirectoryName.separatedDirectoryName,
+      category: DownloadAudioFileCategory.separatedAudio),
+  downloadOtherStem(
+      endpoint: WebapiEndpointConstant.downloadStem,
+      queryParams: WebapiQueryParametersConstant.downloadOtherStem,
+      saveFileName: AudioFilename.other,
+      saveDirectoryName: AudioDirectoryName.separatedDirectoryName,
+      category: DownloadAudioFileCategory.separatedAudio),
 
-  // 結果のダウンロード
-  downloadSeparationResult(ProcessCategory.downloadZip),
-  downloadChordAnalysisResult(ProcessCategory.downloadJson),
-  downloadStructureAnalysisResult(ProcessCategory.downloadJson),
-  downloadLyricAnalysisResult(ProcessCategory.downloadJson);
+  // クリック音
+  downloadClickSoundNormal(
+      endpoint: WebapiEndpointConstant.downloadClickSound,
+      queryParams: WebapiQueryParametersConstant.downloadClickSoundNormal,
+      saveFileName: AudioFilename.clickSoundNormal,
+      saveDirectoryName: AudioDirectoryName.clickSoundDirectoryName,
+      category: DownloadAudioFileCategory.clickSound),
+  downloadClickSound2x(
+      endpoint: WebapiEndpointConstant.downloadClickSound,
+      queryParams: WebapiQueryParametersConstant.downloadClickSound2x,
+      saveFileName: AudioFilename.clickSound2x,
+      saveDirectoryName: AudioDirectoryName.clickSoundDirectoryName,
+      category: DownloadAudioFileCategory.clickSound),
+  downloadClickSoundHalf(
+      endpoint: WebapiEndpointConstant.downloadClickSound,
+      queryParams: WebapiQueryParametersConstant.downloadClickSoundHalf,
+      saveFileName: AudioFilename.clickSoundHalf,
+      saveDirectoryName: AudioDirectoryName.clickSoundDirectoryName,
+      category: DownloadAudioFileCategory.clickSound),
 
-  final ProcessCategory category;
+  // コード音声
+  downloadChordSound(
+      endpoint: WebapiEndpointConstant.downloadChordSound,
+      queryParams: WebapiQueryParametersConstant.downloadChordSound,
+      saveFileName: AudioFilename.chordSound,
+      saveDirectoryName: AudioDirectoryName.chordSoundDirectoryName,
+      category: DownloadAudioFileCategory.chordSound);
 
-  const ProcessType(this.category);
+  const DownloadAudioFileType(
+      {required this.endpoint,
+      this.queryParams,
+      required this.saveFileName,
+      required this.saveDirectoryName,
+      required this.category});
 
-  @override
-  int compareTo(ProcessType other) => name.compareTo(other.name);
+  final String endpoint;
+  final Map<String, String>? queryParams;
+  final String saveFileName;
+  final String saveDirectoryName;
+  final DownloadAudioFileCategory category;
+}
 
-  ProcessType? nextProcess(ProcessStatusType status) {
-    // Enumのリストを取得
-    const values = ProcessType.values;
+enum DownloadZipFileType implements ProcessInterface {
+  downloadSeparationResult(
+      endpoint: WebapiEndpointConstant.downloadSeparationResult,
+      saveDirectoryName: AudioDirectoryName.separatedDirectoryName);
 
-    // 現在のインデックスを取得
-    final currentIndex = values.indexOf(this);
+  const DownloadZipFileType(
+      {required this.endpoint, required this.saveDirectoryName});
 
-    switch (status) {
-      case ProcessStatusType.completed:
-        if (currentIndex + 1 < values.length) {
-          return values[currentIndex + 1]; // 次のプロセスを返す
-        } else {
-          return null; // 最後のプロセスの場合はnullを返す
-        }
-      case ProcessStatusType.failed:
-        return this; // 同じプロセスを返す
-      case ProcessStatusType.interrupted:
-        return this;
-      case ProcessStatusType.processing:
-        throw Exception('プロセスは実行中です');
-    }
+  final String endpoint;
+  final String saveDirectoryName;
+}
+
+enum BulkRemoteJobType implements ProcessInterface {
+  analyzeAll(endpoint: WebapiEndpointConstant.analyzeAll, remoteJobTypes: [
+    RemoteJobType.chordAnalysis,
+    RemoteJobType.separating,
+    RemoteJobType.extractingSpectrograms,
+    RemoteJobType.structureAnalysis,
+    RemoteJobType.lyricAnalysis,
+  ]);
+
+  const BulkRemoteJobType(
+      {required this.endpoint, required this.remoteJobTypes});
+
+  final String endpoint;
+  final List<RemoteJobType> remoteJobTypes;
+}
+
+enum RemoteJobType implements ProcessInterface {
+  // 楽曲分離処理
+  separating(jobName: 'demucs', endpoint: WebapiEndpointConstant.separating),
+
+  // 楽曲分離結果の圧縮
+  compression(
+      jobName: 'compression', endpoint: WebapiEndpointConstant.compression),
+
+  // コード進行解析処理
+  chordAnalysis(
+      jobName: 'crema', endpoint: WebapiEndpointConstant.chordAnalysis),
+
+  // スペクトログラム抽出処理
+  extractingSpectrograms(
+      jobName: 'allin1_spectrograms',
+      endpoint: WebapiEndpointConstant.extractingSpectrograms),
+
+  // 音楽構造解析処理
+  structureAnalysis(
+      jobName: 'allin1_structure',
+      endpoint: WebapiEndpointConstant.structureAnalysis),
+
+  // 歌詞解析処理
+  lyricAnalysis(
+      jobName: 'whisper', endpoint: WebapiEndpointConstant.lyricAnalysis);
+
+  const RemoteJobType({required this.jobName, required this.endpoint});
+
+  final String jobName;
+  final String endpoint;
+
+  static RemoteJobType fromJobName(String jobName) {
+    return RemoteJobType.values.firstWhere(
+      (element) => element.jobName == jobName,
+      orElse: () =>
+          throw ArgumentError('どのRemoteJobTypeに合致しないjobNameが入力されました: $jobName'),
+    );
+  }
+
+  static List<RemoteJobType> getJobsFromAndAfter(RemoteJobType startingJob) {
+    // startingJob のインデックスを取得
+    int startIndex = RemoteJobType.values.indexOf(startingJob);
+
+    // startingJob から最後までのリストを返す
+    return RemoteJobType.values.sublist(startIndex);
   }
 }

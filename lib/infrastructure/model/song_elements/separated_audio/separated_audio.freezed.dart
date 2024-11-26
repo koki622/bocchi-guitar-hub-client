@@ -17,17 +17,17 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$SeparatedAudioData {
   @HiveField(0)
-  String get vocalsPath => throw _privateConstructorUsedError;
+  String? get vocalsPath => throw _privateConstructorUsedError;
   @HiveField(1)
-  String get drumsPath => throw _privateConstructorUsedError;
+  String? get drumsPath => throw _privateConstructorUsedError;
   @HiveField(2)
-  String get bassPath => throw _privateConstructorUsedError;
+  String? get bassPath => throw _privateConstructorUsedError;
   @HiveField(3)
-  String get guitarPath => throw _privateConstructorUsedError;
+  String? get guitarPath => throw _privateConstructorUsedError;
   @HiveField(4)
-  String get pianoPath => throw _privateConstructorUsedError;
+  String? get pianoPath => throw _privateConstructorUsedError;
   @HiveField(5)
-  String get otherPath => throw _privateConstructorUsedError;
+  String? get otherPath => throw _privateConstructorUsedError;
 
   /// Create a copy of SeparatedAudioData
   /// with the given fields replaced by the non-null parameter values.
@@ -43,12 +43,12 @@ abstract class $SeparatedAudioDataCopyWith<$Res> {
       _$SeparatedAudioDataCopyWithImpl<$Res, SeparatedAudioData>;
   @useResult
   $Res call(
-      {@HiveField(0) String vocalsPath,
-      @HiveField(1) String drumsPath,
-      @HiveField(2) String bassPath,
-      @HiveField(3) String guitarPath,
-      @HiveField(4) String pianoPath,
-      @HiveField(5) String otherPath});
+      {@HiveField(0) String? vocalsPath,
+      @HiveField(1) String? drumsPath,
+      @HiveField(2) String? bassPath,
+      @HiveField(3) String? guitarPath,
+      @HiveField(4) String? pianoPath,
+      @HiveField(5) String? otherPath});
 }
 
 /// @nodoc
@@ -66,38 +66,38 @@ class _$SeparatedAudioDataCopyWithImpl<$Res, $Val extends SeparatedAudioData>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? vocalsPath = null,
-    Object? drumsPath = null,
-    Object? bassPath = null,
-    Object? guitarPath = null,
-    Object? pianoPath = null,
-    Object? otherPath = null,
+    Object? vocalsPath = freezed,
+    Object? drumsPath = freezed,
+    Object? bassPath = freezed,
+    Object? guitarPath = freezed,
+    Object? pianoPath = freezed,
+    Object? otherPath = freezed,
   }) {
     return _then(_value.copyWith(
-      vocalsPath: null == vocalsPath
+      vocalsPath: freezed == vocalsPath
           ? _value.vocalsPath
           : vocalsPath // ignore: cast_nullable_to_non_nullable
-              as String,
-      drumsPath: null == drumsPath
+              as String?,
+      drumsPath: freezed == drumsPath
           ? _value.drumsPath
           : drumsPath // ignore: cast_nullable_to_non_nullable
-              as String,
-      bassPath: null == bassPath
+              as String?,
+      bassPath: freezed == bassPath
           ? _value.bassPath
           : bassPath // ignore: cast_nullable_to_non_nullable
-              as String,
-      guitarPath: null == guitarPath
+              as String?,
+      guitarPath: freezed == guitarPath
           ? _value.guitarPath
           : guitarPath // ignore: cast_nullable_to_non_nullable
-              as String,
-      pianoPath: null == pianoPath
+              as String?,
+      pianoPath: freezed == pianoPath
           ? _value.pianoPath
           : pianoPath // ignore: cast_nullable_to_non_nullable
-              as String,
-      otherPath: null == otherPath
+              as String?,
+      otherPath: freezed == otherPath
           ? _value.otherPath
           : otherPath // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
     ) as $Val);
   }
 }
@@ -111,12 +111,12 @@ abstract class _$$SeparatedAudioDataImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@HiveField(0) String vocalsPath,
-      @HiveField(1) String drumsPath,
-      @HiveField(2) String bassPath,
-      @HiveField(3) String guitarPath,
-      @HiveField(4) String pianoPath,
-      @HiveField(5) String otherPath});
+      {@HiveField(0) String? vocalsPath,
+      @HiveField(1) String? drumsPath,
+      @HiveField(2) String? bassPath,
+      @HiveField(3) String? guitarPath,
+      @HiveField(4) String? pianoPath,
+      @HiveField(5) String? otherPath});
 }
 
 /// @nodoc
@@ -132,38 +132,38 @@ class __$$SeparatedAudioDataImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? vocalsPath = null,
-    Object? drumsPath = null,
-    Object? bassPath = null,
-    Object? guitarPath = null,
-    Object? pianoPath = null,
-    Object? otherPath = null,
+    Object? vocalsPath = freezed,
+    Object? drumsPath = freezed,
+    Object? bassPath = freezed,
+    Object? guitarPath = freezed,
+    Object? pianoPath = freezed,
+    Object? otherPath = freezed,
   }) {
     return _then(_$SeparatedAudioDataImpl(
-      vocalsPath: null == vocalsPath
+      vocalsPath: freezed == vocalsPath
           ? _value.vocalsPath
           : vocalsPath // ignore: cast_nullable_to_non_nullable
-              as String,
-      drumsPath: null == drumsPath
+              as String?,
+      drumsPath: freezed == drumsPath
           ? _value.drumsPath
           : drumsPath // ignore: cast_nullable_to_non_nullable
-              as String,
-      bassPath: null == bassPath
+              as String?,
+      bassPath: freezed == bassPath
           ? _value.bassPath
           : bassPath // ignore: cast_nullable_to_non_nullable
-              as String,
-      guitarPath: null == guitarPath
+              as String?,
+      guitarPath: freezed == guitarPath
           ? _value.guitarPath
           : guitarPath // ignore: cast_nullable_to_non_nullable
-              as String,
-      pianoPath: null == pianoPath
+              as String?,
+      pianoPath: freezed == pianoPath
           ? _value.pianoPath
           : pianoPath // ignore: cast_nullable_to_non_nullable
-              as String,
-      otherPath: null == otherPath
+              as String?,
+      otherPath: freezed == otherPath
           ? _value.otherPath
           : otherPath // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
     ));
   }
 }
@@ -173,31 +173,31 @@ class __$$SeparatedAudioDataImplCopyWithImpl<$Res>
 @HiveType(typeId: HiveBoxConstant.separatedAudioBoxTypeId)
 class _$SeparatedAudioDataImpl implements _SeparatedAudioData {
   const _$SeparatedAudioDataImpl(
-      {@HiveField(0) required this.vocalsPath,
-      @HiveField(1) required this.drumsPath,
-      @HiveField(2) required this.bassPath,
-      @HiveField(3) required this.guitarPath,
-      @HiveField(4) required this.pianoPath,
-      @HiveField(5) required this.otherPath});
+      {@HiveField(0) this.vocalsPath,
+      @HiveField(1) this.drumsPath,
+      @HiveField(2) this.bassPath,
+      @HiveField(3) this.guitarPath,
+      @HiveField(4) this.pianoPath,
+      @HiveField(5) this.otherPath});
 
   @override
   @HiveField(0)
-  final String vocalsPath;
+  final String? vocalsPath;
   @override
   @HiveField(1)
-  final String drumsPath;
+  final String? drumsPath;
   @override
   @HiveField(2)
-  final String bassPath;
+  final String? bassPath;
   @override
   @HiveField(3)
-  final String guitarPath;
+  final String? guitarPath;
   @override
   @HiveField(4)
-  final String pianoPath;
+  final String? pianoPath;
   @override
   @HiveField(5)
-  final String otherPath;
+  final String? otherPath;
 
   @override
   String toString() {
@@ -239,32 +239,31 @@ class _$SeparatedAudioDataImpl implements _SeparatedAudioData {
 
 abstract class _SeparatedAudioData implements SeparatedAudioData {
   const factory _SeparatedAudioData(
-          {@HiveField(0) required final String vocalsPath,
-          @HiveField(1) required final String drumsPath,
-          @HiveField(2) required final String bassPath,
-          @HiveField(3) required final String guitarPath,
-          @HiveField(4) required final String pianoPath,
-          @HiveField(5) required final String otherPath}) =
-      _$SeparatedAudioDataImpl;
+      {@HiveField(0) final String? vocalsPath,
+      @HiveField(1) final String? drumsPath,
+      @HiveField(2) final String? bassPath,
+      @HiveField(3) final String? guitarPath,
+      @HiveField(4) final String? pianoPath,
+      @HiveField(5) final String? otherPath}) = _$SeparatedAudioDataImpl;
 
   @override
   @HiveField(0)
-  String get vocalsPath;
+  String? get vocalsPath;
   @override
   @HiveField(1)
-  String get drumsPath;
+  String? get drumsPath;
   @override
   @HiveField(2)
-  String get bassPath;
+  String? get bassPath;
   @override
   @HiveField(3)
-  String get guitarPath;
+  String? get guitarPath;
   @override
   @HiveField(4)
-  String get pianoPath;
+  String? get pianoPath;
   @override
   @HiveField(5)
-  String get otherPath;
+  String? get otherPath;
 
   /// Create a copy of SeparatedAudioData
   /// with the given fields replaced by the non-null parameter values.
