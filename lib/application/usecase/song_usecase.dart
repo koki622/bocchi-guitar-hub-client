@@ -1,4 +1,4 @@
-import 'package:bocchi_guitar_hub_client/application/notifier/songs_notifier.dart';
+import 'package:bocchi_guitar_hub_client/application/notifier/songs/songs_notifier.dart';
 import 'package:bocchi_guitar_hub_client/core/enum/job_status.dart';
 import 'package:bocchi_guitar_hub_client/core/enum/process.dart';
 import 'package:bocchi_guitar_hub_client/core/enum/process_step.dart';

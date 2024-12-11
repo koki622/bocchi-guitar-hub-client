@@ -1,27 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'application_module.dart';
+part of 'audio_player_notifier.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$songUsecaseHash() => r'd97c43b78e6affa43c8f21da92d76eeaa03f9ba4';
-
-/// See also [songUsecase].
-@ProviderFor(songUsecase)
-final songUsecaseProvider = AutoDisposeProvider<SongUsecase>.internal(
-  songUsecase,
-  name: r'songUsecaseProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$songUsecaseHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef SongUsecaseRef = AutoDisposeProviderRef<SongUsecase>;
-String _$audioPlayerUsecaseHash() =>
-    r'f11624601a73595b0433fd762b8457e38c566e44';
+String _$audioPlayerHash() => r'9751f9725d6a1927bc5be136b8c98f6a561ff654';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -44,30 +29,33 @@ class _SystemHash {
   }
 }
 
-/// See also [audioPlayerUsecase].
-@ProviderFor(audioPlayerUsecase)
-const audioPlayerUsecaseProvider = AudioPlayerUsecaseFamily();
+/// See also [audioPlayer].
+@ProviderFor(audioPlayer)
+const audioPlayerProvider = AudioPlayerFamily();
 
-/// See also [audioPlayerUsecase].
-class AudioPlayerUsecaseFamily extends Family<AsyncValue<AudioPlayerUsecase>> {
-  /// See also [audioPlayerUsecase].
-  const AudioPlayerUsecaseFamily();
+/// See also [audioPlayer].
+class AudioPlayerFamily extends Family<AsyncValue<AudioPlayerState>> {
+  /// See also [audioPlayer].
+  const AudioPlayerFamily();
 
-  /// See also [audioPlayerUsecase].
-  AudioPlayerUsecaseProvider call(
+  /// See also [audioPlayer].
+  AudioPlayerProvider call(
     Song song,
+    Map<SoundType, double> initVolumes,
   ) {
-    return AudioPlayerUsecaseProvider(
+    return AudioPlayerProvider(
       song,
+      initVolumes,
     );
   }
 
   @override
-  AudioPlayerUsecaseProvider getProviderOverride(
-    covariant AudioPlayerUsecaseProvider provider,
+  AudioPlayerProvider getProviderOverride(
+    covariant AudioPlayerProvider provider,
   ) {
     return call(
       provider.song,
+      provider.initVolumes,
     );
   }
 
@@ -83,33 +71,35 @@ class AudioPlayerUsecaseFamily extends Family<AsyncValue<AudioPlayerUsecase>> {
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'audioPlayerUsecaseProvider';
+  String? get name => r'audioPlayerProvider';
 }
 
-/// See also [audioPlayerUsecase].
-class AudioPlayerUsecaseProvider
-    extends AutoDisposeFutureProvider<AudioPlayerUsecase> {
-  /// See also [audioPlayerUsecase].
-  AudioPlayerUsecaseProvider(
+/// See also [audioPlayer].
+class AudioPlayerProvider extends AutoDisposeFutureProvider<AudioPlayerState> {
+  /// See also [audioPlayer].
+  AudioPlayerProvider(
     Song song,
+    Map<SoundType, double> initVolumes,
   ) : this._internal(
-          (ref) => audioPlayerUsecase(
-            ref as AudioPlayerUsecaseRef,
+          (ref) => audioPlayer(
+            ref as AudioPlayerRef,
             song,
+            initVolumes,
           ),
-          from: audioPlayerUsecaseProvider,
-          name: r'audioPlayerUsecaseProvider',
+          from: audioPlayerProvider,
+          name: r'audioPlayerProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
-                  : _$audioPlayerUsecaseHash,
-          dependencies: AudioPlayerUsecaseFamily._dependencies,
+                  : _$audioPlayerHash,
+          dependencies: AudioPlayerFamily._dependencies,
           allTransitiveDependencies:
-              AudioPlayerUsecaseFamily._allTransitiveDependencies,
+              AudioPlayerFamily._allTransitiveDependencies,
           song: song,
+          initVolumes: initVolumes,
         );
 
-  AudioPlayerUsecaseProvider._internal(
+  AudioPlayerProvider._internal(
     super._createNotifier, {
     required super.name,
     required super.dependencies,
@@ -117,61 +107,71 @@ class AudioPlayerUsecaseProvider
     required super.debugGetCreateSourceHash,
     required super.from,
     required this.song,
+    required this.initVolumes,
   }) : super.internal();
 
   final Song song;
+  final Map<SoundType, double> initVolumes;
 
   @override
   Override overrideWith(
-    FutureOr<AudioPlayerUsecase> Function(AudioPlayerUsecaseRef provider)
-        create,
+    FutureOr<AudioPlayerState> Function(AudioPlayerRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
-      override: AudioPlayerUsecaseProvider._internal(
-        (ref) => create(ref as AudioPlayerUsecaseRef),
+      override: AudioPlayerProvider._internal(
+        (ref) => create(ref as AudioPlayerRef),
         from: from,
         name: null,
         dependencies: null,
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
         song: song,
+        initVolumes: initVolumes,
       ),
     );
   }
 
   @override
-  AutoDisposeFutureProviderElement<AudioPlayerUsecase> createElement() {
-    return _AudioPlayerUsecaseProviderElement(this);
+  AutoDisposeFutureProviderElement<AudioPlayerState> createElement() {
+    return _AudioPlayerProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is AudioPlayerUsecaseProvider && other.song == song;
+    return other is AudioPlayerProvider &&
+        other.song == song &&
+        other.initVolumes == initVolumes;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
     hash = _SystemHash.combine(hash, song.hashCode);
+    hash = _SystemHash.combine(hash, initVolumes.hashCode);
 
     return _SystemHash.finish(hash);
   }
 }
 
-mixin AudioPlayerUsecaseRef
-    on AutoDisposeFutureProviderRef<AudioPlayerUsecase> {
+mixin AudioPlayerRef on AutoDisposeFutureProviderRef<AudioPlayerState> {
   /// The parameter `song` of this provider.
   Song get song;
+
+  /// The parameter `initVolumes` of this provider.
+  Map<SoundType, double> get initVolumes;
 }
 
-class _AudioPlayerUsecaseProviderElement
-    extends AutoDisposeFutureProviderElement<AudioPlayerUsecase>
-    with AudioPlayerUsecaseRef {
-  _AudioPlayerUsecaseProviderElement(super.provider);
+class _AudioPlayerProviderElement
+    extends AutoDisposeFutureProviderElement<AudioPlayerState>
+    with AudioPlayerRef {
+  _AudioPlayerProviderElement(super.provider);
 
   @override
-  Song get song => (origin as AudioPlayerUsecaseProvider).song;
+  Song get song => (origin as AudioPlayerProvider).song;
+  @override
+  Map<SoundType, double> get initVolumes =>
+      (origin as AudioPlayerProvider).initVolumes;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

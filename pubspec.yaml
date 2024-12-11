@@ -58,7 +58,10 @@ dependencies:
   just_audio_windows: ^0.2.2
   audio_session: ^0.1.21
   flutter_soloud: ^2.1.7
-
+  flutter_guitar_chord:
+    path: ./plugins_customized/flutter_guitar_chord-0.0.2
+  go_router: ^14.6.2
+  wakelock_plus: ^1.2.8
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -82,7 +85,8 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-
+  assets:
+    - assets/chords.json
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
