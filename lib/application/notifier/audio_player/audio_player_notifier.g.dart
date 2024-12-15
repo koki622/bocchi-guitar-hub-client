@@ -6,7 +6,7 @@ part of 'audio_player_notifier.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$audioPlayerHash() => r'9751f9725d6a1927bc5be136b8c98f6a561ff654';
+String _$audioPlayerHash() => r'3f22de286b17ef957dc6ade6364006aa825a5bb8';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -41,7 +41,7 @@ class AudioPlayerFamily extends Family<AsyncValue<AudioPlayerState>> {
   /// See also [audioPlayer].
   AudioPlayerProvider call(
     Song song,
-    Map<SoundType, double> initVolumes,
+    Map<SoundType, PlaybackVolumeState> initVolumes,
   ) {
     return AudioPlayerProvider(
       song,
@@ -79,7 +79,7 @@ class AudioPlayerProvider extends AutoDisposeFutureProvider<AudioPlayerState> {
   /// See also [audioPlayer].
   AudioPlayerProvider(
     Song song,
-    Map<SoundType, double> initVolumes,
+    Map<SoundType, PlaybackVolumeState> initVolumes,
   ) : this._internal(
           (ref) => audioPlayer(
             ref as AudioPlayerRef,
@@ -111,7 +111,7 @@ class AudioPlayerProvider extends AutoDisposeFutureProvider<AudioPlayerState> {
   }) : super.internal();
 
   final Song song;
-  final Map<SoundType, double> initVolumes;
+  final Map<SoundType, PlaybackVolumeState> initVolumes;
 
   @override
   Override overrideWith(
@@ -159,7 +159,7 @@ mixin AudioPlayerRef on AutoDisposeFutureProviderRef<AudioPlayerState> {
   Song get song;
 
   /// The parameter `initVolumes` of this provider.
-  Map<SoundType, double> get initVolumes;
+  Map<SoundType, PlaybackVolumeState> get initVolumes;
 }
 
 class _AudioPlayerProviderElement
@@ -170,7 +170,7 @@ class _AudioPlayerProviderElement
   @override
   Song get song => (origin as AudioPlayerProvider).song;
   @override
-  Map<SoundType, double> get initVolumes =>
+  Map<SoundType, PlaybackVolumeState> get initVolumes =>
       (origin as AudioPlayerProvider).initVolumes;
 }
 // ignore_for_file: type=lint

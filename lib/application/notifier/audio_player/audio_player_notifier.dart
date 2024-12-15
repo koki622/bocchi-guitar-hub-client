@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:bocchi_guitar_hub_client/application/notifier/audio_player/playback_volume_notifier.dart';
 import 'package:bocchi_guitar_hub_client/domain/entity/song/song.dart';
 import 'package:bocchi_guitar_hub_client/domain/entity/song_elements/beat/click_sound.dart';
 import 'package:bocchi_guitar_hub_client/domain/entity/song_elements/chord/chord_sound.dart';
@@ -25,7 +26,7 @@ class AudioPlayerState {
 
 @riverpod
 Future<AudioPlayerState> audioPlayer(
-    Ref ref, Song song, Map<SoundType, double> initVolumes) async {
+    Ref ref, Song song, Map<SoundType, PlaybackVolumeState> initVolumes) async {
   final soloud = SoLoud.instance;
 
   await soloud.init(bufferSize: 512);
@@ -48,21 +49,8 @@ Future<AudioPlayerState> audioPlayer(
   final totalDuration =
       soloud.getLength(soundState.audioSources[SoundType.vocals]!);
 
-  /**
-   * 
-  StreamSubscription subscription = soundState
-      .audioSources[SoundType.vocals]!.soundEvents
-      .listen((eventResult) {
-    if (eventResult.event == SoundEventType.handleIsNoMoreValid) {
-      soloud.destroyVoiceGroup(soundState.groupHandle);
-      soundState.preparePlay(soloudInstance: soloud, initVolumes: initVolumes);
-    }
-  });
-   */
-
   // dispose処理
   ref.onDispose(() {
-    //subscription.cancel();
     soloud.disposeAllSources();
   });
 
@@ -97,7 +85,7 @@ class SoundState {
     ClickSound clickSound,
     ChordSound chordSound,
     SoLoud soloudInstance,
-    Map<SoundType, double> initVolumes,
+    Map<SoundType, PlaybackVolumeState> initVolumes,
   ) async {
     // 全ての音声をロード
     audioSources = {
@@ -125,12 +113,15 @@ class SoundState {
 
   Future<void> _preparePlay(
       {required SoLoud soloudInstance,
-      required Map<SoundType, double> initVolumes}) async {
+      required Map<SoundType, PlaybackVolumeState> initVolumes}) async {
     for (var entry in audioSources.entries) {
       final soundType = entry.key;
       final audioSource = entry.value;
+      final playbackVolumeState = initVolumes[soundType]!;
       soundHandles[soundType] = await soloudInstance.play(audioSource,
-          volume: initVolumes[soundType]!, paused: true);
+          volume:
+              playbackVolumeState.isSoundOn ? playbackVolumeState.volume : 0.0,
+          paused: true);
     }
 
     // ボイスグループを作成
@@ -140,7 +131,7 @@ class SoundState {
 
   Future<void> resetPlayer(
       {required SoLoud soloudInstance,
-      required Map<SoundType, double> initVolumes}) async {
+      required Map<SoundType, PlaybackVolumeState> initVolumes}) async {
     soloudInstance.destroyVoiceGroup(groupHandle);
     await _preparePlay(
         soloudInstance: soloudInstance, initVolumes: initVolumes);

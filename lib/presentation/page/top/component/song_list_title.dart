@@ -1,5 +1,5 @@
 import 'package:bocchi_guitar_hub_client/application/notifier/song_elements/song_elements_notifier.dart';
-import 'package:bocchi_guitar_hub_client/application/notifier/songs/selected_song.dart';
+import 'package:bocchi_guitar_hub_client/presentation/notifier/selected_song.dart';
 import 'package:bocchi_guitar_hub_client/core/constant/text/process.dart';
 import 'package:bocchi_guitar_hub_client/core/enum/process_status.dart';
 import 'package:bocchi_guitar_hub_client/core/enum/process_step.dart';

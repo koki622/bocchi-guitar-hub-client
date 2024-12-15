@@ -31,7 +31,7 @@ Future<AudioPlayerUsecase> audioPlayerUsecase(Ref ref, Song song) async {
       ref.watch(playbackPositionNotifierProvider.notifier);
   final playbackVolumeNotifier =
       ref.watch(playbackVolumeNotifierProvider.notifier);
-  final initVolumes = playbackVolumeNotifier.currentVolumes;
+  final initVolumes = playbackVolumeNotifier.currentStates;
   final audioPlayer =
       await ref.watch(audioPlayerProvider(song, initVolumes).future);
   final usecase = AudioPlayerUsecase(audioPlayer, playbackStateNotifier,

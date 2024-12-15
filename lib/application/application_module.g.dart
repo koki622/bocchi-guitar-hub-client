@@ -21,7 +21,7 @@ final songUsecaseProvider = AutoDisposeProvider<SongUsecase>.internal(
 
 typedef SongUsecaseRef = AutoDisposeProviderRef<SongUsecase>;
 String _$audioPlayerUsecaseHash() =>
-    r'f11624601a73595b0433fd762b8457e38c566e44';
+    r'b9fac63f3d8cff1f005c27de2e67bace68850546';
 
 /// Copied from Dart SDK
 class _SystemHash {

@@ -61,6 +61,19 @@ class AudioPlayerUsecase {
         .pauseSwitch(_audioPlayerState.soundState.groupHandle);
   }
 
+  void toggleSoundOn(SoundType soundType) {
+    final soloud = _audioPlayerState.soloud;
+    final handle = _audioPlayerState.soundState.soundHandles[soundType]!;
+    bool isSoundOn = _playbackVolumeNotifier.isSoundOn(soundType);
+
+    if (isSoundOn) {
+      soloud.setVolume(handle, 0.0);
+    } else {
+      soloud.setVolume(handle, _playbackVolumeNotifier.getVolume(soundType));
+    }
+    _playbackVolumeNotifier.toggleSoundOn(soundType);
+  }
+
   void setVolume(SoundType soundType, double volume) {
     _playbackVolumeNotifier.setVolume(soundType, volume);
     _audioPlayerState.soloud.setVolume(
@@ -90,6 +103,36 @@ class AudioPlayerUsecase {
     }
   }
 
+  void seekForward(Duration timeForward) {
+    final Duration newPosition = _calculateNewPosition(timeForward, true);
+    seek(newPosition);
+  }
+
+  void seekRewind(Duration timeRewind) {
+    final Duration newPosition = _calculateNewPosition(timeRewind, false);
+    seek(newPosition);
+  }
+
+  Duration _calculateNewPosition(Duration time, bool isForward) {
+    final SoLoud soloud = _audioPlayerState.soloud;
+    final Duration currentPosition =
+        soloud.getPosition(_audioPlayerState.soundState.groupHandle);
+    final Duration totalDuration = _audioPlayerState.totalDuration;
+    Duration newPosition;
+    if (isForward) {
+      newPosition = currentPosition + time;
+      if (newPosition > totalDuration) {
+        newPosition = totalDuration;
+      }
+    } else {
+      newPosition = currentPosition - time;
+      if (newPosition < Duration.zero) {
+        newPosition = Duration.zero;
+      }
+    }
+    return newPosition;
+  }
+
   // サウンドイベントのサブスクリプションを設定
   StreamSubscription _setupSoundEventSubscription() {
     return _audioPlayerState
@@ -108,7 +151,7 @@ class AudioPlayerUsecase {
     // handle等をリセット
     await _audioPlayerState.soundState.resetPlayer(
         soloudInstance: soloud,
-        initVolumes: _playbackVolumeNotifier.previousVolumes!);
+        initVolumes: _playbackVolumeNotifier.currentStates);
     // 一時停止にする
     _playbackStateNotifier.togglePlayPause(true);
     _playbackPositionNotifier.stopPositionTracking();

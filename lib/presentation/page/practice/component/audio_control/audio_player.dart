@@ -1,7 +1,9 @@
 import 'package:bocchi_guitar_hub_client/application/application_module.dart';
+import 'package:bocchi_guitar_hub_client/application/notifier/audio_player/audio_player_notifier.dart';
 import 'package:bocchi_guitar_hub_client/application/notifier/audio_player/playback_notifier.dart';
 import 'package:bocchi_guitar_hub_client/application/notifier/audio_player/playback_position_notifier.dart';
-import 'package:bocchi_guitar_hub_client/application/notifier/songs/selected_song.dart';
+import 'package:bocchi_guitar_hub_client/application/notifier/audio_player/playback_volume_notifier.dart';
+import 'package:bocchi_guitar_hub_client/presentation/notifier/selected_song.dart';
 import 'package:bocchi_guitar_hub_client/application/usecase/audio_player_usecase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -37,6 +39,12 @@ class AudioPlayer extends ConsumerWidget {
       children: [
         PlaybackControl(audioPlayerUsecase: state),
         SeekBar(audioPlayerUsecase: state),
+        VolumeBar(audioPlayerUsecase: state, soundType: SoundType.vocals),
+        VolumeBar(audioPlayerUsecase: state, soundType: SoundType.drums),
+        VolumeBar(audioPlayerUsecase: state, soundType: SoundType.bass),
+        VolumeBar(audioPlayerUsecase: state, soundType: SoundType.guitar),
+        VolumeBar(audioPlayerUsecase: state, soundType: SoundType.piano),
+        VolumeBar(audioPlayerUsecase: state, soundType: SoundType.other)
       ],
     );
   }
@@ -113,6 +121,51 @@ class SeekBar extends ConsumerWidget {
             ],
           ),
         ),
+      ],
+    );
+  }
+}
+
+class VolumeBar extends ConsumerWidget {
+  final AudioPlayerUsecase audioPlayerUsecase;
+  final SoundType soundType;
+
+  const VolumeBar(
+      {super.key, required this.audioPlayerUsecase, required this.soundType});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final playbackVolumeState = ref.watch(
+        playbackVolumeNotifierProvider.select((value) => value[soundType]));
+    final isSoundOn = playbackVolumeState!.isSoundOn;
+    final volume = playbackVolumeState.volume;
+    return Column(
+      children: [
+        Text(soundType.name),
+        Row(
+          children: [
+            IconButton(
+              icon: isSoundOn
+                  ? const Icon(Icons.volume_up)
+                  : const Icon(Icons.volume_off),
+              onPressed: () {
+                audioPlayerUsecase.toggleSoundOn(soundType);
+              },
+            ),
+            Expanded(
+                child: Slider(
+              min: 0.0,
+              max: 1.0,
+              value: volume,
+              onChanged: isSoundOn
+                  ? (newVolume) {
+                      audioPlayerUsecase.setVolume(soundType, newVolume);
+                    }
+                  : null,
+              label: '音量',
+            ))
+          ],
+        )
       ],
     );
   }

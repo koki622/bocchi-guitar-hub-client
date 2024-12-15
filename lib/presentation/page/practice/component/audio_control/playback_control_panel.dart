@@ -1,0 +1,126 @@
+import 'package:bocchi_guitar_hub_client/application/notifier/audio_player/playback_notifier.dart';
+import 'package:bocchi_guitar_hub_client/application/notifier/audio_player/playback_position_notifier.dart';
+import 'package:bocchi_guitar_hub_client/application/usecase/audio_player_usecase.dart';
+import 'package:bocchi_guitar_hub_client/core/constant/size.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+class PlaybackControlPanel extends StatelessWidget {
+  final AudioPlayerUsecase audioPlayerUsecase;
+
+  const PlaybackControlPanel({super.key, required this.audioPlayerUsecase});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        SeekBar(
+          audioPlayerUsecase: audioPlayerUsecase,
+        ),
+        PlaybackControl(audioPlayerUsecase: audioPlayerUsecase),
+      ],
+    );
+  }
+}
+
+class PlaybackControl extends ConsumerWidget {
+  final AudioPlayerUsecase audioPlayerUsecase;
+
+  const PlaybackControl({super.key, required this.audioPlayerUsecase});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isPlaying = ref.watch(playbackStateNotifierProvider);
+    final double iconSize = Sizes.iconLarge(context);
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        IconButton(
+          icon: Icon(
+            Icons.fast_rewind,
+            size: iconSize,
+          ),
+          onPressed: () {
+            audioPlayerUsecase.seekRewind(Duration(seconds: 10));
+          },
+        ),
+        IconButton(
+          icon: Icon(
+            isPlaying ? Icons.pause_circle_filled : Icons.play_circle_filled,
+            size: iconSize,
+          ),
+          onPressed: () {
+            audioPlayerUsecase.togglePlayPause();
+          },
+        ),
+        IconButton(
+          icon: Icon(
+            Icons.fast_forward,
+            size: iconSize,
+          ),
+          onPressed: () {
+            audioPlayerUsecase.seekForward(Duration(seconds: 10));
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class SeekBar extends ConsumerWidget {
+  final AudioPlayerUsecase audioPlayerUsecase;
+
+  const SeekBar({super.key, required this.audioPlayerUsecase});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final position = ref.watch(playbackPositionNotifierProvider);
+    final double fontSize = Sizes.fontSmall(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0), // スライダーの左右の余白
+          child: Slider(
+            min: 0,
+            max:
+                audioPlayerUsecase.getTotalDuration().inMilliseconds.toDouble(),
+            value: position.inMilliseconds.toDouble(),
+            onChanged: (value) {
+              if (audioPlayerUsecase.isPlaying()) {
+                audioPlayerUsecase.stopPositionTracking();
+              }
+              audioPlayerUsecase
+                  .updatePosition(Duration(milliseconds: value.toInt()));
+            },
+            onChangeEnd: (value) {
+              if (audioPlayerUsecase.isPlaying() &&
+                  !audioPlayerUsecase.isStartPositionTracking()) {
+                audioPlayerUsecase.startPositionTracking();
+              }
+              audioPlayerUsecase.seek(Duration(milliseconds: value.toInt()));
+            },
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                '${position.inMilliseconds} ミリ秒',
+                style:
+                    TextStyle(fontSize: fontSize, fontWeight: FontWeight.w500),
+              ),
+              Text(
+                '${audioPlayerUsecase.getTotalDuration().inMilliseconds - position.inMilliseconds} ミリ秒',
+                style:
+                    TextStyle(fontSize: fontSize, fontWeight: FontWeight.w500),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
