@@ -18,6 +18,10 @@ class Sizes {
   static double iconLarge(BuildContext context) =>
       _getSize(context, 42, 46, 50);
 
+  // ページビューで表示する範囲
+  static double viewportFraction(BuildContext context) =>
+      _getSize(context, 0.5, 0.3, 0.2);
+
   static double _getSize(
       BuildContext context, double mobile, double tablet, double desktop) {
     final deviceType = ResponsiveBreakpoints.getDeviceType(context);

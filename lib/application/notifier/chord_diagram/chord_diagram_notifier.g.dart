@@ -28,8 +28,8 @@ Map<String, dynamic> _$$ChordDiagramInfoImplToJson(
 // RiverpodGenerator
 // **************************************************************************
 
-String _$chordDiagramNotifierHash() =>
-    r'33bf8e42dc86926fa4df1710b57462668bb2d488';
+String _$chordChangeNotifierHash() =>
+    r'd9dcabac66fe419f5138b432e4cc62400b724645';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -51,6 +51,152 @@ class _SystemHash {
     return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
   }
 }
+
+abstract class _$ChordChangeNotifier
+    extends BuildlessAutoDisposeNotifier<Map<ChordTimeRange, int>> {
+  late final List<Chord> chords;
+
+  Map<ChordTimeRange, int> build(
+    List<Chord> chords,
+  );
+}
+
+/// See also [ChordChangeNotifier].
+@ProviderFor(ChordChangeNotifier)
+const chordChangeNotifierProvider = ChordChangeNotifierFamily();
+
+/// See also [ChordChangeNotifier].
+class ChordChangeNotifierFamily extends Family<Map<ChordTimeRange, int>> {
+  /// See also [ChordChangeNotifier].
+  const ChordChangeNotifierFamily();
+
+  /// See also [ChordChangeNotifier].
+  ChordChangeNotifierProvider call(
+    List<Chord> chords,
+  ) {
+    return ChordChangeNotifierProvider(
+      chords,
+    );
+  }
+
+  @override
+  ChordChangeNotifierProvider getProviderOverride(
+    covariant ChordChangeNotifierProvider provider,
+  ) {
+    return call(
+      provider.chords,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'chordChangeNotifierProvider';
+}
+
+/// See also [ChordChangeNotifier].
+class ChordChangeNotifierProvider extends AutoDisposeNotifierProviderImpl<
+    ChordChangeNotifier, Map<ChordTimeRange, int>> {
+  /// See also [ChordChangeNotifier].
+  ChordChangeNotifierProvider(
+    List<Chord> chords,
+  ) : this._internal(
+          () => ChordChangeNotifier()..chords = chords,
+          from: chordChangeNotifierProvider,
+          name: r'chordChangeNotifierProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$chordChangeNotifierHash,
+          dependencies: ChordChangeNotifierFamily._dependencies,
+          allTransitiveDependencies:
+              ChordChangeNotifierFamily._allTransitiveDependencies,
+          chords: chords,
+        );
+
+  ChordChangeNotifierProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.chords,
+  }) : super.internal();
+
+  final List<Chord> chords;
+
+  @override
+  Map<ChordTimeRange, int> runNotifierBuild(
+    covariant ChordChangeNotifier notifier,
+  ) {
+    return notifier.build(
+      chords,
+    );
+  }
+
+  @override
+  Override overrideWith(ChordChangeNotifier Function() create) {
+    return ProviderOverride(
+      origin: this,
+      override: ChordChangeNotifierProvider._internal(
+        () => create()..chords = chords,
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        chords: chords,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeNotifierProviderElement<ChordChangeNotifier,
+      Map<ChordTimeRange, int>> createElement() {
+    return _ChordChangeNotifierProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ChordChangeNotifierProvider && other.chords == chords;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, chords.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin ChordChangeNotifierRef
+    on AutoDisposeNotifierProviderRef<Map<ChordTimeRange, int>> {
+  /// The parameter `chords` of this provider.
+  List<Chord> get chords;
+}
+
+class _ChordChangeNotifierProviderElement
+    extends AutoDisposeNotifierProviderElement<ChordChangeNotifier,
+        Map<ChordTimeRange, int>> with ChordChangeNotifierRef {
+  _ChordChangeNotifierProviderElement(super.provider);
+
+  @override
+  List<Chord> get chords => (origin as ChordChangeNotifierProvider).chords;
+}
+
+String _$chordDiagramNotifierHash() =>
+    r'676af618e0efc3db16021ebaec1b935d414dc6d2';
 
 abstract class _$ChordDiagramNotifier
     extends BuildlessAutoDisposeAsyncNotifier<List<ChordDiagramState>> {

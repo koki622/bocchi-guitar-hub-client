@@ -16,10 +16,9 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$ChordDiagramState {
+  String get chordName => throw _privateConstructorUsedError;
   FlutterGuitarChord get flutterGuitarChord =>
       throw _privateConstructorUsedError;
-  Duration get startTime => throw _privateConstructorUsedError;
-  Duration get endTime => throw _privateConstructorUsedError;
 
   /// Create a copy of ChordDiagramState
   /// with the given fields replaced by the non-null parameter values.
@@ -34,10 +33,7 @@ abstract class $ChordDiagramStateCopyWith<$Res> {
           ChordDiagramState value, $Res Function(ChordDiagramState) then) =
       _$ChordDiagramStateCopyWithImpl<$Res, ChordDiagramState>;
   @useResult
-  $Res call(
-      {FlutterGuitarChord flutterGuitarChord,
-      Duration startTime,
-      Duration endTime});
+  $Res call({String chordName, FlutterGuitarChord flutterGuitarChord});
 }
 
 /// @nodoc
@@ -55,23 +51,18 @@ class _$ChordDiagramStateCopyWithImpl<$Res, $Val extends ChordDiagramState>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? chordName = null,
     Object? flutterGuitarChord = null,
-    Object? startTime = null,
-    Object? endTime = null,
   }) {
     return _then(_value.copyWith(
+      chordName: null == chordName
+          ? _value.chordName
+          : chordName // ignore: cast_nullable_to_non_nullable
+              as String,
       flutterGuitarChord: null == flutterGuitarChord
           ? _value.flutterGuitarChord
           : flutterGuitarChord // ignore: cast_nullable_to_non_nullable
               as FlutterGuitarChord,
-      startTime: null == startTime
-          ? _value.startTime
-          : startTime // ignore: cast_nullable_to_non_nullable
-              as Duration,
-      endTime: null == endTime
-          ? _value.endTime
-          : endTime // ignore: cast_nullable_to_non_nullable
-              as Duration,
     ) as $Val);
   }
 }
@@ -84,10 +75,7 @@ abstract class _$$ChordDiagramStateImplCopyWith<$Res>
       __$$ChordDiagramStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {FlutterGuitarChord flutterGuitarChord,
-      Duration startTime,
-      Duration endTime});
+  $Res call({String chordName, FlutterGuitarChord flutterGuitarChord});
 }
 
 /// @nodoc
@@ -103,23 +91,18 @@ class __$$ChordDiagramStateImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? chordName = null,
     Object? flutterGuitarChord = null,
-    Object? startTime = null,
-    Object? endTime = null,
   }) {
     return _then(_$ChordDiagramStateImpl(
+      chordName: null == chordName
+          ? _value.chordName
+          : chordName // ignore: cast_nullable_to_non_nullable
+              as String,
       flutterGuitarChord: null == flutterGuitarChord
           ? _value.flutterGuitarChord
           : flutterGuitarChord // ignore: cast_nullable_to_non_nullable
               as FlutterGuitarChord,
-      startTime: null == startTime
-          ? _value.startTime
-          : startTime // ignore: cast_nullable_to_non_nullable
-              as Duration,
-      endTime: null == endTime
-          ? _value.endTime
-          : endTime // ignore: cast_nullable_to_non_nullable
-              as Duration,
     ));
   }
 }
@@ -128,20 +111,16 @@ class __$$ChordDiagramStateImplCopyWithImpl<$Res>
 
 class _$ChordDiagramStateImpl implements _ChordDiagramState {
   _$ChordDiagramStateImpl(
-      {required this.flutterGuitarChord,
-      required this.startTime,
-      required this.endTime});
+      {required this.chordName, required this.flutterGuitarChord});
 
   @override
+  final String chordName;
+  @override
   final FlutterGuitarChord flutterGuitarChord;
-  @override
-  final Duration startTime;
-  @override
-  final Duration endTime;
 
   @override
   String toString() {
-    return 'ChordDiagramState(flutterGuitarChord: $flutterGuitarChord, startTime: $startTime, endTime: $endTime)';
+    return 'ChordDiagramState(chordName: $chordName, flutterGuitarChord: $flutterGuitarChord)';
   }
 
   @override
@@ -149,16 +128,14 @@ class _$ChordDiagramStateImpl implements _ChordDiagramState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ChordDiagramStateImpl &&
+            (identical(other.chordName, chordName) ||
+                other.chordName == chordName) &&
             (identical(other.flutterGuitarChord, flutterGuitarChord) ||
-                other.flutterGuitarChord == flutterGuitarChord) &&
-            (identical(other.startTime, startTime) ||
-                other.startTime == startTime) &&
-            (identical(other.endTime, endTime) || other.endTime == endTime));
+                other.flutterGuitarChord == flutterGuitarChord));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, flutterGuitarChord, startTime, endTime);
+  int get hashCode => Object.hash(runtimeType, chordName, flutterGuitarChord);
 
   /// Create a copy of ChordDiagramState
   /// with the given fields replaced by the non-null parameter values.
@@ -172,16 +149,14 @@ class _$ChordDiagramStateImpl implements _ChordDiagramState {
 
 abstract class _ChordDiagramState implements ChordDiagramState {
   factory _ChordDiagramState(
-      {required final FlutterGuitarChord flutterGuitarChord,
-      required final Duration startTime,
-      required final Duration endTime}) = _$ChordDiagramStateImpl;
+          {required final String chordName,
+          required final FlutterGuitarChord flutterGuitarChord}) =
+      _$ChordDiagramStateImpl;
 
   @override
+  String get chordName;
+  @override
   FlutterGuitarChord get flutterGuitarChord;
-  @override
-  Duration get startTime;
-  @override
-  Duration get endTime;
 
   /// Create a copy of ChordDiagramState
   /// with the given fields replaced by the non-null parameter values.

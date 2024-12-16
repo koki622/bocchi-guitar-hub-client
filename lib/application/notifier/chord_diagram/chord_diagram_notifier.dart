@@ -12,9 +12,8 @@ part 'chord_diagram_notifier.freezed.dart';
 @freezed
 class ChordDiagramState with _$ChordDiagramState {
   factory ChordDiagramState({
+    required String chordName,
     required FlutterGuitarChord flutterGuitarChord,
-    required Duration startTime,
-    required Duration endTime,
   }) = _ChordDiagramState;
 }
 
@@ -55,6 +54,43 @@ class ChordDiagramInfoCollection with _$ChordDiagramInfoCollection {
       rethrow;
     }
   }
+}
+
+class ChordTimeRange {
+  final Duration startTime;
+  final Duration endTime;
+
+  ChordTimeRange(this.startTime, this.endTime);
+
+  // 再生時間がこの範囲内かを確認する
+  bool contains(Duration time) {
+    return time >= startTime && time <= endTime;
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (other is ChordTimeRange) {
+      return startTime == other.startTime && endTime == other.endTime;
+    }
+    return false;
+  }
+
+  @override
+  int get hashCode => startTime.hashCode ^ endTime.hashCode;
+}
+
+@riverpod
+class ChordChangeNotifier extends _$ChordChangeNotifier {
+  @override
+  Map<ChordTimeRange, int> build(List<Chord> chords) {
+    return {
+      for (var (index, chord) in chords.indexed)
+        ChordTimeRange(Duration(seconds: chord.time.toInt()),
+            Duration(seconds: (chord.time + chord.duration).toInt())): index
+    };
+  }
+
+  Map<ChordTimeRange, int> get getState => state;
 }
 
 @riverpod
@@ -106,9 +142,9 @@ class ChordDiagramNotifier extends _$ChordDiagramNotifier {
         }
       }
       chordDiagramStates.add(ChordDiagramState(
-          flutterGuitarChord: flutterGuitarChord,
-          startTime: Duration(seconds: chord.time.toInt()),
-          endTime: Duration(seconds: (chord.time + chord.duration).toInt())));
+        chordName: chord.chord,
+        flutterGuitarChord: flutterGuitarChord,
+      ));
     }
     return chordDiagramStates;
   }

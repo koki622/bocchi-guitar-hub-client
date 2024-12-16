@@ -173,5 +173,139 @@ class _AudioPlayerUsecaseProviderElement
   @override
   Song get song => (origin as AudioPlayerUsecaseProvider).song;
 }
+
+String _$chordDiagramUsecaseHash() =>
+    r'936279ba9d992fa84f7c7e66cdb10fc71f370b13';
+
+/// See also [chordDiagramUsecase].
+@ProviderFor(chordDiagramUsecase)
+const chordDiagramUsecaseProvider = ChordDiagramUsecaseFamily();
+
+/// See also [chordDiagramUsecase].
+class ChordDiagramUsecaseFamily
+    extends Family<AsyncValue<ChordDiagramUsecase>> {
+  /// See also [chordDiagramUsecase].
+  const ChordDiagramUsecaseFamily();
+
+  /// See also [chordDiagramUsecase].
+  ChordDiagramUsecaseProvider call(
+    Song song,
+  ) {
+    return ChordDiagramUsecaseProvider(
+      song,
+    );
+  }
+
+  @override
+  ChordDiagramUsecaseProvider getProviderOverride(
+    covariant ChordDiagramUsecaseProvider provider,
+  ) {
+    return call(
+      provider.song,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'chordDiagramUsecaseProvider';
+}
+
+/// See also [chordDiagramUsecase].
+class ChordDiagramUsecaseProvider
+    extends AutoDisposeFutureProvider<ChordDiagramUsecase> {
+  /// See also [chordDiagramUsecase].
+  ChordDiagramUsecaseProvider(
+    Song song,
+  ) : this._internal(
+          (ref) => chordDiagramUsecase(
+            ref as ChordDiagramUsecaseRef,
+            song,
+          ),
+          from: chordDiagramUsecaseProvider,
+          name: r'chordDiagramUsecaseProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$chordDiagramUsecaseHash,
+          dependencies: ChordDiagramUsecaseFamily._dependencies,
+          allTransitiveDependencies:
+              ChordDiagramUsecaseFamily._allTransitiveDependencies,
+          song: song,
+        );
+
+  ChordDiagramUsecaseProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.song,
+  }) : super.internal();
+
+  final Song song;
+
+  @override
+  Override overrideWith(
+    FutureOr<ChordDiagramUsecase> Function(ChordDiagramUsecaseRef provider)
+        create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: ChordDiagramUsecaseProvider._internal(
+        (ref) => create(ref as ChordDiagramUsecaseRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        song: song,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<ChordDiagramUsecase> createElement() {
+    return _ChordDiagramUsecaseProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ChordDiagramUsecaseProvider && other.song == song;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, song.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin ChordDiagramUsecaseRef
+    on AutoDisposeFutureProviderRef<ChordDiagramUsecase> {
+  /// The parameter `song` of this provider.
+  Song get song;
+}
+
+class _ChordDiagramUsecaseProviderElement
+    extends AutoDisposeFutureProviderElement<ChordDiagramUsecase>
+    with ChordDiagramUsecaseRef {
+  _ChordDiagramUsecaseProviderElement(super.provider);
+
+  @override
+  Song get song => (origin as ChordDiagramUsecaseProvider).song;
+}
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

@@ -77,10 +77,13 @@ class PracticePage extends ConsumerWidget {
         break;
       }
     }
+
     return switch (selectedTab) {
       SelectedTabType.volumeMixer =>
         VolumeControlPanel(audioPlayerUsecase: state),
-      SelectedTabType.guide => ChordPanel(song: song),
+      SelectedTabType.guide => ChordPanel(
+          song: song,
+        ),
       _ => const Center(child: Text("Unknown Tab")), // デフォルトケース
     };
   }

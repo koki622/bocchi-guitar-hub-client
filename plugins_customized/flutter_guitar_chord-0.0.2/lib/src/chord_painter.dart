@@ -56,6 +56,9 @@ class ChordPainter extends CustomPainter {
     double drawAreaWidth = canvasSize - _margin * 2;
     double drawAreaHeight = canvasSize - _margin * 2;
 
+    //double drawAreaWidth = 200;
+    //double drawAreaHeight = 200;
+
     // スケーリングの計算
     _stringGap = (drawAreaHeight / (totalString - 1)) -
         (stringStroke / 2 / (totalString - 1));
