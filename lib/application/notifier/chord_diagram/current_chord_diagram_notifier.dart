@@ -6,12 +6,11 @@ part 'current_chord_diagram_notifier.g.dart';
 
 @riverpod
 class CurrentChordDiagramNotifier extends _$CurrentChordDiagramNotifier {
-  bool _isFirst = true;
   @override
   int build(Map<ChordTimeRange, int> chordChange) {
-    final currentPosition = ref.watch(playbackPositionNotifierProvider);
+    final currentPosition = ref.read(playbackPositionNotifierProvider);
     final currentIndex = _findCurrentIndex(chordChange, currentPosition);
-
+    _listenPosition();
     return currentIndex ?? 0;
   }
 
@@ -19,6 +18,17 @@ class CurrentChordDiagramNotifier extends _$CurrentChordDiagramNotifier {
     state = newIndex;
   }
 
+  // 再生位置を監視する
+  void _listenPosition() {
+    ref.listen<Duration>(playbackPositionNotifierProvider, (previous, next) {
+      final currentIndex = _findCurrentIndex(chordChange, next);
+      if (currentIndex != state) {
+        state = currentIndex ?? 0;
+      }
+    });
+  }
+
+  // 現在の再生位置に一致するコードダイアグラムのインデックスを検索する
   int? _findCurrentIndex(
       Map<ChordTimeRange, int> chordChange, Duration currentPosition) {
     int? currentIndex;

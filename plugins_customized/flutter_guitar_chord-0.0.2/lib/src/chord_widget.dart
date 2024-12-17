@@ -58,7 +58,9 @@ class FlutterGuitarChord extends StatelessWidget {
   final Color labelColor;
 
   /// Status to show label
-  final bool showLabel;
+  final bool showFretLabel;
+
+  final bool showChordLabel;
 
   const FlutterGuitarChord({
     Key? key,
@@ -77,7 +79,8 @@ class FlutterGuitarChord extends StatelessWidget {
     this.tabBackgroundColor = const Color(0xff000000),
     this.tabForegroundColor = const Color(0xffffffff),
     this.labelColor = const Color(0xff000000),
-    this.showLabel = true,
+    this.showFretLabel = false,
+    this.showChordLabel = false,
   }) : super(key: key);
 
   @override
@@ -85,7 +88,6 @@ class FlutterGuitarChord extends StatelessWidget {
     return CustomPaint(
       size: MediaQuery.of(context).size,
       painter: ChordPainter(
-        baseFret: baseFret,
         frets: frets,
         fingers: fingers,
         chordName: chordName,
@@ -100,6 +102,8 @@ class FlutterGuitarChord extends StatelessWidget {
         stringColor: stringColor,
         tabBackgroundColor: tabBackgroundColor,
         tabForegroundColor: tabForegroundColor,
+        showFretLabel: showFretLabel,
+        showChordLabel: showChordLabel,
       ),
     );
   }

@@ -7,7 +7,6 @@ class ChordPainter extends CustomPainter {
   final String frets;
   final String fingers;
   final String chordName;
-  final int baseFret;
   final double fingerSize;
   final int totalString;
   final int bar;
@@ -19,6 +18,14 @@ class ChordPainter extends CustomPainter {
   final Color tabBackgroundColor;
   final Color tabForegroundColor;
   final Color labelColor;
+  final bool showFretLabel;
+  final bool showChordLabel;
+  static const fingeringsMap = {
+    '1': '人',
+    '2': '中',
+    '3': '薬',
+    '4': '小',
+  };
 
   ChordPainter({
     required this.fingerSize,
@@ -27,7 +34,6 @@ class ChordPainter extends CustomPainter {
     required this.stringStroke,
     required this.barStroke,
     required this.firstFrameStroke,
-    required this.baseFret,
     required this.frets,
     required this.fingers,
     required this.chordName,
@@ -36,6 +42,8 @@ class ChordPainter extends CustomPainter {
     required this.tabBackgroundColor,
     required this.tabForegroundColor,
     required this.labelColor,
+    required this.showFretLabel,
+    required this.showChordLabel,
   })  : _stringsList = frets.split(' '),
         _fingeringList = fingers.split(' ') {
     assert(_stringsList.length == totalString);
@@ -43,21 +51,22 @@ class ChordPainter extends CustomPainter {
   }
 
   final double _margin = 30;
+  late int _baseFret;
   late double _stringGap;
   late double _barGap;
   final List<String> _stringsList, _fingeringList;
 
   @override
   void paint(Canvas canvas, Size size) {
+    // 先頭のフレットを求める
+    _baseFret = _calculateBaseFret();
+
     // Canvasのサイズを取得してスケーリング計算を行う
     double canvasSize = min(size.width, size.height);
 
     // 描画領域を正方形に調整
     double drawAreaWidth = canvasSize - _margin * 2;
     double drawAreaHeight = canvasSize - _margin * 2;
-
-    //double drawAreaWidth = 200;
-    //double drawAreaHeight = 200;
 
     // スケーリングの計算
     _stringGap = (drawAreaHeight / (totalString - 1)) -
@@ -69,6 +78,48 @@ class ChordPainter extends CustomPainter {
     double fontSize = canvasSize * 0.05; // キャンバスサイズの5%を文字サイズに設定
 
     // 弦の描画（縦方向、1弦が上、6弦が下）
+    _renderStrings(canvas, paint, drawAreaWidth);
+
+    // フレットの描画（横方向）
+    _renderFrets(canvas, paint, drawAreaHeight);
+
+    int firstBarNumber = 99;
+    for (String i in _stringsList) {
+      if (i == '-1' || i == '0') continue;
+      firstBarNumber = min<int>(firstBarNumber, int.parse(i));
+    }
+
+    // ミュート、開放弦、フレット番号などのラベルを描画
+    _renderBarSideLabel(canvas, canvasSize);
+
+    if (showChordLabel) {
+      // コード名を描画
+      _renderChordLabel(canvas, fontSize, drawAreaWidth, drawAreaHeight);
+    }
+
+    if (showFretLabel) {
+      _renderFretLabel(canvas, fontSize);
+    }
+
+    // 押さえる位置を描画
+    _renderChordInformation(canvas, paint, fingerSize, size, firstBarNumber);
+  }
+
+  // 基準となるフレットを計算
+  int _calculateBaseFret() {
+    bool isOverFret = false;
+    List<int> frets = [];
+    for (String fret in _stringsList) {
+      if (!['0', '-1'].contains(fret)) {
+        frets.add(int.parse(fret));
+        if (bar < int.parse(fret)) isOverFret = true;
+      }
+    }
+    return isOverFret ? frets.reduce(min) : 1;
+  }
+
+  void _renderStrings(Canvas canvas, Paint paint, double drawAreaWidth) {
+    // 弦の描画（縦方向、1弦が上、6弦が下）
     for (int i = 0; i < totalString; i++) {
       final y = _margin + ((totalString - 1 - i) * _stringGap); // 上から順に描画
       canvas.drawLine(
@@ -77,7 +128,9 @@ class ChordPainter extends CustomPainter {
         paint..color = stringColor,
       );
     }
+  }
 
+  void _renderFrets(Canvas canvas, Paint paint, double drawAreaHeight) {
     // フレットの描画（横方向）
     for (int i = 0; i <= bar; i++) {
       final x = _margin + (i * _barGap);
@@ -89,16 +142,34 @@ class ChordPainter extends CustomPainter {
           ..color = barColor,
       );
     }
+  }
 
-    int firstBarNumber = 99;
-    for (String i in _stringsList) {
-      if (i == '-1' || i == '0') continue;
-      firstBarNumber = min<int>(firstBarNumber, int.parse(i));
-    }
+  // ダイアグラム下に表示されるコード名を描画
+  void _renderChordLabel(Canvas canvas, double fontSize, double drawAreaWidth,
+      double drawAreaHeight) {
+    // コード名の位置調整: キャンバスサイズに応じて文字サイズを調整
+    TextPainter chordNameText = TextPainter(
+      text: TextSpan(
+        text: chordName,
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: fontSize, // 動的に設定した文字サイズを使用
+          color: labelColor,
+        ),
+      ),
+      textDirection: TextDirection.ltr,
+    );
+    chordNameText.layout(maxWidth: drawAreaWidth, minWidth: 4);
+    chordNameText.paint(
+        canvas,
+        Offset(_margin + drawAreaWidth / 2 - chordNameText.width / 2,
+            _margin + drawAreaHeight + fontSize));
+  }
 
-    // バーラベル
+  // ダイアグラム上に表示されるフレット番号を描画
+  void _renderFretLabel(Canvas canvas, double fontSize) {
     for (int i = 0; i < bar; i++) {
-      int barNumber = baseFret + i;
+      int barNumber = _baseFret + i;
       final x = _margin + (i * _barGap) + _barGap / 2;
 
       TextPainter barLabelText = TextPainter(
@@ -117,20 +188,36 @@ class ChordPainter extends CustomPainter {
       barLabelText.paint(
           canvas, Offset(x - fontSize / 4, _margin - (fontSize + 20)));
     }
+  }
 
-    // ミュート弦ラベル
-    double muteLabelFontSize = canvasSize * 0.07; // ミュート弦ラベルのフォントサイズ
+  // ダイアグラム左に表示されるミュート、開放弦などのラベル描画
+  void _renderBarSideLabel(Canvas canvas, double canvasSize) {
+    // フレット数を表示する必要があるか
+    bool shouldFretNum = _baseFret > 1 ? true : false;
+
+    // ラベルのフォントサイズ
+    double labelFontSize = canvasSize * 0.07;
+
     for (int i = 0; i < totalString; i++) {
-      if (_stringsList[i] != '-1') continue;
-
+      String labelText;
+      if (_stringsList[i] == '-1') {
+        labelText = 'X';
+      } else if (_stringsList[i] == '0') {
+        labelText = '○';
+      } else if (shouldFretNum) {
+        labelText = _baseFret.toString();
+        shouldFretNum = false;
+      } else {
+        continue;
+      }
       final y = _margin + ((totalString - 1 - i) * _stringGap); // 上から順に描画
 
       TextPainter(
         text: TextSpan(
-          text: 'X',
+          text: labelText,
           style: TextStyle(
             color: labelColor,
-            fontSize: muteLabelFontSize, // スケーリングされたフォントサイズ
+            fontSize: labelFontSize, // スケーリングされたフォントサイズ
             fontWeight: FontWeight.bold,
             textBaseline: TextBaseline.alphabetic,
           ),
@@ -140,30 +227,10 @@ class ChordPainter extends CustomPainter {
         ..layout(maxWidth: 4, minWidth: 4)
         ..paint(
           canvas,
-          Offset(_margin - muteLabelFontSize - 4,
-              y - muteLabelFontSize / 1.5), // ラベルを左側に配置
+          Offset(_margin - labelFontSize - 4,
+              y - labelFontSize / 1.5), // ラベルを左側に配置
         );
     }
-
-    // コード名の位置調整: キャンバスサイズに応じて文字サイズを調整
-    TextPainter chordNameText = TextPainter(
-      text: TextSpan(
-        text: chordName,
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: fontSize, // 動的に設定した文字サイズを使用
-          color: labelColor,
-        ),
-      ),
-      textDirection: TextDirection.ltr,
-    );
-    chordNameText.layout(maxWidth: drawAreaWidth, minWidth: 4);
-    chordNameText.paint(
-        canvas,
-        Offset(_margin + drawAreaWidth / 2 - chordNameText.width / 2,
-            _margin + drawAreaHeight + fontSize));
-
-    _renderChordInformation(canvas, paint, fingerSize, size, firstBarNumber);
   }
 
   void _renderChordInformation(
@@ -198,6 +265,9 @@ class ChordPainter extends CustomPainter {
       }
 
       int fretNumber = int.parse(_stringsList[i]);
+      if (_baseFret > 1 && !['-1', '0'].contains(_stringsList[i])) {
+        fretNumber -= _baseFret - 1;
+      }
 
       // 黒丸（指番号の位置）を描画
       Offset notePosition = _getPointOfNote(fretNumber, from);
@@ -212,11 +282,11 @@ class ChordPainter extends CustomPainter {
 
       // 指番号（数字）の位置を黒丸の中央に配置
       Offset textPosition = notePosition -
-          Offset(fingerLabelFontSize / 3.5, fingerLabelFontSize / 1.6);
+          Offset(fingerLabelFontSize / 2, fingerLabelFontSize / 1.6);
 
       TextPainter(
         text: TextSpan(
-          text: currentFinger,
+          text: fingeringsMap[currentFinger],
           style: TextStyle(
             color: tabForegroundColor,
             fontSize: fingerLabelFontSize, // フォントサイズもスケーリング
@@ -251,7 +321,6 @@ class ChordPainter extends CustomPainter {
         old.stringStroke != stringStroke ||
         old.barStroke != barStroke ||
         old.firstFrameStroke != firstFrameStroke ||
-        old.baseFret != baseFret ||
         old.frets != frets ||
         old.fingers != fingers ||
         old.stringColor != stringColor ||

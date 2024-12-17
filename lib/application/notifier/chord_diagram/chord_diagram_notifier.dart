@@ -131,13 +131,15 @@ class ChordDiagramNotifier extends _$ChordDiagramNotifier {
             String frets = positions.map((e) => e == 'x' ? '-1' : e).join(' ');
             String fingers = fingerings[0].join(' ');
             flutterGuitarChord = FlutterGuitarChord(
-                baseFret: 1,
-                chordName: chord.chord,
-                fingers: fingers,
-                frets: frets,
-                totalString: 6,
-                barCount: 5,
-                fingerSize: 32);
+              baseFret: 1,
+              chordName: chord.chord,
+              fingers: fingers,
+              frets: frets,
+              totalString: 6,
+              barCount: 5,
+              fingerSize: 32,
+              showChordLabel: true,
+            );
           }
         }
       }
@@ -157,6 +159,7 @@ class ChordDiagramNotifier extends _$ChordDiagramNotifier {
       frets: '-1 -1 -1 -1 -1 -1',
       totalString: 6,
       barCount: 5,
+      showChordLabel: true,
     );
   }
 }

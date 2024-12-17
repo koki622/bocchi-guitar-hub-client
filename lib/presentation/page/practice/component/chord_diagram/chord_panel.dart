@@ -1,7 +1,5 @@
 import 'package:bocchi_guitar_hub_client/application/application_module.dart';
-import 'package:bocchi_guitar_hub_client/application/notifier/chord_diagram/chord_diagram_notifier.dart';
 import 'package:bocchi_guitar_hub_client/application/notifier/chord_diagram/current_chord_diagram_notifier.dart';
-import 'package:bocchi_guitar_hub_client/application/notifier/song_elements/song_elements_notifier.dart';
 import 'package:bocchi_guitar_hub_client/application/usecase/chord_diagram_usecase.dart';
 import 'package:bocchi_guitar_hub_client/core/constant/size.dart';
 import 'package:bocchi_guitar_hub_client/domain/entity/song/song.dart';
@@ -84,7 +82,7 @@ class _ChordCarouselState extends ConsumerState<ChordCarousel> {
       if (previous != next) {
         _pageController.animateToPage(
           next,
-          duration: const Duration(milliseconds: 300),
+          duration: const Duration(milliseconds: 50),
           curve: Curves.easeInOut,
         );
       }
