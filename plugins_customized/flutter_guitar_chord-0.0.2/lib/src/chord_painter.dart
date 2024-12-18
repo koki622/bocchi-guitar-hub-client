@@ -211,7 +211,7 @@ class ChordPainter extends CustomPainter {
         continue;
       }
       final y = _margin + ((totalString - 1 - i) * _stringGap); // 上から順に描画
-
+      final offsetNum = labelText.length == 1 ? 4 : 9;
       TextPainter(
         text: TextSpan(
           text: labelText,
@@ -224,10 +224,10 @@ class ChordPainter extends CustomPainter {
         ),
         textDirection: TextDirection.ltr,
       )
-        ..layout(maxWidth: 4, minWidth: 4)
+        ..layout()
         ..paint(
           canvas,
-          Offset(_margin - labelFontSize - 4,
+          Offset(_margin - labelFontSize - offsetNum,
               y - labelFontSize / 1.5), // ラベルを左側に配置
         );
     }

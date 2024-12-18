@@ -6,9 +6,23 @@ part of 'chord_diagram_notifier.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$ChordDiagramInfoImpl _$$ChordDiagramInfoImplFromJson(
-        Map<String, dynamic> json) =>
-    _$ChordDiagramInfoImpl(
+_$MainChordInfoImpl _$$MainChordInfoImplFromJson(Map<String, dynamic> json) =>
+    _$MainChordInfoImpl(
+      positions:
+          (json['frets'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      fingerings: (json['fingers'] as List<dynamic>?)
+          ?.map((e) => (e as List<dynamic>).map((e) => e as String).toList())
+          .toList(),
+    );
+
+Map<String, dynamic> _$$MainChordInfoImplToJson(_$MainChordInfoImpl instance) =>
+    <String, dynamic>{
+      'frets': instance.positions,
+      'fingers': instance.fingerings,
+    };
+
+_$SubChordInfoImpl _$$SubChordInfoImplFromJson(Map<String, dynamic> json) =>
+    _$SubChordInfoImpl(
       positions: (json['positions'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
@@ -17,8 +31,7 @@ _$ChordDiagramInfoImpl _$$ChordDiagramInfoImplFromJson(
           .toList(),
     );
 
-Map<String, dynamic> _$$ChordDiagramInfoImplToJson(
-        _$ChordDiagramInfoImpl instance) =>
+Map<String, dynamic> _$$SubChordInfoImplToJson(_$SubChordInfoImpl instance) =>
     <String, dynamic>{
       'positions': instance.positions,
       'fingerings': instance.fingerings,
@@ -29,7 +42,7 @@ Map<String, dynamic> _$$ChordDiagramInfoImplToJson(
 // **************************************************************************
 
 String _$chordChangeNotifierHash() =>
-    r'd9dcabac66fe419f5138b432e4cc62400b724645';
+    r'fe16bea780ee142572896f9082c6fd6ec1a1aaae';
 
 /// Copied from Dart SDK
 class _SystemHash {

@@ -7,7 +7,7 @@ part of 'playback_position_notifier.dart';
 // **************************************************************************
 
 String _$playbackPositionNotifierHash() =>
-    r'93c0c7013718b3c3d81e39dbdfe3cc18b2ab5b83';
+    r'c30478abad178c18bd25373f2363a90ea98937eb';
 
 /// See also [PlaybackPositionNotifier].
 @ProviderFor(PlaybackPositionNotifier)

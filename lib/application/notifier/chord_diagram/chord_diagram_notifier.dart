@@ -9,6 +9,15 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'chord_diagram_notifier.g.dart';
 part 'chord_diagram_notifier.freezed.dart';
 
+enum ChordJsonType {
+  main(fileName: 'guitar.json'),
+  sub(fileName: 'chords.json');
+
+  const ChordJsonType({required this.fileName});
+
+  final String fileName;
+}
+
 @freezed
 class ChordDiagramState with _$ChordDiagramState {
   factory ChordDiagramState({
@@ -17,39 +26,129 @@ class ChordDiagramState with _$ChordDiagramState {
   }) = _ChordDiagramState;
 }
 
+abstract class ChordInfo {
+  List<String>? get positions;
+  List<List<String>>? get fingerings;
+
+  ChordInfo.fromJson(Map<String, dynamic> json);
+}
+
 @freezed
-class ChordDiagramInfo with _$ChordDiagramInfo {
-  factory ChordDiagramInfo({
+class MainChordInfo with _$MainChordInfo implements ChordInfo {
+  factory MainChordInfo({
     required List<String>? positions,
     required List<List<String>>? fingerings,
-  }) = _ChordDiagramInfo;
+  }) = _MainChordInfo;
 
-  factory ChordDiagramInfo.fromJson(Map<String, dynamic> json) =>
-      _$ChordDiagramInfoFromJson(json);
+  @override
+  factory MainChordInfo.fromJson(Map<String, dynamic> json) {
+    int baseFret = json['baseFret'];
+    List<String> positions = [];
+    for (int fret in json['frets']) {
+      String stringFret;
+      if (fret == -1) {
+        stringFret = 'x';
+      } else {
+        stringFret = (fret + (baseFret - 1)).toString();
+      }
+      positions.add(stringFret);
+    }
+    List<String> fingers = [];
+    for (int finger in json['fingers']) {
+      String stringFinger = finger.toString();
+      fingers.add(stringFinger);
+    }
+    return MainChordInfo(positions: positions, fingerings: [fingers]);
+  }
+}
+
+@freezed
+class SubChordInfo with _$SubChordInfo implements ChordInfo {
+  factory SubChordInfo({
+    @JsonKey(name: 'positions') required List<String>? positions,
+    @JsonKey(name: 'fingerings') required List<List<String>>? fingerings,
+  }) = _SubChordInfo;
+
+  @override
+  factory SubChordInfo.fromJson(Map<String, dynamic> json) =>
+      _$SubChordInfoFromJson(json);
 }
 
 @freezed
 class ChordDiagramInfoCollection with _$ChordDiagramInfoCollection {
   factory ChordDiagramInfoCollection({
-    required Map<String, List<ChordDiagramInfo>> chordDiagramInfos,
+    required Map<String, List<ChordInfo>> chordDiagramInfos,
   }) = _ChordDiagramInfoCollection;
 
-  factory ChordDiagramInfoCollection.fromJson(Map<String, dynamic> json) {
+  static const mainChordInfoKeyMap = {
+    'C': 'C',
+    'C#': 'C#',
+    'D': 'D',
+    'Eb': 'D#',
+    'E': 'E',
+    'F': 'F',
+    'F#': 'F#',
+    'G': 'G',
+    'Ab': 'G#',
+    'A': 'A',
+    'Bb': 'A#',
+    'B': 'B',
+  };
+
+  static const mainChordInfoSuffixMap = {
+    'major': '',
+    'minor': 'm',
+    '/Bb': '/A#',
+    'm9/Bb': 'm9/A#',
+    'm9/Eb': 'm9/D#',
+    'm9/Ab': 'm9/G#',
+    '/Eb': '/D#',
+    '/Ab': '/G#',
+    'm/Bb': 'm/A#',
+    'm/Eb': 'm/D#',
+    'm/Ab': 'm/G#',
+  };
+
+  factory ChordDiagramInfoCollection.fromJson(
+      Map<String, dynamic> json, ChordJsonType chordJsonType) {
     try {
-      return ChordDiagramInfoCollection(
-        chordDiagramInfos: json.map((key, value) {
-          if (value[0] == null) {
-            value[0] = {
-              'positions': null,
-              'fingerings': null,
-            };
+      switch (chordJsonType) {
+        case ChordJsonType.main:
+          final Map<String, dynamic> chords = json['chords'];
+          final Map<String, List<MainChordInfo>> chordInfoMap = {};
+          for (String chordIndex in chords.keys) {
+            for (Map<String, dynamic> chord in chords[chordIndex]) {
+              String chordKey = mainChordInfoKeyMap[chord['key']]!;
+              String chordSuffix =
+                  mainChordInfoSuffixMap[chord['suffix']] ?? chord['suffix'];
+              List<MainChordInfo> chordInfos = [
+                for (Map<String, dynamic> position in chord['positions'])
+                  MainChordInfo.fromJson({
+                    'frets': position['frets'],
+                    'fingers': position['fingers'],
+                    'baseFret': position['baseFret'],
+                  })
+              ];
+              chordInfoMap[chordKey + chordSuffix] = chordInfos;
+            }
           }
-          final List<ChordDiagramInfo> infos = (value as List)
-              .map((item) => ChordDiagramInfo.fromJson(item))
-              .toList();
-          return MapEntry(key, infos);
-        }),
-      );
+          return ChordDiagramInfoCollection(chordDiagramInfos: chordInfoMap);
+        case ChordJsonType.sub:
+          return ChordDiagramInfoCollection(
+            chordDiagramInfos: json.map((key, value) {
+              if (value[0] == null) {
+                value[0] = {
+                  'positions': null,
+                  'fingerings': null,
+                };
+              }
+              final List<ChordInfo> infos = (value as List)
+                  .map((item) => SubChordInfo.fromJson(item))
+                  .toList();
+              return MapEntry(key, infos);
+            }),
+          );
+      }
     } catch (e) {
       rethrow;
     }
@@ -98,17 +197,22 @@ class ChordChangeNotifier extends _$ChordChangeNotifier {
 
 @riverpod
 class ChordDiagramNotifier extends _$ChordDiagramNotifier {
-  late ChordDiagramInfoCollection _chordInfos;
+  late ChordDiagramInfoCollection _mainChordInfos;
+  late ChordDiagramInfoCollection _subChordInfos;
 
   @override
   Future<List<ChordDiagramState>> build(List<Chord> chords) async {
-    await _loadChordsJson();
+    _mainChordInfos = ChordDiagramInfoCollection.fromJson(
+        json.decode(await _loadChordsJson(ChordJsonType.main)),
+        ChordJsonType.main);
+    _subChordInfos = ChordDiagramInfoCollection.fromJson(
+        json.decode(await _loadChordsJson(ChordJsonType.sub)),
+        ChordJsonType.sub);
     return _convertChordToDiagram(chords);
   }
 
-  Future<void> _loadChordsJson() async {
-    String jsonStr = await rootBundle.loadString('assets/chords.json');
-    _chordInfos = ChordDiagramInfoCollection.fromJson(json.decode(jsonStr));
+  Future<String> _loadChordsJson(ChordJsonType chordJsonType) async {
+    return await rootBundle.loadString('assets/${chordJsonType.fileName}');
   }
 
   List<ChordDiagramState> _convertChordToDiagram(List<Chord> chords) {
@@ -119,8 +223,9 @@ class ChordDiagramNotifier extends _$ChordDiagramNotifier {
         // XやNコードを含む場合
         flutterGuitarChord = _getNoChord(chord.chord);
       } else {
-        List<ChordDiagramInfo>? chordInfo =
-            _chordInfos.chordDiagramInfos[chord.chord];
+        List<ChordInfo>? chordInfo =
+            _mainChordInfos.chordDiagramInfos[chord.chord] ??
+                _subChordInfos.chordDiagramInfos[chord.chord];
         if (chordInfo == null) {
           // コードのダイアグラム情報が見つからない場合
           flutterGuitarChord = _getNoChord('${chord.chord}(Unknown)');

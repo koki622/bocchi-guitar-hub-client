@@ -7,7 +7,7 @@ part of 'beat_position_notifier.dart';
 // **************************************************************************
 
 String _$beatPositionNotifierHash() =>
-    r'bb21bb965392aad0e0ff0b7e1a3829231df0370e';
+    r'63d0b9cdb2ba05ee5d7d9157fb14a90e9222b0cc';
 
 /// Copied from Dart SDK
 class _SystemHash {
