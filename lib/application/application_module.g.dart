@@ -307,5 +307,136 @@ class _ChordDiagramUsecaseProviderElement
   @override
   Song get song => (origin as ChordDiagramUsecaseProvider).song;
 }
+
+String _$beatPositionUsecaseHash() =>
+    r'63d987523d56180cd22f7deeab6a0b57ffafa5e5';
+
+/// See also [beatPositionUsecase].
+@ProviderFor(beatPositionUsecase)
+const beatPositionUsecaseProvider = BeatPositionUsecaseFamily();
+
+/// See also [beatPositionUsecase].
+class BeatPositionUsecaseFamily extends Family<BeatPositionUsecase> {
+  /// See also [beatPositionUsecase].
+  const BeatPositionUsecaseFamily();
+
+  /// See also [beatPositionUsecase].
+  BeatPositionUsecaseProvider call(
+    Song song,
+  ) {
+    return BeatPositionUsecaseProvider(
+      song,
+    );
+  }
+
+  @override
+  BeatPositionUsecaseProvider getProviderOverride(
+    covariant BeatPositionUsecaseProvider provider,
+  ) {
+    return call(
+      provider.song,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'beatPositionUsecaseProvider';
+}
+
+/// See also [beatPositionUsecase].
+class BeatPositionUsecaseProvider
+    extends AutoDisposeProvider<BeatPositionUsecase> {
+  /// See also [beatPositionUsecase].
+  BeatPositionUsecaseProvider(
+    Song song,
+  ) : this._internal(
+          (ref) => beatPositionUsecase(
+            ref as BeatPositionUsecaseRef,
+            song,
+          ),
+          from: beatPositionUsecaseProvider,
+          name: r'beatPositionUsecaseProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$beatPositionUsecaseHash,
+          dependencies: BeatPositionUsecaseFamily._dependencies,
+          allTransitiveDependencies:
+              BeatPositionUsecaseFamily._allTransitiveDependencies,
+          song: song,
+        );
+
+  BeatPositionUsecaseProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.song,
+  }) : super.internal();
+
+  final Song song;
+
+  @override
+  Override overrideWith(
+    BeatPositionUsecase Function(BeatPositionUsecaseRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: BeatPositionUsecaseProvider._internal(
+        (ref) => create(ref as BeatPositionUsecaseRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        song: song,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeProviderElement<BeatPositionUsecase> createElement() {
+    return _BeatPositionUsecaseProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is BeatPositionUsecaseProvider && other.song == song;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, song.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin BeatPositionUsecaseRef on AutoDisposeProviderRef<BeatPositionUsecase> {
+  /// The parameter `song` of this provider.
+  Song get song;
+}
+
+class _BeatPositionUsecaseProviderElement
+    extends AutoDisposeProviderElement<BeatPositionUsecase>
+    with BeatPositionUsecaseRef {
+  _BeatPositionUsecaseProviderElement(super.provider);
+
+  @override
+  Song get song => (origin as BeatPositionUsecaseProvider).song;
+}
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

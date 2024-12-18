@@ -6,6 +6,7 @@ import 'package:bocchi_guitar_hub_client/domain/entity/song/song.dart';
 import 'package:bocchi_guitar_hub_client/presentation/notifier/selected_tab_notifier.dart';
 import 'package:bocchi_guitar_hub_client/presentation/page/practice/component/audio_control/playback_control_panel.dart';
 import 'package:bocchi_guitar_hub_client/presentation/page/practice/component/audio_control/volume_control_panel.dart';
+import 'package:bocchi_guitar_hub_client/presentation/page/practice/component/beat_position/beat_position_panel.dart';
 import 'package:bocchi_guitar_hub_client/presentation/page/practice/component/chord_diagram/chord_panel.dart';
 import 'package:bocchi_guitar_hub_client/presentation/page/practice/component/navi_bar/navi_bar_panel.dart';
 import 'package:bocchi_guitar_hub_client/presentation/page/practice/component/settings/settings_panel.dart';
@@ -82,9 +83,7 @@ class PracticePage extends ConsumerWidget {
     return switch (selectedTab) {
       SelectedTabType.volumeMixer =>
         VolumeControlPanel(audioPlayerUsecase: state),
-      SelectedTabType.guide => ChordPanel(
-          song: song,
-        ),
+      SelectedTabType.guide => ChordPanel(song: song),
       SelectedTabType.setting => SettingsPanel(audioPlayerUsecase: state),
       _ => const Center(child: Text("Unknown Tab")), // デフォルトケース
     };

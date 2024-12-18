@@ -196,7 +196,7 @@ class _ChordChangeNotifierProviderElement
 }
 
 String _$chordDiagramNotifierHash() =>
-    r'676af618e0efc3db16021ebaec1b935d414dc6d2';
+    r'9e2ac7516fbe871b8508fc254746a8bf349cca3c';
 
 abstract class _$ChordDiagramNotifier
     extends BuildlessAutoDisposeAsyncNotifier<List<ChordDiagramState>> {

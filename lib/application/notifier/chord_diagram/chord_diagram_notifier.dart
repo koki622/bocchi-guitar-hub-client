@@ -85,8 +85,11 @@ class ChordChangeNotifier extends _$ChordChangeNotifier {
   Map<ChordTimeRange, int> build(List<Chord> chords) {
     return {
       for (var (index, chord) in chords.indexed)
-        ChordTimeRange(Duration(seconds: chord.time.toInt()),
-            Duration(seconds: (chord.time + chord.duration).toInt())): index
+        ChordTimeRange(
+            Duration(milliseconds: (chord.time * 1000).round()),
+            Duration(
+                milliseconds:
+                    (chord.time * 1000 + chord.duration * 1000).round())): index
     };
   }
 

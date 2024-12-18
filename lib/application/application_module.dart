@@ -4,11 +4,13 @@ import 'package:bocchi_guitar_hub_client/application/notifier/audio_player/audio
 import 'package:bocchi_guitar_hub_client/application/notifier/audio_player/playback_notifier.dart';
 import 'package:bocchi_guitar_hub_client/application/notifier/audio_player/playback_position_notifier.dart';
 import 'package:bocchi_guitar_hub_client/application/notifier/audio_player/playback_volume_notifier.dart';
+import 'package:bocchi_guitar_hub_client/application/notifier/beat_position/beat_position_notifier.dart';
 import 'package:bocchi_guitar_hub_client/application/notifier/chord_diagram/chord_diagram_notifier.dart';
 import 'package:bocchi_guitar_hub_client/application/notifier/chord_diagram/current_chord_diagram_notifier.dart';
 import 'package:bocchi_guitar_hub_client/application/notifier/song_elements/song_elements_notifier.dart';
 import 'package:bocchi_guitar_hub_client/application/notifier/songs/songs_notifier.dart';
 import 'package:bocchi_guitar_hub_client/application/usecase/audio_player_usecase.dart';
+import 'package:bocchi_guitar_hub_client/application/usecase/beat_position_usecase.dart';
 import 'package:bocchi_guitar_hub_client/application/usecase/chord_diagram_usecase.dart';
 import 'package:bocchi_guitar_hub_client/application/usecase/song_usecase.dart';
 import 'package:bocchi_guitar_hub_client/domain/entity/song/song.dart';
@@ -60,4 +62,12 @@ Future<ChordDiagramUsecase> chordDiagramUsecase(Ref ref, Song song) async {
       await ref.watch(chordDiagramNotifierProvider(chords).future);
   return ChordDiagramUsecase(
       chordDiagramNotifier, currentChordDiagramNotifier, chordDiagramStates);
+}
+
+@riverpod
+BeatPositionUsecase beatPositionUsecase(Ref ref, Song song) {
+  final beats = ref.watch(beatNotifierProvider(song));
+  final beatPositionNotifier =
+      ref.watch(beatPositionNotifierProvider(beats).notifier);
+  return BeatPositionUsecase(beatPositionNotifier, beats);
 }

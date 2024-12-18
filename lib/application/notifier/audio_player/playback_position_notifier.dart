@@ -23,7 +23,7 @@ class PlaybackPositionNotifier extends _$PlaybackPositionNotifier {
   void startPositionTracking(AudioPlayerState audioPlayerState) {
     _timer?.cancel(); // 既存のタイマーをキャンセル
     _isStartPositionTracking = true;
-    _timer = Timer.periodic(const Duration(milliseconds: 50), (_) {
+    _timer = Timer.periodic(const Duration(milliseconds: 20), (_) {
       state = audioPlayerState.soloud
           .getPosition(audioPlayerState.soundState.groupHandle);
     });

@@ -94,7 +94,7 @@ class _ChordCarouselState extends ConsumerState<ChordCarousel> {
         _currentIndex = next;
         _pageController.animateToPage(
           next,
-          duration: const Duration(milliseconds: 50),
+          duration: const Duration(milliseconds: 150),
           curve: Curves.easeInOut,
         );
       }
@@ -127,7 +127,7 @@ class _ChordCarouselState extends ConsumerState<ChordCarousel> {
       widthFactor: 0.9,
       heightFactor: 0.8,
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 50),
         padding: EdgeInsets.all(isCurrentChord ? 8.0 : 0), // ハイライト時に余白追加
         decoration: BoxDecoration(
           border: Border.all(

@@ -7,7 +7,7 @@ part of 'playback_volume_notifier.dart';
 // **************************************************************************
 
 String _$playbackVolumeNotifierHash() =>
-    r'9cd46c29f00374896f912ab812727dcf9be43af5';
+    r'2035662defedd8900b18dbe6fa5174cb51dd0473';
 
 /// See also [PlaybackVolumeNotifier].
 @ProviderFor(PlaybackVolumeNotifier)
