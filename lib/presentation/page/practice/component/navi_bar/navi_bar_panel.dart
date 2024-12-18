@@ -19,6 +19,7 @@ class NaviBarPanel extends ConsumerWidget {
       children: const [
         Icon(Icons.tune),
         Icon(Icons.play_arrow),
+        Icon(Icons.settings),
       ],
       onPressed: (index) {
         selectedTabNotifier.set(SelectedTabType.values[index]);

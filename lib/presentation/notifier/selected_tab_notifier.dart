@@ -5,6 +5,7 @@ part 'selected_tab_notifier.g.dart';
 enum SelectedTabType {
   volumeMixer,
   guide,
+  setting,
 }
 
 @riverpod

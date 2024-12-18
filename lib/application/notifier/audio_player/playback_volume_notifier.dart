@@ -26,8 +26,8 @@ class PlaybackVolumeNotifier extends _$PlaybackVolumeNotifier {
       SoundType.guitar: PlaybackVolumeState(volume: 1.0, isSoundOn: true),
       SoundType.piano: PlaybackVolumeState(volume: 1.0, isSoundOn: true),
       SoundType.other: PlaybackVolumeState(volume: 1.0, isSoundOn: true),
-      SoundType.click: PlaybackVolumeState(volume: 0, isSoundOn: false),
-      SoundType.chord: PlaybackVolumeState(volume: 0, isSoundOn: false),
+      SoundType.click: PlaybackVolumeState(volume: 1.0, isSoundOn: false),
+      SoundType.chord: PlaybackVolumeState(volume: 1.0, isSoundOn: false),
     };
 
     previousVolumes = {

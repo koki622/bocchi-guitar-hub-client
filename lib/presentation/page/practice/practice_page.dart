@@ -8,6 +8,7 @@ import 'package:bocchi_guitar_hub_client/presentation/page/practice/component/au
 import 'package:bocchi_guitar_hub_client/presentation/page/practice/component/audio_control/volume_control_panel.dart';
 import 'package:bocchi_guitar_hub_client/presentation/page/practice/component/chord_diagram/chord_panel.dart';
 import 'package:bocchi_guitar_hub_client/presentation/page/practice/component/navi_bar/navi_bar_panel.dart';
+import 'package:bocchi_guitar_hub_client/presentation/page/practice/component/settings/settings_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -84,6 +85,7 @@ class PracticePage extends ConsumerWidget {
       SelectedTabType.guide => ChordPanel(
           song: song,
         ),
+      SelectedTabType.setting => SettingsPanel(audioPlayerUsecase: state),
       _ => const Center(child: Text("Unknown Tab")), // デフォルトケース
     };
   }

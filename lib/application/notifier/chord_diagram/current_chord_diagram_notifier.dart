@@ -22,8 +22,8 @@ class CurrentChordDiagramNotifier extends _$CurrentChordDiagramNotifier {
   void _listenPosition() {
     ref.listen<Duration>(playbackPositionNotifierProvider, (previous, next) {
       final currentIndex = _findCurrentIndex(chordChange, next);
-      if (currentIndex != state) {
-        state = currentIndex ?? 0;
+      if (currentIndex != state && currentIndex != null) {
+        state = currentIndex;
       }
     });
   }

@@ -53,6 +53,7 @@ class _ChordCarouselState extends ConsumerState<ChordCarousel> {
   final double viewportFraction;
   late final PageController _pageController;
   late final int _initialPage;
+  late int _currentIndex;
 
   _ChordCarouselState(
       {required this.chordDiagramUsecase, required this.viewportFraction});
@@ -62,8 +63,18 @@ class _ChordCarouselState extends ConsumerState<ChordCarousel> {
     super.initState();
     _initialPage = ref.read(currentChordDiagramNotifierProvider(
         chordDiagramUsecase.getChordChange));
+    _currentIndex = _initialPage;
     _pageController = PageController(
         initialPage: _initialPage, viewportFraction: viewportFraction);
+    // PageViewのスクロールを監視し、ページインデックスを更新
+    _pageController.addListener(() {
+      final int newPage = _pageController.page?.round() ?? 0;
+      if (newPage != _currentIndex) {
+        setState(() {
+          _currentIndex = newPage;
+        });
+      }
+    });
   }
 
   @override
@@ -80,6 +91,7 @@ class _ChordCarouselState extends ConsumerState<ChordCarousel> {
         currentChordDiagramNotifierProvider(chordDiagramUsecase.getChordChange),
         (previous, next) {
       if (previous != next) {
+        _currentIndex = next;
         _pageController.animateToPage(
           next,
           duration: const Duration(milliseconds: 50),
@@ -88,16 +100,53 @@ class _ChordCarouselState extends ConsumerState<ChordCarousel> {
       }
     });
 
-    return PageView(
-      scrollDirection: Axis.horizontal,
-      controller: _pageController,
-      physics: const NeverScrollableScrollPhysics(),
-      padEnds: false,
-      children: [
-        for (FlutterGuitarChord flutterGuitarChord
-            in chordDiagramUsecase.getFlutterGuitarChords)
-          FractionallySizedBox(heightFactor: 0.8, child: flutterGuitarChord)
-      ],
+    return Container(
+      child: PageView(
+        scrollDirection: Axis.horizontal,
+        controller: _pageController,
+        physics: const NeverScrollableScrollPhysics(),
+        padEnds: false,
+        children: [
+          for (var (index, flutterGuitarChord)
+              in chordDiagramUsecase.getFlutterGuitarChords.indexed)
+            _buildChordDiagram(flutterGuitarChord, index),
+          Container(),
+          Container(),
+          Container(),
+          Container(),
+          Container(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildChordDiagram(FlutterGuitarChord chordWidget, int index) {
+    final bool isCurrentChord = index == _currentIndex;
+
+    return FractionallySizedBox(
+      widthFactor: 0.9,
+      heightFactor: 0.8,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: EdgeInsets.all(isCurrentChord ? 8.0 : 0), // ハイライト時に余白追加
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: isCurrentChord ? Colors.amber : Colors.transparent,
+            width: 3.0,
+          ),
+          boxShadow: isCurrentChord
+              ? [
+                  BoxShadow(
+                    color: Colors.amber.withOpacity(0.5),
+                    blurRadius: 10,
+                    spreadRadius: 3,
+                  ),
+                ]
+              : [],
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: chordWidget,
+      ),
     );
   }
 }
