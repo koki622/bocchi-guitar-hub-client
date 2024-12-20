@@ -45,7 +45,13 @@ class ChordSoundNotifier extends _$ChordSoundNotifier {
 class ChordNotifier extends _$ChordNotifier {
   @override
   List<Chord> build(Song song) {
-    return ref.watch(songElementsRepositoryProvider).fetchChordList(song: song);
+    List<Chord> chordList =
+        ref.watch(songElementsRepositoryProvider).fetchChordList(song: song);
+    if (chordList[0].time != 0) {
+      chordList[0] =
+          chordList[0].copyWith(time: 0, duration: chordList[1].time - 0);
+    }
+    return chordList;
   }
 }
 
@@ -53,7 +59,13 @@ class ChordNotifier extends _$ChordNotifier {
 class BeatNotifier extends _$BeatNotifier {
   @override
   List<Beat> build(Song song) {
-    return ref.watch(songElementsRepositoryProvider).fetchBeatList(song: song);
+    List<Beat> beatList =
+        ref.watch(songElementsRepositoryProvider).fetchBeatList(song: song);
+    if (beatList[0].beatTime != 0) {
+      // 0秒からビートが始まっていない場合は以下を追加
+      beatList.insert(0, Beat(beatPosition: -1, beatTime: 0));
+    }
+    return beatList;
   }
 }
 

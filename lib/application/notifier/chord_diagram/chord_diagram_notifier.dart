@@ -48,6 +48,8 @@ class MainChordInfo with _$MainChordInfo implements ChordInfo {
       String stringFret;
       if (fret == -1) {
         stringFret = 'x';
+      } else if (fret == 0) {
+        stringFret = '0';
       } else {
         stringFret = (fret + (baseFret - 1)).toString();
       }

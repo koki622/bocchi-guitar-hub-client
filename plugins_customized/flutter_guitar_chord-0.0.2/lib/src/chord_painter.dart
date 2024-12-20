@@ -94,7 +94,7 @@ class ChordPainter extends CustomPainter {
 
     if (showChordLabel) {
       // コード名を描画
-      _renderChordLabel(canvas, fontSize, drawAreaWidth, drawAreaHeight);
+      _renderChordLabel(canvas, fontSize, drawAreaWidth, drawAreaHeight, size);
     }
 
     if (showFretLabel) {
@@ -146,7 +146,7 @@ class ChordPainter extends CustomPainter {
 
   // ダイアグラム下に表示されるコード名を描画
   void _renderChordLabel(Canvas canvas, double fontSize, double drawAreaWidth,
-      double drawAreaHeight) {
+      double drawAreaHeight, Size size) {
     // コード名の位置調整: キャンバスサイズに応じて文字サイズを調整
     TextPainter chordNameText = TextPainter(
       text: TextSpan(
@@ -160,10 +160,23 @@ class ChordPainter extends CustomPainter {
       textDirection: TextDirection.ltr,
     );
     chordNameText.layout(maxWidth: drawAreaWidth, minWidth: 4);
-    chordNameText.paint(
-        canvas,
-        Offset(_margin + drawAreaWidth / 2 - chordNameText.width / 2,
-            _margin + drawAreaHeight + fontSize));
+    double textX = _margin + drawAreaWidth / 2 - chordNameText.width / 2;
+    // コード名が左端から描画開始位置をはみ出す場合
+    if (textX < _margin) {
+      textX = _margin;
+    }
+    // コード名が右端から描画終了位置をはみ出す場合
+    if (textX + chordNameText.width > _margin + drawAreaWidth) {
+      textX = _margin + drawAreaWidth - chordNameText.width;
+    }
+    // コード名が下端からはみ出さないように調整
+    double textY = _margin + drawAreaHeight + fontSize;
+    final availableHeight = size.height - textY;
+    if (availableHeight < chordNameText.height) {
+      textY = size.height - chordNameText.height;
+    }
+
+    chordNameText.paint(canvas, Offset(textX, textY));
   }
 
   // ダイアグラム上に表示されるフレット番号を描画
@@ -268,7 +281,6 @@ class ChordPainter extends CustomPainter {
       if (_baseFret > 1 && !['-1', '0'].contains(_stringsList[i])) {
         fretNumber -= _baseFret - 1;
       }
-
       // 黒丸（指番号の位置）を描画
       Offset notePosition = _getPointOfNote(fretNumber, from);
       canvas.drawLine(

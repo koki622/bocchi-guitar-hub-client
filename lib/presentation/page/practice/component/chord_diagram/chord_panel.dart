@@ -99,7 +99,7 @@ class _ChordCarouselState extends ConsumerState<ChordCarousel> {
         );
       }
     });
-
+    print('再ビルド');
     return Container(
       child: PageView(
         scrollDirection: Axis.horizontal,
@@ -123,30 +123,27 @@ class _ChordCarouselState extends ConsumerState<ChordCarousel> {
   Widget _buildChordDiagram(FlutterGuitarChord chordWidget, int index) {
     final bool isCurrentChord = index == _currentIndex;
 
-    return FractionallySizedBox(
-      widthFactor: 0.9,
-      heightFactor: 0.8,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 50),
-        padding: EdgeInsets.all(isCurrentChord ? 8.0 : 0), // ハイライト時に余白追加
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: isCurrentChord ? Colors.amber : Colors.transparent,
-            width: 3.0,
-          ),
-          boxShadow: isCurrentChord
-              ? [
-                  BoxShadow(
-                    color: Colors.amber.withOpacity(0.5),
-                    blurRadius: 10,
-                    spreadRadius: 3,
-                  ),
-                ]
-              : [],
-          borderRadius: BorderRadius.circular(10),
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 50),
+      margin: const EdgeInsets.only(left: 8.0),
+      padding: EdgeInsets.all(isCurrentChord ? 8.0 : 0), // ハイライト時に余白追加
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: isCurrentChord ? Colors.amber : Colors.transparent,
+          width: 9.0,
         ),
-        child: chordWidget,
+        boxShadow: isCurrentChord
+            ? [
+                BoxShadow(
+                  color: Colors.amber.withOpacity(0.5),
+                  blurRadius: 10,
+                  spreadRadius: 3,
+                ),
+              ]
+            : [],
+        borderRadius: BorderRadius.circular(10),
       ),
+      child: chordWidget,
     );
   }
 }

@@ -166,19 +166,10 @@ abstract class _ChordDiagramState implements ChordDiagramState {
       throw _privateConstructorUsedError;
 }
 
-MainChordInfo _$MainChordInfoFromJson(Map<String, dynamic> json) {
-  return _MainChordInfo.fromJson(json);
-}
-
 /// @nodoc
 mixin _$MainChordInfo {
-  @JsonKey(name: 'frets')
   List<String>? get positions => throw _privateConstructorUsedError;
-  @JsonKey(name: 'fingers')
   List<List<String>>? get fingerings => throw _privateConstructorUsedError;
-
-  /// Serializes this MainChordInfo to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of MainChordInfo
   /// with the given fields replaced by the non-null parameter values.
@@ -193,9 +184,7 @@ abstract class $MainChordInfoCopyWith<$Res> {
           MainChordInfo value, $Res Function(MainChordInfo) then) =
       _$MainChordInfoCopyWithImpl<$Res, MainChordInfo>;
   @useResult
-  $Res call(
-      {@JsonKey(name: 'frets') List<String>? positions,
-      @JsonKey(name: 'fingers') List<List<String>>? fingerings});
+  $Res call({List<String>? positions, List<List<String>>? fingerings});
 }
 
 /// @nodoc
@@ -237,9 +226,7 @@ abstract class _$$MainChordInfoImplCopyWith<$Res>
       __$$MainChordInfoImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {@JsonKey(name: 'frets') List<String>? positions,
-      @JsonKey(name: 'fingers') List<List<String>>? fingerings});
+  $Res call({List<String>? positions, List<List<String>>? fingerings});
 }
 
 /// @nodoc
@@ -272,20 +259,16 @@ class __$$MainChordInfoImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
 class _$MainChordInfoImpl implements _MainChordInfo {
   _$MainChordInfoImpl(
-      {@JsonKey(name: 'frets') required final List<String>? positions,
-      @JsonKey(name: 'fingers') required final List<List<String>>? fingerings})
+      {required final List<String>? positions,
+      required final List<List<String>>? fingerings})
       : _positions = positions,
         _fingerings = fingerings;
 
-  factory _$MainChordInfoImpl.fromJson(Map<String, dynamic> json) =>
-      _$$MainChordInfoImplFromJson(json);
-
   final List<String>? _positions;
   @override
-  @JsonKey(name: 'frets')
   List<String>? get positions {
     final value = _positions;
     if (value == null) return null;
@@ -296,7 +279,6 @@ class _$MainChordInfoImpl implements _MainChordInfo {
 
   final List<List<String>>? _fingerings;
   @override
-  @JsonKey(name: 'fingers')
   List<List<String>>? get fingerings {
     final value = _fingerings;
     if (value == null) return null;
@@ -321,7 +303,6 @@ class _$MainChordInfoImpl implements _MainChordInfo {
                 .equals(other._fingerings, _fingerings));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -335,29 +316,16 @@ class _$MainChordInfoImpl implements _MainChordInfo {
   @pragma('vm:prefer-inline')
   _$$MainChordInfoImplCopyWith<_$MainChordInfoImpl> get copyWith =>
       __$$MainChordInfoImplCopyWithImpl<_$MainChordInfoImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$MainChordInfoImplToJson(
-      this,
-    );
-  }
 }
 
 abstract class _MainChordInfo implements MainChordInfo {
   factory _MainChordInfo(
-      {@JsonKey(name: 'frets') required final List<String>? positions,
-      @JsonKey(name: 'fingers')
+      {required final List<String>? positions,
       required final List<List<String>>? fingerings}) = _$MainChordInfoImpl;
 
-  factory _MainChordInfo.fromJson(Map<String, dynamic> json) =
-      _$MainChordInfoImpl.fromJson;
-
   @override
-  @JsonKey(name: 'frets')
   List<String>? get positions;
   @override
-  @JsonKey(name: 'fingers')
   List<List<String>>? get fingerings;
 
   /// Create a copy of MainChordInfo

@@ -31,13 +31,12 @@ class CurrentChordDiagramNotifier extends _$CurrentChordDiagramNotifier {
   // 現在の再生位置に一致するコードダイアグラムのインデックスを検索する
   int? _findCurrentIndex(
       Map<ChordTimeRange, int> chordChange, Duration currentPosition) {
-    int? currentIndex;
+    if (currentPosition == Duration.zero) return 0;
     for (ChordTimeRange chordTimeRange in chordChange.keys) {
       if (chordTimeRange.contains(currentPosition)) {
-        currentIndex = chordChange[chordTimeRange]!;
-        break;
+        return chordChange[chordTimeRange]!;
       }
     }
-    return currentIndex;
+    return chordChange.length - 1;
   }
 }

@@ -608,7 +608,7 @@ class _ChordNotifierProviderElement
   Song get song => (origin as ChordNotifierProvider).song;
 }
 
-String _$beatNotifierHash() => r'ad38f54e108a9904e7d9a299e6d1085e183b1242';
+String _$beatNotifierHash() => r'30d1bd8ba8d2f258875df2fd2f52df159b402671';
 
 abstract class _$BeatNotifier extends BuildlessAutoDisposeNotifier<List<Beat>> {
   late final Song song;

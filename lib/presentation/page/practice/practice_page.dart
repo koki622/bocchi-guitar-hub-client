@@ -83,7 +83,18 @@ class PracticePage extends ConsumerWidget {
     return switch (selectedTab) {
       SelectedTabType.volumeMixer =>
         VolumeControlPanel(audioPlayerUsecase: state),
-      SelectedTabType.guide => ChordPanel(song: song),
+      SelectedTabType.guide => Column(
+          children: [
+            Flexible(
+              flex: 9,
+              child: ChordPanel(song: song),
+            ),
+            Flexible(
+              flex: 1,
+              child: BeatPositionPanel(song: song),
+            ),
+          ],
+        ),
       SelectedTabType.setting => SettingsPanel(audioPlayerUsecase: state),
       _ => const Center(child: Text("Unknown Tab")), // デフォルトケース
     };

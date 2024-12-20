@@ -6,21 +6,6 @@ part of 'chord_diagram_notifier.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$MainChordInfoImpl _$$MainChordInfoImplFromJson(Map<String, dynamic> json) =>
-    _$MainChordInfoImpl(
-      positions:
-          (json['frets'] as List<dynamic>?)?.map((e) => e as String).toList(),
-      fingerings: (json['fingers'] as List<dynamic>?)
-          ?.map((e) => (e as List<dynamic>).map((e) => e as String).toList())
-          .toList(),
-    );
-
-Map<String, dynamic> _$$MainChordInfoImplToJson(_$MainChordInfoImpl instance) =>
-    <String, dynamic>{
-      'frets': instance.positions,
-      'fingers': instance.fingerings,
-    };
-
 _$SubChordInfoImpl _$$SubChordInfoImplFromJson(Map<String, dynamic> json) =>
     _$SubChordInfoImpl(
       positions: (json['positions'] as List<dynamic>?)
@@ -209,7 +194,7 @@ class _ChordChangeNotifierProviderElement
 }
 
 String _$chordDiagramNotifierHash() =>
-    r'9e2ac7516fbe871b8508fc254746a8bf349cca3c';
+    r'f69fd85c606a1a12039fa7d0ea1bc78d96a21884';
 
 abstract class _$ChordDiagramNotifier
     extends BuildlessAutoDisposeAsyncNotifier<List<ChordDiagramState>> {

@@ -1,4 +1,5 @@
 import 'package:bocchi_guitar_hub_client/presentation/page/loading_screen.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:bocchi_guitar_hub_client/presentation/router/go_router.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ class MyApp extends ConsumerWidget {
       minTextAdapt: true,
       builder: (context, child) {
         return MaterialApp(
+          scrollBehavior: MyCustomScrollBehavior(),
           debugShowCheckedModeBanner: false,
           // キーボードを開いているときなどにページをタップするとfocusを外せる
           home: GestureDetector(
@@ -39,4 +41,13 @@ class MyApp extends ConsumerWidget {
       },
     );
   }
+}
+
+class MyCustomScrollBehavior extends MaterialScrollBehavior {
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+        PointerDeviceKind.touch, // タッチ操作
+        PointerDeviceKind.mouse, // マウス操作
+        PointerDeviceKind.stylus, // スタイラス
+      };
 }
