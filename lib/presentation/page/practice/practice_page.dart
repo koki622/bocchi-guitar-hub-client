@@ -8,6 +8,7 @@ import 'package:bocchi_guitar_hub_client/presentation/page/practice/component/au
 import 'package:bocchi_guitar_hub_client/presentation/page/practice/component/audio_control/volume_control_panel.dart';
 import 'package:bocchi_guitar_hub_client/presentation/page/practice/component/beat_position/beat_position_panel.dart';
 import 'package:bocchi_guitar_hub_client/presentation/page/practice/component/chord_diagram/chord_panel.dart';
+import 'package:bocchi_guitar_hub_client/presentation/page/practice/component/lyrics/lyric_panel.dart';
 import 'package:bocchi_guitar_hub_client/presentation/page/practice/component/navi_bar/navi_bar_panel.dart';
 import 'package:bocchi_guitar_hub_client/presentation/page/practice/component/settings/settings_panel.dart';
 import 'package:flutter/material.dart';
@@ -86,7 +87,11 @@ class PracticePage extends ConsumerWidget {
       SelectedTabType.guide => Column(
           children: [
             Flexible(
-              flex: 9,
+              flex: 3,
+              child: LyricPanel(song: song),
+            ),
+            Flexible(
+              flex: 6,
               child: ChordPanel(song: song),
             ),
             Flexible(

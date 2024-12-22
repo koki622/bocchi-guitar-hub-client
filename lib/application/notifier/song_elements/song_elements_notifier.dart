@@ -4,10 +4,12 @@ import 'package:bocchi_guitar_hub_client/domain/entity/song_elements/beat/click_
 import 'package:bocchi_guitar_hub_client/domain/entity/song_elements/chord/chord.dart';
 import 'package:bocchi_guitar_hub_client/domain/entity/song_elements/chord/chord_sound.dart';
 import 'package:bocchi_guitar_hub_client/domain/entity/song_elements/lyric/lyric.dart';
+import 'package:bocchi_guitar_hub_client/domain/entity/song_elements/lyric/lyric_word.dart';
 import 'package:bocchi_guitar_hub_client/domain/entity/song_elements/section/section.dart';
 import 'package:bocchi_guitar_hub_client/domain/entity/song_elements/separated_audio/separated_audio.dart';
 import 'package:bocchi_guitar_hub_client/infrastructure/infrastructure_module.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'dart:convert';
 
 part 'song_elements_notifier.g.dart';
 
@@ -83,6 +85,19 @@ class SectionNotifier extends _$SectionNotifier {
 class LyricNotifier extends _$LyricNotifier {
   @override
   List<Lyric> build(Song song) {
-    return ref.watch(songElementsRepositoryProvider).fetchLyricList(song: song);
+    final List<Lyric> lyrics =
+        ref.watch(songElementsRepositoryProvider).fetchLyricList(song: song);
+    List<Lyric> convertedLyrics = [];
+    for (Lyric lyric in lyrics) {
+      List<LyricWord> convertedWords = [];
+      for (LyricWord lyricWord in lyric.words) {
+        convertedWords.add(lyricWord.copyWith(
+            word: utf8.decode(lyricWord.word.runes.toList())));
+      }
+      convertedLyrics.add(lyric.copyWith(
+          segmentedLyric: utf8.decode(lyric.segmentedLyric.runes.toList()),
+          words: convertedWords));
+    }
+    return convertedLyrics;
   }
 }

@@ -438,5 +438,136 @@ class _BeatPositionUsecaseProviderElement
   @override
   Song get song => (origin as BeatPositionUsecaseProvider).song;
 }
+
+String _$lyricPositionUsecaseHash() =>
+    r'15e48712f413bd3b5721d8c02b78ffaca6f5abd5';
+
+/// See also [lyricPositionUsecase].
+@ProviderFor(lyricPositionUsecase)
+const lyricPositionUsecaseProvider = LyricPositionUsecaseFamily();
+
+/// See also [lyricPositionUsecase].
+class LyricPositionUsecaseFamily extends Family<LyricPositionUsecase> {
+  /// See also [lyricPositionUsecase].
+  const LyricPositionUsecaseFamily();
+
+  /// See also [lyricPositionUsecase].
+  LyricPositionUsecaseProvider call(
+    Song song,
+  ) {
+    return LyricPositionUsecaseProvider(
+      song,
+    );
+  }
+
+  @override
+  LyricPositionUsecaseProvider getProviderOverride(
+    covariant LyricPositionUsecaseProvider provider,
+  ) {
+    return call(
+      provider.song,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'lyricPositionUsecaseProvider';
+}
+
+/// See also [lyricPositionUsecase].
+class LyricPositionUsecaseProvider
+    extends AutoDisposeProvider<LyricPositionUsecase> {
+  /// See also [lyricPositionUsecase].
+  LyricPositionUsecaseProvider(
+    Song song,
+  ) : this._internal(
+          (ref) => lyricPositionUsecase(
+            ref as LyricPositionUsecaseRef,
+            song,
+          ),
+          from: lyricPositionUsecaseProvider,
+          name: r'lyricPositionUsecaseProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$lyricPositionUsecaseHash,
+          dependencies: LyricPositionUsecaseFamily._dependencies,
+          allTransitiveDependencies:
+              LyricPositionUsecaseFamily._allTransitiveDependencies,
+          song: song,
+        );
+
+  LyricPositionUsecaseProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.song,
+  }) : super.internal();
+
+  final Song song;
+
+  @override
+  Override overrideWith(
+    LyricPositionUsecase Function(LyricPositionUsecaseRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: LyricPositionUsecaseProvider._internal(
+        (ref) => create(ref as LyricPositionUsecaseRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        song: song,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeProviderElement<LyricPositionUsecase> createElement() {
+    return _LyricPositionUsecaseProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is LyricPositionUsecaseProvider && other.song == song;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, song.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin LyricPositionUsecaseRef on AutoDisposeProviderRef<LyricPositionUsecase> {
+  /// The parameter `song` of this provider.
+  Song get song;
+}
+
+class _LyricPositionUsecaseProviderElement
+    extends AutoDisposeProviderElement<LyricPositionUsecase>
+    with LyricPositionUsecaseRef {
+  _LyricPositionUsecaseProviderElement(super.provider);
+
+  @override
+  Song get song => (origin as LyricPositionUsecaseProvider).song;
+}
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

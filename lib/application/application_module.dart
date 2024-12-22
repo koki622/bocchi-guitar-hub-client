@@ -7,11 +7,13 @@ import 'package:bocchi_guitar_hub_client/application/notifier/audio_player/playb
 import 'package:bocchi_guitar_hub_client/application/notifier/beat_position/beat_position_notifier.dart';
 import 'package:bocchi_guitar_hub_client/application/notifier/chord_diagram/chord_diagram_notifier.dart';
 import 'package:bocchi_guitar_hub_client/application/notifier/chord_diagram/current_chord_diagram_notifier.dart';
+import 'package:bocchi_guitar_hub_client/application/notifier/lyric_position/lyric_position_notifier.dart';
 import 'package:bocchi_guitar_hub_client/application/notifier/song_elements/song_elements_notifier.dart';
 import 'package:bocchi_guitar_hub_client/application/notifier/songs/songs_notifier.dart';
 import 'package:bocchi_guitar_hub_client/application/usecase/audio_player_usecase.dart';
 import 'package:bocchi_guitar_hub_client/application/usecase/beat_position_usecase.dart';
 import 'package:bocchi_guitar_hub_client/application/usecase/chord_diagram_usecase.dart';
+import 'package:bocchi_guitar_hub_client/application/usecase/lyric_position_usecase.dart';
 import 'package:bocchi_guitar_hub_client/application/usecase/song_usecase.dart';
 import 'package:bocchi_guitar_hub_client/domain/entity/song/song.dart';
 import 'package:bocchi_guitar_hub_client/infrastructure/infrastructure_module.dart';
@@ -70,4 +72,19 @@ BeatPositionUsecase beatPositionUsecase(Ref ref, Song song) {
   final beatPositionNotifier =
       ref.watch(beatPositionNotifierProvider(beats).notifier);
   return BeatPositionUsecase(beatPositionNotifier, beats);
+}
+
+@riverpod
+LyricPositionUsecase lyricPositionUsecase(Ref ref, Song song) {
+  final lyrics = ref.watch(lyricNotifierProvider(song));
+  final segmentedLyricPositionNotifier =
+      ref.watch(segmentedLyricPositionNotifierProvider(lyrics).notifier);
+
+  final wordLyricPositionNotifierList = [
+    for (int i = 0; i < lyrics.length; i++)
+      ref.watch(wordLyricPositionNotifierProvider(lyrics, i).notifier)
+  ];
+
+  return LyricPositionUsecase(
+      segmentedLyricPositionNotifier, wordLyricPositionNotifierList, lyrics);
 }

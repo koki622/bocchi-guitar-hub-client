@@ -7,7 +7,7 @@ part of 'current_chord_diagram_notifier.dart';
 // **************************************************************************
 
 String _$currentChordDiagramNotifierHash() =>
-    r'6eec5702d4c220b984e991df96fd034d0fb85155';
+    r'e14410465760e8cecb8a7b439e1ddc4433f21af6';
 
 /// Copied from Dart SDK
 class _SystemHash {

@@ -63,6 +63,7 @@ dependencies:
   go_router: ^14.6.2
   wakelock_plus: ^1.2.8
   flutter_screenutil: ^5.9.3
+  animated_text_kit: ^4.2.2
 dev_dependencies:
   flutter_test:
     sdk: flutter

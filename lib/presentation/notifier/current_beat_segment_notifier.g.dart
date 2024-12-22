@@ -7,7 +7,7 @@ part of 'current_beat_segment_notifier.dart';
 // **************************************************************************
 
 String _$currentBeatSegmentNotifierHash() =>
-    r'fde9855ca15e4699679f2176d84f9d17083b86d5';
+    r'72bbdcd6f02d9647790dfc4bb2cdfbbfbb1c29f7';
 
 /// Copied from Dart SDK
 class _SystemHash {

@@ -464,7 +464,7 @@ class _ChordSoundNotifierProviderElement
   Song get song => (origin as ChordSoundNotifierProvider).song;
 }
 
-String _$chordNotifierHash() => r'9f6ea3defb77e63438daa61c999b1b48bfe9794a';
+String _$chordNotifierHash() => r'3e4fb9389b4b482c4e6f63cf794bbcb0f9ea6ad4';
 
 abstract class _$ChordNotifier
     extends BuildlessAutoDisposeNotifier<List<Chord>> {
@@ -894,7 +894,7 @@ class _SectionNotifierProviderElement
   Song get song => (origin as SectionNotifierProvider).song;
 }
 
-String _$lyricNotifierHash() => r'99448e6b5d475a87bba9abcacf52314645ab2563';
+String _$lyricNotifierHash() => r'a5ac68e46ce805cd85ef20ce45646e88f03327c5';
 
 abstract class _$LyricNotifier
     extends BuildlessAutoDisposeNotifier<List<Lyric>> {
