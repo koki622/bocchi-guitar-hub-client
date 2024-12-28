@@ -2,23 +2,38 @@ import 'package:bocchi_guitar_hub_client/application/notifier/audio_player/playb
 import 'package:bocchi_guitar_hub_client/application/notifier/audio_player/playback_position_notifier.dart';
 import 'package:bocchi_guitar_hub_client/application/usecase/audio_player_usecase.dart';
 import 'package:bocchi_guitar_hub_client/core/constant/size.dart';
+import 'package:bocchi_guitar_hub_client/domain/entity/song/song.dart';
+import 'package:bocchi_guitar_hub_client/presentation/page/practice/component/section_box/section_box_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class PlaybackControlPanel extends StatelessWidget {
+  final Song song;
   final AudioPlayerUsecase audioPlayerUsecase;
 
-  const PlaybackControlPanel({super.key, required this.audioPlayerUsecase});
+  const PlaybackControlPanel(
+      {super.key, required this.song, required this.audioPlayerUsecase});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SeekBar(
-          audioPlayerUsecase: audioPlayerUsecase,
-        ),
-        PlaybackControl(audioPlayerUsecase: audioPlayerUsecase),
-      ],
+    return Container(
+      child: Column(
+        children: [
+          Container(
+              height: 100,
+              child: SeekBar(
+                audioPlayerUsecase: audioPlayerUsecase,
+              )),
+          Container(
+            height: 50,
+            child: SectionBoxPanel(song: song),
+          ),
+          Container(
+            height: 100,
+            child: PlaybackControl(audioPlayerUsecase: audioPlayerUsecase),
+          ),
+        ],
+      ),
     );
   }
 }

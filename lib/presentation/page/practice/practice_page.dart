@@ -10,6 +10,7 @@ import 'package:bocchi_guitar_hub_client/presentation/page/practice/component/be
 import 'package:bocchi_guitar_hub_client/presentation/page/practice/component/chord_diagram/chord_panel.dart';
 import 'package:bocchi_guitar_hub_client/presentation/page/practice/component/lyrics/lyric_panel.dart';
 import 'package:bocchi_guitar_hub_client/presentation/page/practice/component/navi_bar/navi_bar_panel.dart';
+import 'package:bocchi_guitar_hub_client/presentation/page/practice/component/section_box/section_box_panel.dart';
 import 'package:bocchi_guitar_hub_client/presentation/page/practice/component/settings/settings_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -32,10 +33,10 @@ class PracticePage extends ConsumerWidget {
             children: [
               Expanded(
                   // 下寄せしない要素をここに書く
-                  child: _buildSelectedWidget(selectedTab!, selectedSong, state)
-                  //VolumeControlPanel(audioPlayerUsecase: state),
-                  ),
-              PlaybackControlPanel(audioPlayerUsecase: state),
+                  child:
+                      _buildSelectedWidget(selectedTab!, selectedSong, state)),
+              PlaybackControlPanel(
+                  song: selectedSong, audioPlayerUsecase: state),
               const NaviBarPanel(initSelectedTab: initTabType),
             ],
           ));

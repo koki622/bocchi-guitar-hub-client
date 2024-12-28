@@ -1,6 +1,7 @@
 import 'package:bocchi_guitar_hub_client/application/notifier/audio_player/audio_player_notifier.dart';
 import 'package:bocchi_guitar_hub_client/application/notifier/audio_player/playback_volume_notifier.dart';
 import 'package:bocchi_guitar_hub_client/application/usecase/audio_player_usecase.dart';
+import 'package:bocchi_guitar_hub_client/core/constant/reference/responsive_breakpoints.dart';
 import 'package:bocchi_guitar_hub_client/core/constant/size.dart';
 import 'package:bocchi_guitar_hub_client/core/constant/text/sound.dart';
 import 'package:flutter/material.dart';
@@ -13,24 +14,32 @@ class VolumeControlPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> volumeBars = [
+      VolumeBar(
+          audioPlayerUsecase: audioPlayerUsecase, soundType: SoundType.vocals),
+      VolumeBar(
+          audioPlayerUsecase: audioPlayerUsecase, soundType: SoundType.drums),
+      VolumeBar(
+          audioPlayerUsecase: audioPlayerUsecase, soundType: SoundType.bass),
+      VolumeBar(
+          audioPlayerUsecase: audioPlayerUsecase, soundType: SoundType.guitar),
+      VolumeBar(
+          audioPlayerUsecase: audioPlayerUsecase, soundType: SoundType.piano),
+      VolumeBar(
+          audioPlayerUsecase: audioPlayerUsecase, soundType: SoundType.other)
+    ];
+    if (MediaQuery.of(context).size.height < 650 &&
+        ResponsiveBreakpoints.getDeviceType(context) != DeviceSizeType.mobile) {
+      return GridView.count(
+        childAspectRatio: MediaQuery.of(context).size.width / 120,
+        padding: EdgeInsets.zero,
+        crossAxisCount: 2,
+        children: volumeBars,
+      );
+    }
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        VolumeBar(
-            audioPlayerUsecase: audioPlayerUsecase,
-            soundType: SoundType.vocals),
-        VolumeBar(
-            audioPlayerUsecase: audioPlayerUsecase, soundType: SoundType.drums),
-        VolumeBar(
-            audioPlayerUsecase: audioPlayerUsecase, soundType: SoundType.bass),
-        VolumeBar(
-            audioPlayerUsecase: audioPlayerUsecase,
-            soundType: SoundType.guitar),
-        VolumeBar(
-            audioPlayerUsecase: audioPlayerUsecase, soundType: SoundType.piano),
-        VolumeBar(
-            audioPlayerUsecase: audioPlayerUsecase, soundType: SoundType.other)
-      ],
+      children: volumeBars,
     );
   }
 }

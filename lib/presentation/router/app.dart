@@ -48,6 +48,6 @@ class MyCustomScrollBehavior extends MaterialScrollBehavior {
   Set<PointerDeviceKind> get dragDevices => {
         PointerDeviceKind.touch, // タッチ操作
         PointerDeviceKind.mouse, // マウス操作
-        PointerDeviceKind.stylus, // スタイラス
+        //PointerDeviceKind.stylus, // スタイラス
       };
 }
