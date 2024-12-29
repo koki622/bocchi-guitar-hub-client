@@ -50,7 +50,10 @@ class WebapiEndpointConstant {
   static const deleteAudioFile = '/audiofile/';
 
   // リモートジョブに再接続
-  static const reconnectRemoteJob = '/async-job/status/';
+  static const reconnectRemoteJob = '/async-job/status';
+
+  // サーバーステータスを確認
+  static const checkServerStatus = '/util/server-status';
 }
 
 class WebapiQueryParametersConstant {

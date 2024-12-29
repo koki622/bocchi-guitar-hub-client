@@ -22,6 +22,7 @@ Song _$SongFromJson(Map<String, dynamic> json) {
 mixin _$Song {
   int get songId => throw _privateConstructorUsedError;
   String? get audioFileId => throw _privateConstructorUsedError;
+  DestApiServerType get destApiServerType => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
   String get filePath => throw _privateConstructorUsedError;
   String get directoryPath => throw _privateConstructorUsedError;
@@ -46,6 +47,7 @@ abstract class $SongCopyWith<$Res> {
   $Res call(
       {int songId,
       String? audioFileId,
+      DestApiServerType destApiServerType,
       String title,
       String filePath,
       String directoryPath,
@@ -71,6 +73,7 @@ class _$SongCopyWithImpl<$Res, $Val extends Song>
   $Res call({
     Object? songId = null,
     Object? audioFileId = freezed,
+    Object? destApiServerType = null,
     Object? title = null,
     Object? filePath = null,
     Object? directoryPath = null,
@@ -87,6 +90,10 @@ class _$SongCopyWithImpl<$Res, $Val extends Song>
           ? _value.audioFileId
           : audioFileId // ignore: cast_nullable_to_non_nullable
               as String?,
+      destApiServerType: null == destApiServerType
+          ? _value.destApiServerType
+          : destApiServerType // ignore: cast_nullable_to_non_nullable
+              as DestApiServerType,
       title: null == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
@@ -125,6 +132,7 @@ abstract class _$$SongImplCopyWith<$Res> implements $SongCopyWith<$Res> {
   $Res call(
       {int songId,
       String? audioFileId,
+      DestApiServerType destApiServerType,
       String title,
       String filePath,
       String directoryPath,
@@ -147,6 +155,7 @@ class __$$SongImplCopyWithImpl<$Res>
   $Res call({
     Object? songId = null,
     Object? audioFileId = freezed,
+    Object? destApiServerType = null,
     Object? title = null,
     Object? filePath = null,
     Object? directoryPath = null,
@@ -163,6 +172,10 @@ class __$$SongImplCopyWithImpl<$Res>
           ? _value.audioFileId
           : audioFileId // ignore: cast_nullable_to_non_nullable
               as String?,
+      destApiServerType: null == destApiServerType
+          ? _value.destApiServerType
+          : destApiServerType // ignore: cast_nullable_to_non_nullable
+              as DestApiServerType,
       title: null == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
@@ -197,6 +210,7 @@ class _$SongImpl implements _Song {
   _$SongImpl(
       {required this.songId,
       this.audioFileId,
+      required this.destApiServerType,
       required this.title,
       required this.filePath,
       required this.directoryPath,
@@ -212,6 +226,8 @@ class _$SongImpl implements _Song {
   @override
   final String? audioFileId;
   @override
+  final DestApiServerType destApiServerType;
+  @override
   final String title;
   @override
   final String filePath;
@@ -226,7 +242,7 @@ class _$SongImpl implements _Song {
 
   @override
   String toString() {
-    return 'Song(songId: $songId, audioFileId: $audioFileId, title: $title, filePath: $filePath, directoryPath: $directoryPath, createdAt: $createdAt, processType: $processType, processStatusType: $processStatusType)';
+    return 'Song(songId: $songId, audioFileId: $audioFileId, destApiServerType: $destApiServerType, title: $title, filePath: $filePath, directoryPath: $directoryPath, createdAt: $createdAt, processType: $processType, processStatusType: $processStatusType)';
   }
 
   @override
@@ -237,6 +253,8 @@ class _$SongImpl implements _Song {
             (identical(other.songId, songId) || other.songId == songId) &&
             (identical(other.audioFileId, audioFileId) ||
                 other.audioFileId == audioFileId) &&
+            (identical(other.destApiServerType, destApiServerType) ||
+                other.destApiServerType == destApiServerType) &&
             (identical(other.title, title) || other.title == title) &&
             (identical(other.filePath, filePath) ||
                 other.filePath == filePath) &&
@@ -252,8 +270,17 @@ class _$SongImpl implements _Song {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, songId, audioFileId, title,
-      filePath, directoryPath, createdAt, processType, processStatusType);
+  int get hashCode => Object.hash(
+      runtimeType,
+      songId,
+      audioFileId,
+      destApiServerType,
+      title,
+      filePath,
+      directoryPath,
+      createdAt,
+      processType,
+      processStatusType);
 
   /// Create a copy of Song
   /// with the given fields replaced by the non-null parameter values.
@@ -275,6 +302,7 @@ abstract class _Song implements Song {
   factory _Song(
       {required final int songId,
       final String? audioFileId,
+      required final DestApiServerType destApiServerType,
       required final String title,
       required final String filePath,
       required final String directoryPath,
@@ -288,6 +316,8 @@ abstract class _Song implements Song {
   int get songId;
   @override
   String? get audioFileId;
+  @override
+  DestApiServerType get destApiServerType;
   @override
   String get title;
   @override

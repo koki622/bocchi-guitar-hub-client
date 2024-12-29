@@ -199,5 +199,20 @@ final songElementsRepositoryProvider =
 
 typedef SongElementsRepositoryRef
     = AutoDisposeProviderRef<SongElementsRepository>;
+String _$serverRepositoryHash() => r'3cdef718f3862971e30de20b7dc8485b3f21d02b';
+
+/// See also [serverRepository].
+@ProviderFor(serverRepository)
+final serverRepositoryProvider = AutoDisposeProvider<ServerRepository>.internal(
+  serverRepository,
+  name: r'serverRepositoryProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$serverRepositoryHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef ServerRepositoryRef = AutoDisposeProviderRef<ServerRepository>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

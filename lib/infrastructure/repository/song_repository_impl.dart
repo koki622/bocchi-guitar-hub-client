@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:bocchi_guitar_hub_client/core/constant/reference/file_extensions.dart';
 import 'package:bocchi_guitar_hub_client/core/constant/reference/webapi.dart';
+import 'package:bocchi_guitar_hub_client/core/enum/dest_api_server.dart';
 import 'package:bocchi_guitar_hub_client/core/enum/process.dart';
 import 'package:bocchi_guitar_hub_client/core/enum/process_step.dart';
 import 'package:bocchi_guitar_hub_client/core/enum/process_status.dart';
@@ -44,7 +45,9 @@ class SongRepositoryImpl implements SongRepository {
   // ディレクトリの作成
   // 曲情報のデータベースへの書き込み
   @override
-  Future<Song> addSong({required NewSong newSong}) async {
+  Future<Song> addSong(
+      {required NewSong newSong,
+      required DestApiServerType destApiServerType}) async {
     const uuid = Uuid();
 
     // アプリケーションサポートディレクトリを取得
@@ -70,6 +73,7 @@ class SongRepositoryImpl implements SongRepository {
     try {
       // データベースに曲情報を登録
       SongData unuploadedSongData = SongData(
+          destApiServerType: destApiServerType.name,
           title: newSong.title,
           processType: ProcessStep.init.name,
           processStatusType: ProcessStatusType.completed.name,
@@ -86,6 +90,9 @@ class SongRepositoryImpl implements SongRepository {
   @override
   Future<Song> uploadSong(
       {required Song song, required UploadType uploadType}) async {
+    final baseUrl = song.destApiServerType.getBaseUrl();
+    if (baseUrl == null) throw Exception('NullなbaseUrlが渡されました');
+
     String filePath = song.filePath;
 
     // 拡張子を取得
@@ -98,8 +105,8 @@ class SongRepositoryImpl implements SongRepository {
     }
 
     // 音声ファイルをサーバーにアップロード
-    var response =
-        await _songWebapi.uploadFile(uploadType.endpoint, filePath, mediaType);
+    var response = await _songWebapi.uploadFile(
+        baseUrl, uploadType.endpoint, filePath, mediaType);
 
     String? audioFileId = response['audiofile_id'];
     if (audioFileId == null) {
@@ -120,9 +127,11 @@ class SongRepositoryImpl implements SongRepository {
 
   @override
   Future<void> deleteSong({required Song song}) async {
+    final baseUrl = song.destApiServerType.getBaseUrl();
+    if (baseUrl == null) throw Exception('NullなbaseUrlが渡されました');
     await Directory(song.directoryPath).delete(recursive: true);
     await _songHive.delete(song.songId);
-    await _songWebapi.deleteUploadFile(
+    await _songWebapi.deleteUploadFile(baseUrl,
         '${WebapiEndpointConstant.deleteAudioFile}/${song.audioFileId}');
   }
 

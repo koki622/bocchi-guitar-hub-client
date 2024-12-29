@@ -8,7 +8,6 @@ import 'package:bocchi_guitar_hub_client/core/enum/job_status.dart';
 import 'package:bocchi_guitar_hub_client/core/exception/http_exceptions.dart';
 import 'package:bocchi_guitar_hub_client/core/exception/remote_job_exceptions.dart';
 import 'package:http/http.dart' as http;
-import 'package:bocchi_guitar_hub_client/core/env/env.dart';
 import 'package:bocchi_guitar_hub_client/infrastructure/model/remote_job/job_status.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:path_provider/path_provider.dart';
@@ -17,16 +16,21 @@ import 'package:uuid/uuid.dart';
 enum HttpMethod { get, post, delete }
 
 class SongWebapi {
-  final baseUrl = Env.apiBaseUrl;
-
   Stream<JobStatusData> sendRequestJob(
-      {required String endpoint, String? jobId}) async* {
+      {required String baseUrl,
+      required String endpoint,
+      String? jobId}) async* {
     String url = baseUrl + endpoint;
     Uri parsedUri = Uri.parse(url);
+    final httpMethod;
     if (jobId != null) {
       parsedUri = parsedUri.replace(queryParameters: {'job_id': jobId});
+      httpMethod = 'GET';
+    } else {
+      httpMethod = 'POST';
     }
-    var request = http.Request('POST', Uri.parse(url));
+
+    var request = http.Request(httpMethod, parsedUri);
 
     Map<String, String> header = {
       'Accept': 'text/event-stream',
@@ -67,8 +71,8 @@ class SongWebapi {
     }
   }
 
-  Future<dynamic> uploadFile(
-      String endpoint, String filePath, String mediaType) async {
+  Future<dynamic> uploadFile(String baseUrl, String endpoint, String filePath,
+      String mediaType) async {
     String url = baseUrl + endpoint;
     var request = http.MultipartRequest('POST', Uri.parse(url));
     request.files.add(await http.MultipartFile.fromPath('file', filePath,
@@ -86,13 +90,15 @@ class SongWebapi {
   }
 
   // アップロードしたファイルを削除
-  Future<void> deleteUploadFile(String endpoint) async {
+  Future<void> deleteUploadFile(String baseUrl, String endpoint) async {
     String url = baseUrl + endpoint;
     await _sendHttpRequest(method: HttpMethod.delete, url: url);
   }
 
   Future<dynamic> downloadJson(
-      {required String endpoint, Map<String, String>? queryParams}) async {
+      {required String baseUrl,
+      required String endpoint,
+      Map<String, String>? queryParams}) async {
     String url = baseUrl + endpoint;
     Response response = await _sendHttpRequest(
         method: HttpMethod.get, url: url, queryParams: queryParams);
@@ -101,7 +107,8 @@ class SongWebapi {
   }
 
   Future<String> downloadAudioFile(
-      {required String endpoint,
+      {required String baseUrl,
+      required String endpoint,
       required String destinationDir,
       Map<String, String>? queryParams,
       required String saveFileName}) async {
@@ -119,7 +126,8 @@ class SongWebapi {
   }
 
   Future<void> downloadZipFile(
-      {required String endpoint,
+      {required String baseUrl,
+      required String endpoint,
       Map<String, String>? queryParams,
       required String destinationDir}) async {
     String url = baseUrl + endpoint;

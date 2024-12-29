@@ -1,3 +1,4 @@
+import 'package:bocchi_guitar_hub_client/core/enum/process_status.dart';
 import 'package:bocchi_guitar_hub_client/domain/entity/song/song.dart';
 import 'package:bocchi_guitar_hub_client/infrastructure/infrastructure_module.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -11,13 +12,15 @@ class SongsNotifier extends _$SongsNotifier {
     // 初期状態としてsongRepositoryから取得した全曲をMap形式に変換して格納
     List<Song?> songs = ref.watch(songRepositoryProvider).fetchAllSong();
 
-    // songsリストにnullが含まれている場合、nullを返す
-    if (songs.contains(null)) {
+    if (songs.isEmpty) {
       return null;
     }
+    List<Song> noNullsongs = songs.whereType<Song>().toList();
 
+    // 状態が処理中のものは中断に変更する
+    List<Song> initedSongs = _initProcessStatusType(noNullsongs);
     return {
-      for (var song in songs) song!.songId: song,
+      for (var song in initedSongs) song.songId: song,
     };
   }
 
@@ -34,5 +37,18 @@ class SongsNotifier extends _$SongsNotifier {
       final updatedState = Map<int, Song>.from(state!)..remove(songId);
       state = updatedState;
     }
+  }
+
+  List<Song> _initProcessStatusType(List<Song> songs) {
+    List<Song> initedSongs = [];
+    for (Song song in songs) {
+      if (song.processStatusType == ProcessStatusType.processing) {
+        initedSongs.add(
+            song.copyWith(processStatusType: ProcessStatusType.interrupted));
+      } else {
+        initedSongs.add(song);
+      }
+    }
+    return initedSongs;
   }
 }

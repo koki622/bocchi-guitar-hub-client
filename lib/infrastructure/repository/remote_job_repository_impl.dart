@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:bocchi_guitar_hub_client/core/enum/dest_api_server.dart';
 import 'package:bocchi_guitar_hub_client/core/enum/process.dart';
 import 'package:bocchi_guitar_hub_client/core/exception/http_exceptions.dart';
 import 'package:bocchi_guitar_hub_client/core/exception/remote_job_exceptions.dart';
@@ -29,7 +30,10 @@ class RemoteJobRepositoryImpl implements RemoteJobRepository {
       throw Exception('audioFileId is Null');
     }
     String endpoint = remoteJobType.endpoint + audioFileId;
-    yield* _handleJobRequest(endpoint: endpoint, songId: song.songId);
+    yield* _handleJobRequest(
+        endpoint: endpoint,
+        songId: song.songId,
+        destApiServerType: song.destApiServerType);
   }
 
   @override
@@ -40,16 +44,28 @@ class RemoteJobRepositoryImpl implements RemoteJobRepository {
     if (audioFileId == null) {
       throw Exception('audioFileId is Null');
     }
-    String endpoint = bulkRemoteJobType.endpoint + audioFileId;
-    yield* _handleJobRequest(endpoint: endpoint, songId: song.songId);
+    final jobStatusData = _jobStatusHive.readJobStatus(song.songId);
+    if (jobStatusData != null) {
+      // 既にリクエスト済みの場合、再接続
+      yield* _reconnectBulkRemoteJob(
+          song: song, bulkRemoteJobType: bulkRemoteJobType);
+    } else {
+      String endpoint = bulkRemoteJobType.endpoint + audioFileId;
+      yield* _handleJobRequest(
+          endpoint: endpoint,
+          songId: song.songId,
+          destApiServerType: song.destApiServerType);
+    }
   }
 
-  Stream<RemoteJobStatus> _handleJobRequest({
-    required String endpoint,
-    required int songId,
-  }) async* {
+  Stream<RemoteJobStatus> _handleJobRequest(
+      {required String endpoint,
+      required int songId,
+      required DestApiServerType destApiServerType}) async* {
+    final baseUrl = destApiServerType.getBaseUrl();
+    if (baseUrl == null) throw Exception('NullなbaseUrlが渡されました');
     Stream<JobStatusData> response =
-        _songWebapi.sendRequestJob(endpoint: endpoint);
+        _songWebapi.sendRequestJob(baseUrl: baseUrl, endpoint: endpoint);
 
     try {
       await for (JobStatusData jobStatusData in response) {
@@ -71,8 +87,7 @@ class RemoteJobRepositoryImpl implements RemoteJobRepository {
     }
   }
 
-  @override
-  Stream<RemoteJobStatus> reconnectBulkRemoteJob(
+  Stream<RemoteJobStatus> _reconnectBulkRemoteJob(
       {required Song song,
       required BulkRemoteJobType bulkRemoteJobType}) async* {
     final jobStatusData = _jobStatusHive.readJobStatus(song.songId);
@@ -83,9 +98,11 @@ class RemoteJobRepositoryImpl implements RemoteJobRepository {
     if (audioFileId == null) {
       throw Exception('audioFileId is Null');
     }
-    String endpoint = bulkRemoteJobType.endpoint + audioFileId;
+    final baseUrl = song.destApiServerType.getBaseUrl();
+    if (baseUrl == null) throw Exception('NullなbaseUrlが渡されました');
+    String endpoint = bulkRemoteJobType.reconnectEndpoint;
     Stream<JobStatusData> response = _songWebapi.sendRequestJob(
-        endpoint: endpoint, jobId: jobStatusData.jobId);
+        baseUrl: baseUrl, endpoint: endpoint, jobId: jobStatusData.jobId);
     try {
       await for (JobStatusData jobStatusData in response) {
         yield jobStatusData.toEntity();
@@ -120,10 +137,8 @@ class RemoteJobRepositoryImpl implements RemoteJobRepository {
   }
 
   @override
-  Future<RemoteJobStatus> fetchRemoteJobStatus(
-      {required String songId, required RemoteJobType remoteJobType}) {
-    // TODO: implement fetchRemoteJobStatus
-    throw UnimplementedError();
+  RemoteJobStatus? fetchRemoteJobStatus({required int songId}) {
+    return _jobStatusHive.readJobStatus(songId)?.toEntity();
   }
 
   @override

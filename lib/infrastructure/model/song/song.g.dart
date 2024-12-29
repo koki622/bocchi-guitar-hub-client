@@ -18,35 +18,38 @@ class SongDataImplAdapter extends TypeAdapter<_$SongDataImpl> {
     };
     return _$SongDataImpl(
       audioFileId: fields[0] as String?,
-      title: fields[1] as String,
-      processType: fields[2] as String,
-      processStatusType: fields[3] as String,
-      filePath: fields[4] as String,
-      directoryPath: fields[5] as String,
-      createdAt: fields[6] as DateTime,
-      updatedAt: fields[7] as DateTime?,
+      destApiServerType: fields[1] as String,
+      title: fields[2] as String,
+      processType: fields[3] as String,
+      processStatusType: fields[4] as String,
+      filePath: fields[5] as String,
+      directoryPath: fields[6] as String,
+      createdAt: fields[7] as DateTime,
+      updatedAt: fields[8] as DateTime?,
     );
   }
 
   @override
   void write(BinaryWriter writer, _$SongDataImpl obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.audioFileId)
       ..writeByte(1)
-      ..write(obj.title)
+      ..write(obj.destApiServerType)
       ..writeByte(2)
-      ..write(obj.processType)
+      ..write(obj.title)
       ..writeByte(3)
-      ..write(obj.processStatusType)
+      ..write(obj.processType)
       ..writeByte(4)
-      ..write(obj.filePath)
+      ..write(obj.processStatusType)
       ..writeByte(5)
-      ..write(obj.directoryPath)
+      ..write(obj.filePath)
       ..writeByte(6)
-      ..write(obj.createdAt)
+      ..write(obj.directoryPath)
       ..writeByte(7)
+      ..write(obj.createdAt)
+      ..writeByte(8)
       ..write(obj.updatedAt);
   }
 

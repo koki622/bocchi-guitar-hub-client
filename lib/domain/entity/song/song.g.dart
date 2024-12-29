@@ -9,6 +9,8 @@ part of 'song.dart';
 _$SongImpl _$$SongImplFromJson(Map<String, dynamic> json) => _$SongImpl(
       songId: (json['songId'] as num).toInt(),
       audioFileId: json['audioFileId'] as String?,
+      destApiServerType:
+          $enumDecode(_$DestApiServerTypeEnumMap, json['destApiServerType']),
       title: json['title'] as String,
       filePath: json['filePath'] as String,
       directoryPath: json['directoryPath'] as String,
@@ -22,6 +24,8 @@ Map<String, dynamic> _$$SongImplToJson(_$SongImpl instance) =>
     <String, dynamic>{
       'songId': instance.songId,
       'audioFileId': instance.audioFileId,
+      'destApiServerType':
+          _$DestApiServerTypeEnumMap[instance.destApiServerType]!,
       'title': instance.title,
       'filePath': instance.filePath,
       'directoryPath': instance.directoryPath,
@@ -30,6 +34,11 @@ Map<String, dynamic> _$$SongImplToJson(_$SongImpl instance) =>
       'processStatusType':
           _$ProcessStatusTypeEnumMap[instance.processStatusType]!,
     };
+
+const _$DestApiServerTypeEnumMap = {
+  DestApiServerType.main: 'main',
+  DestApiServerType.sub: 'sub',
+};
 
 const _$ProcessStepEnumMap = {
   ProcessStep.init: 'init',

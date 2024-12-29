@@ -19,18 +19,20 @@ mixin _$SongData {
   @HiveField(0)
   String? get audioFileId => throw _privateConstructorUsedError;
   @HiveField(1)
-  String get title => throw _privateConstructorUsedError;
+  String get destApiServerType => throw _privateConstructorUsedError;
   @HiveField(2)
-  String get processType => throw _privateConstructorUsedError;
+  String get title => throw _privateConstructorUsedError;
   @HiveField(3)
-  String get processStatusType => throw _privateConstructorUsedError;
+  String get processType => throw _privateConstructorUsedError;
   @HiveField(4)
-  String get filePath => throw _privateConstructorUsedError;
+  String get processStatusType => throw _privateConstructorUsedError;
   @HiveField(5)
-  String get directoryPath => throw _privateConstructorUsedError;
+  String get filePath => throw _privateConstructorUsedError;
   @HiveField(6)
-  DateTime get createdAt => throw _privateConstructorUsedError;
+  String get directoryPath => throw _privateConstructorUsedError;
   @HiveField(7)
+  DateTime get createdAt => throw _privateConstructorUsedError;
+  @HiveField(8)
   DateTime? get updatedAt => throw _privateConstructorUsedError;
 
   /// Create a copy of SongData
@@ -47,13 +49,14 @@ abstract class $SongDataCopyWith<$Res> {
   @useResult
   $Res call(
       {@HiveField(0) String? audioFileId,
-      @HiveField(1) String title,
-      @HiveField(2) String processType,
-      @HiveField(3) String processStatusType,
-      @HiveField(4) String filePath,
-      @HiveField(5) String directoryPath,
-      @HiveField(6) DateTime createdAt,
-      @HiveField(7) DateTime? updatedAt});
+      @HiveField(1) String destApiServerType,
+      @HiveField(2) String title,
+      @HiveField(3) String processType,
+      @HiveField(4) String processStatusType,
+      @HiveField(5) String filePath,
+      @HiveField(6) String directoryPath,
+      @HiveField(7) DateTime createdAt,
+      @HiveField(8) DateTime? updatedAt});
 }
 
 /// @nodoc
@@ -72,6 +75,7 @@ class _$SongDataCopyWithImpl<$Res, $Val extends SongData>
   @override
   $Res call({
     Object? audioFileId = freezed,
+    Object? destApiServerType = null,
     Object? title = null,
     Object? processType = null,
     Object? processStatusType = null,
@@ -85,6 +89,10 @@ class _$SongDataCopyWithImpl<$Res, $Val extends SongData>
           ? _value.audioFileId
           : audioFileId // ignore: cast_nullable_to_non_nullable
               as String?,
+      destApiServerType: null == destApiServerType
+          ? _value.destApiServerType
+          : destApiServerType // ignore: cast_nullable_to_non_nullable
+              as String,
       title: null == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
@@ -127,13 +135,14 @@ abstract class _$$SongDataImplCopyWith<$Res>
   @useResult
   $Res call(
       {@HiveField(0) String? audioFileId,
-      @HiveField(1) String title,
-      @HiveField(2) String processType,
-      @HiveField(3) String processStatusType,
-      @HiveField(4) String filePath,
-      @HiveField(5) String directoryPath,
-      @HiveField(6) DateTime createdAt,
-      @HiveField(7) DateTime? updatedAt});
+      @HiveField(1) String destApiServerType,
+      @HiveField(2) String title,
+      @HiveField(3) String processType,
+      @HiveField(4) String processStatusType,
+      @HiveField(5) String filePath,
+      @HiveField(6) String directoryPath,
+      @HiveField(7) DateTime createdAt,
+      @HiveField(8) DateTime? updatedAt});
 }
 
 /// @nodoc
@@ -150,6 +159,7 @@ class __$$SongDataImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? audioFileId = freezed,
+    Object? destApiServerType = null,
     Object? title = null,
     Object? processType = null,
     Object? processStatusType = null,
@@ -163,6 +173,10 @@ class __$$SongDataImplCopyWithImpl<$Res>
           ? _value.audioFileId
           : audioFileId // ignore: cast_nullable_to_non_nullable
               as String?,
+      destApiServerType: null == destApiServerType
+          ? _value.destApiServerType
+          : destApiServerType // ignore: cast_nullable_to_non_nullable
+              as String,
       title: null == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
@@ -201,42 +215,46 @@ class __$$SongDataImplCopyWithImpl<$Res>
 class _$SongDataImpl implements _SongData {
   const _$SongDataImpl(
       {@HiveField(0) this.audioFileId,
-      @HiveField(1) required this.title,
-      @HiveField(2) required this.processType,
-      @HiveField(3) required this.processStatusType,
-      @HiveField(4) required this.filePath,
-      @HiveField(5) required this.directoryPath,
-      @HiveField(6) required this.createdAt,
-      @HiveField(7) this.updatedAt});
+      @HiveField(1) required this.destApiServerType,
+      @HiveField(2) required this.title,
+      @HiveField(3) required this.processType,
+      @HiveField(4) required this.processStatusType,
+      @HiveField(5) required this.filePath,
+      @HiveField(6) required this.directoryPath,
+      @HiveField(7) required this.createdAt,
+      @HiveField(8) this.updatedAt});
 
   @override
   @HiveField(0)
   final String? audioFileId;
   @override
   @HiveField(1)
-  final String title;
+  final String destApiServerType;
   @override
   @HiveField(2)
-  final String processType;
+  final String title;
   @override
   @HiveField(3)
-  final String processStatusType;
+  final String processType;
   @override
   @HiveField(4)
-  final String filePath;
+  final String processStatusType;
   @override
   @HiveField(5)
-  final String directoryPath;
+  final String filePath;
   @override
   @HiveField(6)
-  final DateTime createdAt;
+  final String directoryPath;
   @override
   @HiveField(7)
+  final DateTime createdAt;
+  @override
+  @HiveField(8)
   final DateTime? updatedAt;
 
   @override
   String toString() {
-    return 'SongData(audioFileId: $audioFileId, title: $title, processType: $processType, processStatusType: $processStatusType, filePath: $filePath, directoryPath: $directoryPath, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'SongData(audioFileId: $audioFileId, destApiServerType: $destApiServerType, title: $title, processType: $processType, processStatusType: $processStatusType, filePath: $filePath, directoryPath: $directoryPath, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -246,6 +264,8 @@ class _$SongDataImpl implements _SongData {
             other is _$SongDataImpl &&
             (identical(other.audioFileId, audioFileId) ||
                 other.audioFileId == audioFileId) &&
+            (identical(other.destApiServerType, destApiServerType) ||
+                other.destApiServerType == destApiServerType) &&
             (identical(other.title, title) || other.title == title) &&
             (identical(other.processType, processType) ||
                 other.processType == processType) &&
@@ -262,8 +282,17 @@ class _$SongDataImpl implements _SongData {
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, audioFileId, title, processType,
-      processStatusType, filePath, directoryPath, createdAt, updatedAt);
+  int get hashCode => Object.hash(
+      runtimeType,
+      audioFileId,
+      destApiServerType,
+      title,
+      processType,
+      processStatusType,
+      filePath,
+      directoryPath,
+      createdAt,
+      updatedAt);
 
   /// Create a copy of SongData
   /// with the given fields replaced by the non-null parameter values.
@@ -277,37 +306,41 @@ class _$SongDataImpl implements _SongData {
 abstract class _SongData implements SongData {
   const factory _SongData(
       {@HiveField(0) final String? audioFileId,
-      @HiveField(1) required final String title,
-      @HiveField(2) required final String processType,
-      @HiveField(3) required final String processStatusType,
-      @HiveField(4) required final String filePath,
-      @HiveField(5) required final String directoryPath,
-      @HiveField(6) required final DateTime createdAt,
-      @HiveField(7) final DateTime? updatedAt}) = _$SongDataImpl;
+      @HiveField(1) required final String destApiServerType,
+      @HiveField(2) required final String title,
+      @HiveField(3) required final String processType,
+      @HiveField(4) required final String processStatusType,
+      @HiveField(5) required final String filePath,
+      @HiveField(6) required final String directoryPath,
+      @HiveField(7) required final DateTime createdAt,
+      @HiveField(8) final DateTime? updatedAt}) = _$SongDataImpl;
 
   @override
   @HiveField(0)
   String? get audioFileId;
   @override
   @HiveField(1)
-  String get title;
+  String get destApiServerType;
   @override
   @HiveField(2)
-  String get processType;
+  String get title;
   @override
   @HiveField(3)
-  String get processStatusType;
+  String get processType;
   @override
   @HiveField(4)
-  String get filePath;
+  String get processStatusType;
   @override
   @HiveField(5)
-  String get directoryPath;
+  String get filePath;
   @override
   @HiveField(6)
-  DateTime get createdAt;
+  String get directoryPath;
   @override
   @HiveField(7)
+  DateTime get createdAt;
+  @override
+  @HiveField(8)
   DateTime? get updatedAt;
 
   /// Create a copy of SongData

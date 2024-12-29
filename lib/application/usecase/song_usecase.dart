@@ -1,4 +1,7 @@
+import 'package:bocchi_guitar_hub_client/application/exception.dart';
+import 'package:bocchi_guitar_hub_client/application/notifier/remote_job/remote_job_notifier.dart';
 import 'package:bocchi_guitar_hub_client/application/notifier/songs/songs_notifier.dart';
+import 'package:bocchi_guitar_hub_client/core/enum/dest_api_server.dart';
 import 'package:bocchi_guitar_hub_client/core/enum/job_status.dart';
 import 'package:bocchi_guitar_hub_client/core/enum/process.dart';
 import 'package:bocchi_guitar_hub_client/core/enum/process_step.dart';
@@ -7,29 +10,56 @@ import 'package:bocchi_guitar_hub_client/core/exception/remote_job_exceptions.da
 import 'package:bocchi_guitar_hub_client/domain/entity/remote_job/remote_job_status.dart';
 import 'package:bocchi_guitar_hub_client/domain/entity/song/song.dart';
 import 'package:bocchi_guitar_hub_client/domain/repository/remote_job_repository.dart';
+import 'package:bocchi_guitar_hub_client/domain/repository/server_repository.dart';
 import 'package:bocchi_guitar_hub_client/domain/repository/song_elements_repository.dart';
 import 'package:bocchi_guitar_hub_client/domain/repository/song_repository.dart';
-import 'package:path/path.dart';
 
 class SongUsecase {
   final SongsNotifier _songsNotifier;
   final SongRepository _songRepository;
   final SongElementsRepository _songElementsRepository;
   final RemoteJobRepository _remoteJobRepository;
+  final ServerRepository _serverRepository;
 
-  SongUsecase(this._songsNotifier, this._songRepository,
-      this._songElementsRepository, this._remoteJobRepository);
+  SongUsecase(
+      this._songsNotifier,
+      this._songRepository,
+      this._songElementsRepository,
+      this._remoteJobRepository,
+      this._serverRepository);
 
   List<Song?> fetchAllSongs() {
     return _songRepository.fetchAllSong();
   }
 
+  Future<DestApiServerType?> getAvailableServerType() async {
+    final mainApiBaseUrl = DestApiServerType.main.getBaseUrl();
+    if (mainApiBaseUrl != null) {
+      final mainIsAvailable = await _serverRepository.isServerAvailable(
+          destApiServerType: DestApiServerType.main);
+      if (mainIsAvailable) return DestApiServerType.main;
+    }
+    final subApiBaseUrl = DestApiServerType.sub.getBaseUrl();
+    if (subApiBaseUrl != null) {
+      final subIsAvailable = await _serverRepository.isServerAvailable(
+          destApiServerType: DestApiServerType.sub);
+      if (subIsAvailable) return DestApiServerType.sub;
+    }
+    return null;
+  }
+
   Future<void> addSong(
       {required String title, required String filePath}) async {
     NewSong newSong = NewSong(title: title, filePath: filePath);
-    Song unuploadedSong = await _songRepository.addSong(newSong: newSong);
+    final destApiServerType = await getAvailableServerType();
+
+    // どのサーバとも接続できないとき
+    if (destApiServerType == null) throw UnableConnectServerException();
+
+    Song unuploadedSong = await _songRepository.addSong(
+        newSong: newSong, destApiServerType: destApiServerType);
     _songsNotifier.upsertSong(unuploadedSong);
-    await executeProcess(song: unuploadedSong);
+    await _executeProcess(song: unuploadedSong);
   }
 
   Future<void> deleteSong({required Song song}) async {
@@ -42,7 +72,11 @@ class SongUsecase {
     }
   }
 
-  Future<void> executeProcess({required Song song}) async {
+  Future<void> resumeProcess({required Song song}) async {
+    await _executeProcess(song: song);
+  }
+
+  Future<void> _executeProcess({required Song song}) async {
     Song currentSong = song.copyWith();
     while (true) {
       // 次に実行すべきプロセスを得る
@@ -273,6 +307,9 @@ class SongUsecase {
         throw ArgumentError('ここで$processTypeが入ることは想定されていません');
       }
       await for (RemoteJobStatus jobStatus in response) {
+        _songsNotifier.ref
+            .read(remoteJobNotifierProvider(song.songId).notifier)
+            .update(jobStatus);
         ProcessStatusType? processStatusType;
         switch (jobStatus.jobStatus) {
           case JobStatusType.jobSuccess:

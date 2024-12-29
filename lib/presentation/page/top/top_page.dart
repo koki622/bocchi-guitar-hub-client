@@ -5,6 +5,8 @@ import 'package:bocchi_guitar_hub_client/presentation/page/top/component/song_li
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+//class TopPage extends {}
+
 class TopPage extends ConsumerWidget {
   const TopPage({super.key});
 
@@ -20,9 +22,7 @@ class TopPage extends ConsumerWidget {
                 style: TextStyle(fontSize: 18),
               ),
             )
-          : Column(
-              children: [Expanded(child: SongList(songs: songs, ref: ref))],
-            ),
+          : SongList(songs: songs),
       floatingActionButton: const AddSongButton(),
     );
   }

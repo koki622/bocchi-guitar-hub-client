@@ -5,13 +5,6 @@ class ProcessStepStrings {
   static const Map<ProcessStep, String> displayNames = {
     ProcessStep.init: '初期処理',
     ProcessStep.uploading: 'アップロード',
-    //ProcessStep.separating: '音源分離処理',
-    //ProcessStep.compression: '分離音源を圧縮',
-    //ProcessStep.chordAnalysis: 'コード解析',
-    //ProcessStep.extractingSpectrograms: 'スペクトログラム抽出',
-    //ProcessStep.structureAnalysis: '音楽構造解析',
-    //ProcessStep.lyricAnalysis: '歌詞解析',
-    //ProcessStep.downloadSeparationResult: '分離音源のダウンロード',
     ProcessStep.downloadVocalsStem: 'ボーカル音源のダウンロード',
     ProcessStep.downloadDrumsStem: 'ドラム音源のダウンロード',
     ProcessStep.downloadBassStem: 'ベース音源のダウンロード',

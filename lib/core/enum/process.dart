@@ -133,18 +133,24 @@ enum DownloadZipFileType implements ProcessInterface {
 }
 
 enum BulkRemoteJobType implements ProcessInterface {
-  analyzeAll(endpoint: WebapiEndpointConstant.analyzeAll, remoteJobTypes: [
-    RemoteJobType.chordAnalysis,
-    RemoteJobType.separating,
-    RemoteJobType.extractingSpectrograms,
-    RemoteJobType.structureAnalysis,
-    RemoteJobType.lyricAnalysis,
-  ]);
+  analyzeAll(
+      endpoint: WebapiEndpointConstant.analyzeAll,
+      reconnectEndpoint: WebapiEndpointConstant.reconnectRemoteJob,
+      remoteJobTypes: [
+        RemoteJobType.chordAnalysis,
+        RemoteJobType.separating,
+        RemoteJobType.extractingSpectrograms,
+        RemoteJobType.structureAnalysis,
+        RemoteJobType.lyricAnalysis,
+      ]);
 
   const BulkRemoteJobType(
-      {required this.endpoint, required this.remoteJobTypes});
+      {required this.endpoint,
+      required this.reconnectEndpoint,
+      required this.remoteJobTypes});
 
   final String endpoint;
+  final String reconnectEndpoint;
   final List<RemoteJobType> remoteJobTypes;
 }
 

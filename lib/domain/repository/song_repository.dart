@@ -1,3 +1,4 @@
+import 'package:bocchi_guitar_hub_client/core/enum/dest_api_server.dart';
 import 'package:bocchi_guitar_hub_client/core/enum/process.dart';
 import 'package:bocchi_guitar_hub_client/domain/entity/song/song.dart';
 
@@ -5,7 +6,8 @@ abstract interface class SongRepository {
   Stream<SongEvent?> get stream;
 
   // 曲を管理するディレクトリを作成をし、データベースに曲情報を書き込む
-  Future<Song> addSong({required NewSong newSong});
+  Future<Song> addSong(
+      {required NewSong newSong, required DestApiServerType destApiServerType});
 
   // 曲をサーバにアップロードする
   Future<Song> uploadSong({required Song song, required UploadType uploadType});

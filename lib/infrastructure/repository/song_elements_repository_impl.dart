@@ -50,7 +50,10 @@ class SongElementsRepositoryImpl implements SongElementsRepository {
   @override
   Future<void> downloadAndSaveJsonType(
       {required Song song, required DownloadJsonType downloadJsonType}) async {
+    final baseUrl = song.destApiServerType.getBaseUrl();
+    if (baseUrl == null) throw Exception('NullなbaseUrlが渡されました');
     var response = await _songWebapi.downloadJson(
+        baseUrl: baseUrl,
         endpoint: '${downloadJsonType.endpoint}/${song.audioFileId}',
         queryParams: downloadJsonType.queryParams);
 
@@ -94,6 +97,8 @@ class SongElementsRepositoryImpl implements SongElementsRepository {
   Future<void> downloadAudioFileType(
       {required Song song,
       required DownloadAudioFileType downloadAudioFileType}) async {
+    final baseUrl = song.destApiServerType.getBaseUrl();
+    if (baseUrl == null) throw Exception('NullなbaseUrlが渡されました');
     String saveDirectory =
         p.join(song.directoryPath, downloadAudioFileType.saveDirectoryName);
     if (!await Directory(saveDirectory).exists()) {
@@ -105,6 +110,7 @@ class SongElementsRepositoryImpl implements SongElementsRepository {
       }
     }
     String savedFilePath = await _songWebapi.downloadAudioFile(
+        baseUrl: baseUrl,
         endpoint: '${downloadAudioFileType.endpoint}/${song.audioFileId}',
         destinationDir: saveDirectory,
         queryParams: downloadAudioFileType.queryParams,
@@ -195,6 +201,8 @@ class SongElementsRepositoryImpl implements SongElementsRepository {
   Future<void> downloadAndSaveZipFileType(
       {required Song song,
       required DownloadZipFileType downloadZipFileType}) async {
+    final baseUrl = song.destApiServerType.getBaseUrl();
+    if (baseUrl == null) throw Exception('NullなbaseUrlが渡されました');
     switch (downloadZipFileType) {
       case DownloadZipFileType.downloadSeparationResult:
         // 分離された音源を格納するディレクトリを用意
@@ -206,6 +214,7 @@ class SongElementsRepositoryImpl implements SongElementsRepository {
           throw Exception('ディレクトリの作成処理でエラー発生: $e');
         }
         await _songWebapi.downloadZipFile(
+            baseUrl: baseUrl,
             endpoint: '${downloadZipFileType.endpoint}/${song.audioFileId}',
             destinationDir: separatedAudioDirectory.path);
         SeparatedAudioData separatedAudioData = SeparatedAudioData(
@@ -237,6 +246,7 @@ class SongElementsRepositoryImpl implements SongElementsRepository {
     await _beatsHive.delete(song.songId);
     await _sectionsHive.delete(song.songId);
     await _lyricsHive.delete(song.songId);
+    await _clickSoundHive.delete(song.songId);
   }
 
   @override

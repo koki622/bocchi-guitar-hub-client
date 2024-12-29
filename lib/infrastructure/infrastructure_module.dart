@@ -1,4 +1,5 @@
 import 'package:bocchi_guitar_hub_client/domain/repository/remote_job_repository.dart';
+import 'package:bocchi_guitar_hub_client/domain/repository/server_repository.dart';
 import 'package:bocchi_guitar_hub_client/domain/repository/song_elements_repository.dart';
 import 'package:bocchi_guitar_hub_client/infrastructure/datasource/database/beat_datasource.dart';
 import 'package:bocchi_guitar_hub_client/infrastructure/datasource/database/chord_datasource.dart';
@@ -9,6 +10,7 @@ import 'package:bocchi_guitar_hub_client/infrastructure/datasource/database/sect
 import 'package:bocchi_guitar_hub_client/infrastructure/datasource/database/separated_audio_datasource.dart';
 import 'package:bocchi_guitar_hub_client/infrastructure/datasource/webapi/song_webapi.dart';
 import 'package:bocchi_guitar_hub_client/infrastructure/repository/remote_job_repository_impl.dart';
+import 'package:bocchi_guitar_hub_client/infrastructure/repository/server_repository_impl.dart';
 import 'package:bocchi_guitar_hub_client/infrastructure/repository/song_elements_repository_impl.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../domain/repository/song_repository.dart';
@@ -87,4 +89,9 @@ SongElementsRepository songElementsRepository(SongElementsRepositoryRef ref) {
       ref.watch(lyricsDatasourceProvider),
       ref.watch(clickSoundDatasourceProvider),
       ref.watch(songWebapiDatasourceProvider));
+}
+
+@riverpod
+ServerRepository serverRepository(ServerRepositoryRef ref) {
+  return ServerRepositoryImpl(ref.watch(songWebapiDatasourceProvider));
 }

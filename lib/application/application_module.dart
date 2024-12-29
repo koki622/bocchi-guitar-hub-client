@@ -8,6 +8,7 @@ import 'package:bocchi_guitar_hub_client/application/notifier/beat_position/beat
 import 'package:bocchi_guitar_hub_client/application/notifier/chord_diagram/chord_diagram_notifier.dart';
 import 'package:bocchi_guitar_hub_client/application/notifier/chord_diagram/current_chord_diagram_notifier.dart';
 import 'package:bocchi_guitar_hub_client/application/notifier/lyric_position/lyric_position_notifier.dart';
+import 'package:bocchi_guitar_hub_client/application/notifier/remote_job/remote_job_notifier.dart';
 import 'package:bocchi_guitar_hub_client/application/notifier/song_elements/song_elements_notifier.dart';
 import 'package:bocchi_guitar_hub_client/application/notifier/songs/songs_notifier.dart';
 import 'package:bocchi_guitar_hub_client/application/usecase/audio_player_usecase.dart';
@@ -28,7 +29,8 @@ SongUsecase songUsecase(SongUsecaseRef ref) {
       ref.watch(songsNotifierProvider.notifier),
       ref.watch(songRepositoryProvider),
       ref.watch(songElementsRepositoryProvider),
-      ref.watch(remoteJobRepositoryProvider));
+      ref.watch(remoteJobRepositoryProvider),
+      ref.watch(serverRepositoryProvider));
 }
 
 @riverpod

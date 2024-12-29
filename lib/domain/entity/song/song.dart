@@ -1,3 +1,4 @@
+import 'package:bocchi_guitar_hub_client/core/enum/dest_api_server.dart';
 import 'package:bocchi_guitar_hub_client/core/enum/process_step.dart';
 import 'package:bocchi_guitar_hub_client/core/enum/process_status.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -10,6 +11,7 @@ class Song with _$Song {
   factory Song({
     required int songId,
     String? audioFileId,
+    required DestApiServerType destApiServerType,
     required String title,
     required String filePath,
     required String directoryPath,

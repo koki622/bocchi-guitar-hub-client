@@ -9,9 +9,6 @@ abstract interface class RemoteJobRepository {
   Stream<RemoteJobStatus> requestBulkRemoteJob(
       {required Song song, required BulkRemoteJobType bulkRemoteJobType});
 
-  Stream<RemoteJobStatus> reconnectBulkRemoteJob(
-      {required Song song, required BulkRemoteJobType bulkRemoteJobType});
-
   Future<void> addRemoteJobStatus(
       {required String songId, required RemoteJobStatus remoteJobStatus});
 
@@ -20,6 +17,5 @@ abstract interface class RemoteJobRepository {
 
   Future<void> deleteRemoteJobStatus({required String songId});
 
-  Future<RemoteJobStatus> fetchRemoteJobStatus(
-      {required String songId, required RemoteJobType remoteJobType});
+  RemoteJobStatus? fetchRemoteJobStatus({required int songId});
 }
