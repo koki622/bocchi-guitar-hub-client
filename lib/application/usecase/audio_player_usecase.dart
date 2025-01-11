@@ -5,6 +5,7 @@ import 'package:bocchi_guitar_hub_client/application/notifier/audio_player/playb
 import 'package:bocchi_guitar_hub_client/application/notifier/audio_player/playback_notifier.dart';
 import 'package:bocchi_guitar_hub_client/application/notifier/audio_player/playback_position_notifier.dart';
 import 'package:bocchi_guitar_hub_client/application/notifier/audio_player/playback_volume_notifier.dart';
+import 'package:bocchi_guitar_hub_client/application/notifier/selected_section/selected_section_notifier.dart';
 import 'package:flutter_soloud/flutter_soloud.dart';
 
 class AudioPlayerUsecase {
@@ -13,6 +14,7 @@ class AudioPlayerUsecase {
   final PlaybackPositionNotifier _playbackPositionNotifier;
   final PlaybackVolumeNotifier _playbackVolumeNotifier;
   final PlaybackLoopNotifier _playbackLoopNotifier;
+  final SelectedSectionNotifier _selectedSectionNotifier;
 
   late final StreamSubscription _soundEventSubscription;
 
@@ -21,7 +23,8 @@ class AudioPlayerUsecase {
       this._playbackStateNotifier,
       this._playbackPositionNotifier,
       this._playbackVolumeNotifier,
-      this._playbackLoopNotifier) {
+      this._playbackLoopNotifier,
+      this._selectedSectionNotifier) {
     _soundEventSubscription = _setupSoundEventSubscription();
   }
 
@@ -88,6 +91,7 @@ class AudioPlayerUsecase {
       _positionSub?.cancel();
     } else {
       _monitoringLoopPoint();
+      seek(_playbackLoopNotifier.loopingStartAt);
     }
     _playbackLoopNotifier.toggleLoop();
   }
@@ -111,7 +115,14 @@ class AudioPlayerUsecase {
       loopingEndIsTotalDuration = false;
     }
     // 現在のポジションを監視して、ループ終了地点になったらシーク
+    bool isSeeked = false;
     _positionSub = _playbackPositionNotifier.positionStream.listen((duration) {
+      if (duration < _playbackLoopNotifier.loopingStartAt &&
+          _playbackLoopNotifier.isLoopOn &&
+          !isSeeked) {
+        seek(_playbackLoopNotifier.loopingStartAt);
+        isSeeked = true;
+      }
       if (duration >= _playbackLoopNotifier.loopingEndAt &&
           _playbackLoopNotifier.isLoopOn) {
         if (!loopingEndIsTotalDuration) {
@@ -125,6 +136,36 @@ class AudioPlayerUsecase {
     _playbackLoopNotifier.setDefaultLoopPoint();
     _audioPlayerState.soloud
         .setLoopPoint(_audioPlayerState.soundState.groupHandle, Duration.zero);
+  }
+
+  void setSelectedSection(int selectedSectionIndex) {
+    if (_selectedSectionNotifier.getState().contains(selectedSectionIndex)) {
+      _selectedSectionNotifier.deleteIndex(selectedSectionIndex);
+    } else {
+      _selectedSectionNotifier.addIndex(selectedSectionIndex);
+    }
+    final sections = _selectedSectionNotifier.getSections();
+    List<int> selectedIndexes = _selectedSectionNotifier.getState();
+
+    // 選択されているセクションに基づいてループポイントをセット
+    if (selectedIndexes.isEmpty) {
+      resetLoopPoint();
+    } else if (selectedIndexes.length == 1) {
+      final selectedSection = sections[selectedIndexes.first];
+      setLoopPoint(
+          loopingStartAt:
+              Duration(milliseconds: (selectedSection.start * 1000).round()),
+          loopingEndAt:
+              Duration(milliseconds: (selectedSection.end * 1000).round()));
+    } else {
+      final startSelectedSection = sections[selectedIndexes.first];
+      final endSelectedSection = sections[selectedIndexes.last];
+      setLoopPoint(
+          loopingStartAt: Duration(
+              milliseconds: (startSelectedSection.start * 1000).round()),
+          loopingEndAt:
+              Duration(milliseconds: (endSelectedSection.end * 1000).round()));
+    }
   }
 
   void setVolume(SoundType soundType, double volume) {

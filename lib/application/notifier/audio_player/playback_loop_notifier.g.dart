@@ -7,7 +7,7 @@ part of 'playback_loop_notifier.dart';
 // **************************************************************************
 
 String _$playbackLoopNotifierHash() =>
-    r'a6d55c8dd0f3fb7c60d65a88f46f427b21df41c4';
+    r'd7b678c07c136a3b675afc8deca9e20cef5d6783';
 
 /// Copied from Dart SDK
 class _SystemHash {

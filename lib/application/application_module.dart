@@ -10,6 +10,7 @@ import 'package:bocchi_guitar_hub_client/application/notifier/chord_diagram/chor
 import 'package:bocchi_guitar_hub_client/application/notifier/chord_diagram/current_chord_diagram_notifier.dart';
 import 'package:bocchi_guitar_hub_client/application/notifier/lyric_position/lyric_position_notifier.dart';
 import 'package:bocchi_guitar_hub_client/application/notifier/remote_job/remote_job_notifier.dart';
+import 'package:bocchi_guitar_hub_client/application/notifier/selected_section/selected_section_notifier.dart';
 import 'package:bocchi_guitar_hub_client/application/notifier/song_elements/song_elements_notifier.dart';
 import 'package:bocchi_guitar_hub_client/application/notifier/songs/songs_notifier.dart';
 import 'package:bocchi_guitar_hub_client/application/usecase/audio_player_usecase.dart';
@@ -47,8 +48,15 @@ Future<AudioPlayerUsecase> audioPlayerUsecase(Ref ref, Song song) async {
       await ref.watch(audioPlayerProvider(song, initVolumes).future);
   final playbackLoopNotifier = ref
       .watch(playbackLoopNotifierProvider(audioPlayer.totalDuration).notifier);
-  final usecase = AudioPlayerUsecase(audioPlayer, playbackStateNotifier,
-      playbackPositionNotifier, playbackVolumeNotifier, playbackLoopNotifier);
+  final selectedSectionNotifier =
+      ref.watch(selectedSectionNotifierProvider(song).notifier);
+  final usecase = AudioPlayerUsecase(
+      audioPlayer,
+      playbackStateNotifier,
+      playbackPositionNotifier,
+      playbackVolumeNotifier,
+      playbackLoopNotifier,
+      selectedSectionNotifier);
   ref.onDispose(() {
     usecase.dispose();
   });

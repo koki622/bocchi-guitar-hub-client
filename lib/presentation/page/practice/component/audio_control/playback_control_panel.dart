@@ -119,7 +119,23 @@ class SeekBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final position = ref.watch(playbackPositionNotifierProvider);
+    Duration position = ref.watch(playbackPositionNotifierProvider);
+    final playbackLoopState = ref.watch(
+        playbackLoopNotifierProvider(audioPlayerUsecase.getTotalDuration()));
+
+    // シークバーの最小値
+    final minDuration = playbackLoopState.isLooping
+        ? playbackLoopState.loopingStartAt
+        : Duration.zero;
+
+    // シークバーの最大値
+    final maxDuration = playbackLoopState.isLooping
+        ? playbackLoopState.loopingEndAt
+        : audioPlayerUsecase.getTotalDuration();
+
+    if (minDuration > position || maxDuration < position) {
+      position = minDuration;
+    }
     final double fontSize = Sizes.fontSmall(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -127,9 +143,8 @@ class SeekBar extends ConsumerWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0), // スライダーの左右の余白
           child: Slider(
-            min: 0,
-            max:
-                audioPlayerUsecase.getTotalDuration().inMilliseconds.toDouble(),
+            min: minDuration.inMilliseconds.toDouble(),
+            max: maxDuration.inMilliseconds.toDouble(),
             value: position.inMilliseconds.toDouble(),
             onChanged: (value) {
               if (audioPlayerUsecase.isPlaying()) {
@@ -153,12 +168,12 @@ class SeekBar extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '${position.inMilliseconds} ミリ秒',
+                _formatDuration(position),
                 style:
                     TextStyle(fontSize: fontSize, fontWeight: FontWeight.w500),
               ),
               Text(
-                '${audioPlayerUsecase.getTotalDuration().inMilliseconds - position.inMilliseconds} ミリ秒',
+                _formatDuration(maxDuration - position),
                 style:
                     TextStyle(fontSize: fontSize, fontWeight: FontWeight.w500),
               ),
@@ -167,5 +182,12 @@ class SeekBar extends ConsumerWidget {
         ),
       ],
     );
+  }
+
+  String _formatDuration(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    final minutes = twoDigits(duration.inMinutes.remainder(60));
+    final seconds = twoDigits(duration.inSeconds.remainder(60));
+    return '$minutes:$seconds';
   }
 }
