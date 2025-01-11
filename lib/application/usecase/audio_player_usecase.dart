@@ -85,28 +85,11 @@ class AudioPlayerUsecase {
     final bool isLoopOn = _playbackLoopNotifier.isLoopOn;
 
     if (isLoopOn) {
-      _playbackLoopNotifier.toggleLoop();
       _positionSub?.cancel();
     } else {
-      bool loopingEndIsTotalDuration;
-      if (_playbackLoopNotifier.loopingEndAt == getTotalDuration()) {
-        loopingEndIsTotalDuration = true;
-      } else {
-        loopingEndIsTotalDuration = false;
-      }
-      _playbackLoopNotifier.toggleLoop();
-
-      // 現在のポジションを監視して、ループ終了地点になったらシーク
-      _positionSub =
-          _playbackPositionNotifier.positionStream.listen((duration) {
-        if (duration >= _playbackLoopNotifier.loopingEndAt &&
-            _playbackLoopNotifier.isLoopOn) {
-          if (!loopingEndIsTotalDuration) {
-            seek(_playbackLoopNotifier.loopingStartAt);
-          }
-        }
-      });
+      _monitoringLoopPoint();
     }
+    _playbackLoopNotifier.toggleLoop();
   }
 
   void setLoopPoint({Duration? loopingStartAt, Duration? loopingEndAt}) {
@@ -115,7 +98,33 @@ class AudioPlayerUsecase {
     if (loopingStartAt != null) {
       _audioPlayerState.soloud.setLoopPoint(
           _audioPlayerState.soundState.groupHandle, loopingStartAt);
+      _monitoringLoopPoint();
     }
+  }
+
+  void _monitoringLoopPoint() {
+    _positionSub?.cancel();
+    bool loopingEndIsTotalDuration;
+    if (_playbackLoopNotifier.loopingEndAt == getTotalDuration()) {
+      loopingEndIsTotalDuration = true;
+    } else {
+      loopingEndIsTotalDuration = false;
+    }
+    // 現在のポジションを監視して、ループ終了地点になったらシーク
+    _positionSub = _playbackPositionNotifier.positionStream.listen((duration) {
+      if (duration >= _playbackLoopNotifier.loopingEndAt &&
+          _playbackLoopNotifier.isLoopOn) {
+        if (!loopingEndIsTotalDuration) {
+          seek(_playbackLoopNotifier.loopingStartAt);
+        }
+      }
+    });
+  }
+
+  void resetLoopPoint() {
+    _playbackLoopNotifier.setDefaultLoopPoint();
+    _audioPlayerState.soloud
+        .setLoopPoint(_audioPlayerState.soundState.groupHandle, Duration.zero);
   }
 
   void setVolume(SoundType soundType, double volume) {

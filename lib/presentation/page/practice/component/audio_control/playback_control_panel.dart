@@ -56,7 +56,6 @@ class PlaybackControl extends ConsumerWidget {
     final double iconSize = Sizes.iconLarge(context);
     return Stack(
       children: [
-        // 中央に既存のアイコン群を配置
         Align(
           alignment: Alignment.center,
           child: Row(
@@ -94,7 +93,7 @@ class PlaybackControl extends ConsumerWidget {
             ],
           ),
         ),
-        // 右側に新しいアイコンを配置
+        // ループアイコン
         Align(
           alignment: Alignment.centerRight,
           child: IconButton(
