@@ -5,10 +5,10 @@ class SectionNameText {
     'intro': 'イントロ',
     'outro': 'アウトロ',
     'break': 'ブレイク',
-    'bridge': 'Cメロ',
+    'bridge': 'ブリッジ',
     'inst': 'インスト',
     'solo': 'ソロ',
-    'verse': 'Aメロ',
+    'verse': 'ヴァース',
     'chorus': 'サビ',
   };
 }
