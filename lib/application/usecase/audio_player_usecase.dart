@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bocchi_guitar_hub_client/application/notifier/audio_player/audio_player_notifier.dart';
+import 'package:bocchi_guitar_hub_client/application/notifier/audio_player/playback_loop_notifier.dart';
 import 'package:bocchi_guitar_hub_client/application/notifier/audio_player/playback_notifier.dart';
 import 'package:bocchi_guitar_hub_client/application/notifier/audio_player/playback_position_notifier.dart';
 import 'package:bocchi_guitar_hub_client/application/notifier/audio_player/playback_volume_notifier.dart';
@@ -11,11 +12,16 @@ class AudioPlayerUsecase {
   final PlaybackStateNotifier _playbackStateNotifier;
   final PlaybackPositionNotifier _playbackPositionNotifier;
   final PlaybackVolumeNotifier _playbackVolumeNotifier;
+  final PlaybackLoopNotifier _playbackLoopNotifier;
 
   late final StreamSubscription _soundEventSubscription;
 
-  AudioPlayerUsecase(this._audioPlayerState, this._playbackStateNotifier,
-      this._playbackPositionNotifier, this._playbackVolumeNotifier) {
+  AudioPlayerUsecase(
+      this._audioPlayerState,
+      this._playbackStateNotifier,
+      this._playbackPositionNotifier,
+      this._playbackVolumeNotifier,
+      this._playbackLoopNotifier) {
     _soundEventSubscription = _setupSoundEventSubscription();
   }
 
@@ -72,6 +78,44 @@ class AudioPlayerUsecase {
       soloud.setVolume(handle, _playbackVolumeNotifier.getVolume(soundType));
     }
     _playbackVolumeNotifier.toggleSoundOn(soundType);
+  }
+
+  StreamSubscription<Duration>? _positionSub;
+  void toggleLooping() {
+    final bool isLoopOn = _playbackLoopNotifier.isLoopOn;
+
+    if (isLoopOn) {
+      _playbackLoopNotifier.toggleLoop();
+      _positionSub?.cancel();
+    } else {
+      bool loopingEndIsTotalDuration;
+      if (_playbackLoopNotifier.loopingEndAt == getTotalDuration()) {
+        loopingEndIsTotalDuration = true;
+      } else {
+        loopingEndIsTotalDuration = false;
+      }
+      _playbackLoopNotifier.toggleLoop();
+
+      // 現在のポジションを監視して、ループ終了地点になったらシーク
+      _positionSub =
+          _playbackPositionNotifier.positionStream.listen((duration) {
+        if (duration >= _playbackLoopNotifier.loopingEndAt &&
+            _playbackLoopNotifier.isLoopOn) {
+          if (!loopingEndIsTotalDuration) {
+            seek(_playbackLoopNotifier.loopingStartAt);
+          }
+        }
+      });
+    }
+  }
+
+  void setLoopPoint({Duration? loopingStartAt, Duration? loopingEndAt}) {
+    _playbackLoopNotifier.setNewLoopPoint(
+        loopingStartAt: loopingStartAt, loopingEndAt: loopingEndAt);
+    if (loopingStartAt != null) {
+      _audioPlayerState.soloud.setLoopPoint(
+          _audioPlayerState.soundState.groupHandle, loopingStartAt);
+    }
   }
 
   void setVolume(SoundType soundType, double volume) {
@@ -148,18 +192,30 @@ class AudioPlayerUsecase {
   Future<void> _resetPlayer() async {
     SoLoud soloud = _audioPlayerState.soloud;
 
+    final bool isLoopOn = _playbackLoopNotifier.isLoopOn;
+    final Duration newPosition =
+        isLoopOn ? _playbackLoopNotifier.loopingStartAt : Duration.zero;
+
     // handle等をリセット
     await _audioPlayerState.soundState.resetPlayer(
         soloudInstance: soloud,
         initVolumes: _playbackVolumeNotifier.currentStates);
+
     // 一時停止にする
     _playbackStateNotifier.togglePlayPause(true);
     _playbackPositionNotifier.stopPositionTracking();
-    _playbackPositionNotifier.updatePosition(Duration.zero);
+
+    if (isLoopOn) {
+      seek(newPosition);
+      togglePlayPause();
+    } else {
+      _playbackPositionNotifier.updatePosition(Duration.zero);
+    }
   }
 
   // 解放処理
   void dispose() {
     _soundEventSubscription.cancel();
+    _positionSub?.cancel();
   }
 }

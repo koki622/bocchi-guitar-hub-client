@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bocchi_guitar_hub_client/application/notifier/audio_player/audio_player_notifier.dart';
+import 'package:bocchi_guitar_hub_client/application/notifier/audio_player/playback_loop_notifier.dart';
 import 'package:bocchi_guitar_hub_client/application/notifier/audio_player/playback_notifier.dart';
 import 'package:bocchi_guitar_hub_client/application/notifier/audio_player/playback_position_notifier.dart';
 import 'package:bocchi_guitar_hub_client/application/notifier/audio_player/playback_volume_notifier.dart';
@@ -44,8 +45,10 @@ Future<AudioPlayerUsecase> audioPlayerUsecase(Ref ref, Song song) async {
   final initVolumes = playbackVolumeNotifier.currentStates;
   final audioPlayer =
       await ref.watch(audioPlayerProvider(song, initVolumes).future);
+  final playbackLoopNotifier = ref
+      .watch(playbackLoopNotifierProvider(audioPlayer.totalDuration).notifier);
   final usecase = AudioPlayerUsecase(audioPlayer, playbackStateNotifier,
-      playbackPositionNotifier, playbackVolumeNotifier);
+      playbackPositionNotifier, playbackVolumeNotifier, playbackLoopNotifier);
   ref.onDispose(() {
     usecase.dispose();
   });

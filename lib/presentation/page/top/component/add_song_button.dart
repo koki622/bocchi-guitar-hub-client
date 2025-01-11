@@ -1,9 +1,10 @@
 import 'package:bocchi_guitar_hub_client/application/application_module.dart';
+import 'package:bocchi_guitar_hub_client/presentation/error_handler_mixin.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AddSongButton extends ConsumerWidget {
+class AddSongButton extends ConsumerWidget with ErrorHandlerMixin {
   const AddSongButton({super.key});
 
   @override
@@ -16,10 +17,17 @@ class AddSongButton extends ConsumerWidget {
         if (result != null) {
           String filePath = result.files.single.path!;
           String fileName = result.files.single.name;
-          String title = fileName.split('.').first;
+          // ファイル名の最後の "." の位置を取得
+          int lastDotIndex = fileName.lastIndexOf('.');
+          String title = lastDotIndex == -1
+              ? fileName
+              : fileName.substring(0, lastDotIndex);
 
           TextEditingController titleController =
               TextEditingController(text: title);
+
+          if (!context.mounted) return;
+
           String? inputTitle = await showDialog<String>(
             context: context,
             builder: (context) {
@@ -46,7 +54,10 @@ class AddSongButton extends ConsumerWidget {
           );
 
           if (inputTitle != null && inputTitle.isNotEmpty) {
-            await songUsecase.addSong(title: inputTitle, filePath: filePath);
+            action() =>
+                songUsecase.addSong(title: inputTitle, filePath: filePath);
+            if (!context.mounted) return;
+            await execute(context, action, successMessage: '曲の追加に成功しました');
           }
         }
       },

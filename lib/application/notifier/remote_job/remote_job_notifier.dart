@@ -8,13 +8,12 @@ part 'remote_job_notifier.g.dart';
 class RemoteJobNotifier extends _$RemoteJobNotifier {
   @override
   RemoteJobStatus? build(int songId) {
-    // 初期状態としてsongRepositoryから取得した全曲をMap形式に変換して格納
     return ref
         .watch(remoteJobRepositoryProvider)
         .fetchRemoteJobStatus(songId: songId);
   }
 
   void update(RemoteJobStatus remoteJobStatus) {
-    state = remoteJobStatus;
+    state = remoteJobStatus.copyWith();
   }
 }

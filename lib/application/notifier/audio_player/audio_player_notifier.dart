@@ -113,7 +113,8 @@ class SoundState {
 
   Future<void> _preparePlay(
       {required SoLoud soloudInstance,
-      required Map<SoundType, PlaybackVolumeState> initVolumes}) async {
+      required Map<SoundType, PlaybackVolumeState> initVolumes,
+      bool paused = true}) async {
     for (var entry in audioSources.entries) {
       final soundType = entry.key;
       final audioSource = entry.value;
@@ -121,7 +122,7 @@ class SoundState {
       soundHandles[soundType] = await soloudInstance.play(audioSource,
           volume:
               playbackVolumeState.isSoundOn ? playbackVolumeState.volume : 0.0,
-          paused: true);
+          paused: paused);
     }
 
     // ボイスグループを作成
@@ -131,10 +132,13 @@ class SoundState {
 
   Future<void> resetPlayer(
       {required SoLoud soloudInstance,
-      required Map<SoundType, PlaybackVolumeState> initVolumes}) async {
+      required Map<SoundType, PlaybackVolumeState> initVolumes,
+      bool paused = true}) async {
     soloudInstance.destroyVoiceGroup(groupHandle);
     await _preparePlay(
-        soloudInstance: soloudInstance, initVolumes: initVolumes);
+        soloudInstance: soloudInstance,
+        initVolumes: initVolumes,
+        paused: paused);
   }
 
   StreamSubscription setupSoundEventsListener({

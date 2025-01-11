@@ -1,22 +1,21 @@
 import 'package:bocchi_guitar_hub_client/application/application_module.dart';
 import 'package:bocchi_guitar_hub_client/application/notifier/remote_job/remote_job_notifier.dart';
-import 'package:bocchi_guitar_hub_client/application/notifier/song_elements/song_elements_notifier.dart';
 import 'package:bocchi_guitar_hub_client/application/notifier/songs/songs_notifier.dart';
 import 'package:bocchi_guitar_hub_client/core/constant/text/remote_job.dart';
 import 'package:bocchi_guitar_hub_client/domain/entity/remote_job/remote_job_status.dart';
+import 'package:bocchi_guitar_hub_client/presentation/error_handler_mixin.dart';
 import 'package:bocchi_guitar_hub_client/presentation/notifier/selected_song.dart';
 import 'package:bocchi_guitar_hub_client/core/constant/text/process.dart';
 import 'package:bocchi_guitar_hub_client/core/enum/process_status.dart';
 import 'package:bocchi_guitar_hub_client/core/enum/process_step.dart';
 import 'package:bocchi_guitar_hub_client/domain/entity/song/song.dart';
 import 'package:bocchi_guitar_hub_client/presentation/page/top/component/song_options_button.dart';
-import 'package:bocchi_guitar_hub_client/presentation/router/go_router.dart';
 import 'package:bocchi_guitar_hub_client/presentation/router/page_path.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-class SongListTile extends ConsumerWidget {
+class SongListTile extends ConsumerWidget with ErrorHandlerMixin {
   final int songId;
 
   const SongListTile({
@@ -31,6 +30,7 @@ class SongListTile extends ConsumerWidget {
     final remoteJobStatus = ref.watch(remoteJobNotifierProvider(song!.songId));
     final isProcessFinish = song.processType == ProcessStep.values.last &&
         song.processStatusType == ProcessStatusType.completed;
+
     return ListTile(
       title: Text(song.title),
       subtitle: isProcessFinish
@@ -43,8 +43,12 @@ class SongListTile extends ConsumerWidget {
           song.processStatusType == ProcessStatusType.interrupted
               ? IconButton(
                   icon: const Icon(Icons.refresh),
-                  onPressed: () {
-                    ref.read(songUsecaseProvider).resumeProcess(song: song);
+                  onPressed: () async {
+                    action() =>
+                        ref.read(songUsecaseProvider).resumeProcess(song: song);
+                    if (!context.mounted) return;
+                    await execute(context, action,
+                        successMessage: '曲の追加に成功しました');
                   },
                 )
               : const SizedBox.shrink(),

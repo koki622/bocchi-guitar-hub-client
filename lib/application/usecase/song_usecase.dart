@@ -72,6 +72,13 @@ class SongUsecase {
     }
   }
 
+  Future<void> editSongTitle(
+      {required Song song, required String newTitle}) async {
+    final updatedSong = song.copyWith(title: newTitle);
+    await _songRepository.updateSong(songId: song.songId, song: updatedSong);
+    _songsNotifier.upsertSong(updatedSong);
+  }
+
   Future<void> resumeProcess({required Song song}) async {
     await _executeProcess(song: song);
   }
@@ -292,7 +299,7 @@ class SongUsecase {
   }
 
   Future<Song> _remoteJobHandle(Song song, ProcessStep processType) async {
-    ProcessStatusType lastProcessStatusType = ProcessStatusType.failed;
+    ProcessStatusType lastProcessStatusType = ProcessStatusType.processing;
     Song resultSong;
     Stream<RemoteJobStatus> response;
     try {
@@ -306,6 +313,7 @@ class SongUsecase {
       } else {
         throw ArgumentError('ここで$processTypeが入ることは想定されていません');
       }
+
       await for (RemoteJobStatus jobStatus in response) {
         _songsNotifier.ref
             .read(remoteJobNotifierProvider(song.songId).notifier)
@@ -314,7 +322,7 @@ class SongUsecase {
         switch (jobStatus.jobStatus) {
           case JobStatusType.jobSuccess:
             //processStatusType = ProcessStatusType.completed;
-            lastProcessStatusType = ProcessStatusType.completed;
+            //lastProcessStatusType = ProcessStatusType.completed;
             break;
           case JobStatusType.jobCompleted:
             lastProcessStatusType = ProcessStatusType.completed;
@@ -325,8 +333,10 @@ class SongUsecase {
             processStatusType = ProcessStatusType.processing;
             break;
           case JobStatusType.processingSoon:
+            processStatusType = ProcessStatusType.processing;
             break;
           case JobStatusType.queued:
+            processStatusType = ProcessStatusType.processing;
             break;
         }
         if (processStatusType != null) {

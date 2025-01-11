@@ -1,4 +1,5 @@
 import 'package:bocchi_guitar_hub_client/application/application_module.dart';
+import 'package:bocchi_guitar_hub_client/application/usecase/song_usecase.dart';
 import 'package:bocchi_guitar_hub_client/domain/entity/song/song.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -35,7 +36,7 @@ class SongOptionsButton extends StatelessWidget {
                     title: const Text('タイトル変更'),
                     onTap: () async {
                       Navigator.pop(context);
-                      await _showEditTitleDialog(context, song);
+                      await _showEditTitleDialog(context, song, songUsecase);
                     },
                   ),
                   ListTile(
@@ -51,7 +52,8 @@ class SongOptionsButton extends StatelessWidget {
     );
   }
 
-  Future<void> _showEditTitleDialog(BuildContext context, Song song) async {
+  Future<void> _showEditTitleDialog(
+      BuildContext context, Song song, SongUsecase songUsecase) async {
     final titleController = TextEditingController(text: song.title);
     final newTitle = await showDialog<String>(
       context: context,
@@ -78,6 +80,7 @@ class SongOptionsButton extends StatelessWidget {
 
     if (newTitle != null && newTitle.isNotEmpty) {
       // タイトル更新処理を呼び出し
+      await songUsecase.editSongTitle(song: song, newTitle: newTitle);
     }
   }
 }

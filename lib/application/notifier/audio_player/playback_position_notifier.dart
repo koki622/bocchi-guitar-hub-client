@@ -9,6 +9,8 @@ part 'playback_position_notifier.g.dart';
 class PlaybackPositionNotifier extends _$PlaybackPositionNotifier {
   Timer? _timer;
   bool? _isStartPositionTracking;
+  final StreamController<Duration> _positionStreamController =
+      StreamController<Duration>.broadcast();
 
   @override
   Duration build() {
@@ -24,8 +26,10 @@ class PlaybackPositionNotifier extends _$PlaybackPositionNotifier {
     _timer?.cancel(); // 既存のタイマーをキャンセル
     _isStartPositionTracking = true;
     _timer = Timer.periodic(const Duration(milliseconds: 20), (_) {
-      state = audioPlayerState.soloud
+      final newPosition = audioPlayerState.soloud
           .getPosition(audioPlayerState.soundState.groupHandle);
+      state = newPosition;
+      _positionStreamController.add(newPosition); // サブスクライブ用に新しい位置を通知
     });
   }
 
@@ -47,4 +51,7 @@ class PlaybackPositionNotifier extends _$PlaybackPositionNotifier {
   void resetPosition() {
     state = Duration.zero;
   }
+
+  // サブスクリプション用のStreamを返す
+  Stream<Duration> get positionStream => _positionStreamController.stream;
 }

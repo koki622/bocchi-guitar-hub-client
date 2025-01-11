@@ -1,3 +1,4 @@
+import 'package:bocchi_guitar_hub_client/application/notifier/audio_player/playback_loop_notifier.dart';
 import 'package:bocchi_guitar_hub_client/application/notifier/audio_player/playback_notifier.dart';
 import 'package:bocchi_guitar_hub_client/application/notifier/audio_player/playback_position_notifier.dart';
 import 'package:bocchi_guitar_hub_client/application/usecase/audio_player_usecase.dart';
@@ -26,7 +27,10 @@ class PlaybackControlPanel extends StatelessWidget {
               )),
           Container(
             height: 50,
-            child: SectionBoxPanel(song: song),
+            child: SectionBoxPanel(
+              song: song,
+              audioPlayerUsecase: audioPlayerUsecase,
+            ),
           ),
           Container(
             height: 100,
@@ -46,36 +50,63 @@ class PlaybackControl extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isPlaying = ref.watch(playbackStateNotifierProvider);
+    final isLoopOn = ref.watch(
+        playbackLoopNotifierProvider(audioPlayerUsecase.getTotalDuration())
+            .select((selector) => selector.isLooping));
     final double iconSize = Sizes.iconLarge(context);
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+    return Stack(
       children: [
-        IconButton(
-          icon: Icon(
-            Icons.fast_rewind,
-            size: iconSize,
+        // 中央に既存のアイコン群を配置
+        Align(
+          alignment: Alignment.center,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              IconButton(
+                icon: Icon(
+                  Icons.fast_rewind,
+                  size: iconSize,
+                ),
+                onPressed: () {
+                  audioPlayerUsecase.seekRewind(Duration(seconds: 10));
+                },
+              ),
+              IconButton(
+                icon: Icon(
+                  isPlaying
+                      ? Icons.pause_circle_filled
+                      : Icons.play_circle_filled,
+                  size: iconSize,
+                ),
+                onPressed: () {
+                  audioPlayerUsecase.togglePlayPause();
+                },
+              ),
+              IconButton(
+                icon: Icon(
+                  Icons.fast_forward,
+                  size: iconSize,
+                ),
+                onPressed: () {
+                  audioPlayerUsecase.seekForward(Duration(seconds: 10));
+                },
+              ),
+            ],
           ),
-          onPressed: () {
-            audioPlayerUsecase.seekRewind(Duration(seconds: 10));
-          },
         ),
-        IconButton(
-          icon: Icon(
-            isPlaying ? Icons.pause_circle_filled : Icons.play_circle_filled,
-            size: iconSize,
+        // 右側に新しいアイコンを配置
+        Align(
+          alignment: Alignment.centerRight,
+          child: IconButton(
+            icon: Icon(
+              Icons.loop,
+              size: iconSize,
+              color: isLoopOn ? Colors.blue : Colors.grey,
+            ),
+            onPressed: () {
+              audioPlayerUsecase.toggleLooping();
+            },
           ),
-          onPressed: () {
-            audioPlayerUsecase.togglePlayPause();
-          },
-        ),
-        IconButton(
-          icon: Icon(
-            Icons.fast_forward,
-            size: iconSize,
-          ),
-          onPressed: () {
-            audioPlayerUsecase.seekForward(Duration(seconds: 10));
-          },
         ),
       ],
     );

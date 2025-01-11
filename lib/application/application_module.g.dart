@@ -6,7 +6,7 @@ part of 'application_module.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$songUsecaseHash() => r'5a0c83d490579ccbcd6918fa647ae29240e6f0a0';
+String _$songUsecaseHash() => r'128aea141a0301b0d99eaca38edbab21e414c040';
 
 /// See also [songUsecase].
 @ProviderFor(songUsecase)
@@ -21,7 +21,7 @@ final songUsecaseProvider = AutoDisposeProvider<SongUsecase>.internal(
 
 typedef SongUsecaseRef = AutoDisposeProviderRef<SongUsecase>;
 String _$audioPlayerUsecaseHash() =>
-    r'b9fac63f3d8cff1f005c27de2e67bace68850546';
+    r'37ef7e8270e0624b4e7d8373c4f14eb820ed42de';
 
 /// Copied from Dart SDK
 class _SystemHash {

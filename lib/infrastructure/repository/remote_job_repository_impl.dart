@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bocchi_guitar_hub_client/core/enum/dest_api_server.dart';
+import 'package:bocchi_guitar_hub_client/core/enum/job_status.dart';
 import 'package:bocchi_guitar_hub_client/core/enum/process.dart';
 import 'package:bocchi_guitar_hub_client/core/exception/http_exceptions.dart';
 import 'package:bocchi_guitar_hub_client/core/exception/remote_job_exceptions.dart';
@@ -69,10 +70,18 @@ class RemoteJobRepositoryImpl implements RemoteJobRepository {
 
     try {
       await for (JobStatusData jobStatusData in response) {
-        yield jobStatusData.toEntity();
-
-        // データベースにジョブのステータスを随時記録
-        _jobStatusHive.create(jobStatusData, songId);
+        final jobStatus = jobStatusData.toEntity();
+        if ([
+          JobStatusType.jobCompleted,
+          JobStatusType.jobSuccess,
+          JobStatusType.jobFailed,
+          JobStatusType.queued,
+          JobStatusType.processingSoon
+        ].contains(jobStatus.jobStatus)) {
+          yield jobStatus;
+          // データベースにジョブのステータスを随時記録
+          _jobStatusHive.create(jobStatusData, songId);
+        }
       }
     } on HttpException catch (e) {
       throw RequestFailedException('Request Failed exception: $e');
@@ -105,10 +114,18 @@ class RemoteJobRepositoryImpl implements RemoteJobRepository {
         baseUrl: baseUrl, endpoint: endpoint, jobId: jobStatusData.jobId);
     try {
       await for (JobStatusData jobStatusData in response) {
-        yield jobStatusData.toEntity();
-
-        // データベースにジョブのステータスを随時記録
-        _jobStatusHive.create(jobStatusData, song.songId);
+        final jobStatus = jobStatusData.toEntity();
+        if ([
+          JobStatusType.jobCompleted,
+          JobStatusType.jobSuccess,
+          JobStatusType.jobFailed,
+          JobStatusType.queued,
+          JobStatusType.processingSoon
+        ].contains(jobStatus.jobStatus)) {
+          yield jobStatus;
+          // データベースにジョブのステータスを随時記録
+          _jobStatusHive.create(jobStatusData, song.songId);
+        }
       }
     } on HttpException catch (e) {
       throw RequestFailedException('Request Failed exception: $e');

@@ -57,6 +57,7 @@ class SongWebapi {
         final map = dataLine.replaceAll('data: ', '');
         if (map.isNotEmpty) {
           JobStatusData jobStatus = JobStatusData.fromJson(jsonDecode(map));
+
           yield jobStatus;
 
           if (jobStatus.jobStatus == JobStatusType.jobCompleted.message) {

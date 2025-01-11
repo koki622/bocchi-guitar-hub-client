@@ -14,7 +14,7 @@ class TopPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final Map<int, Song>? songs = ref.watch(songsNotifierProvider);
     return Scaffold(
-      appBar: AppBar(title: const Text('Song List')),
+      appBar: AppBar(title: const Text('練習曲一覧')),
       body: (songs == null)
           ? const Center(
               child: Text(

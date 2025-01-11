@@ -6,7 +6,7 @@ part of 'remote_job_notifier.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$remoteJobNotifierHash() => r'bb4e70d057831a7e650a632a8a2bd84f6d6f112f';
+String _$remoteJobNotifierHash() => r'473d28ac3b6bbb61fdf1db7125166f464d7f39e0';
 
 /// Copied from Dart SDK
 class _SystemHash {
