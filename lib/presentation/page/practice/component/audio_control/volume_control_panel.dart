@@ -64,7 +64,7 @@ class VolumeBar extends ConsumerWidget {
           children: [
             // Textを横並びに配置
             SizedBox(
-              width: 70.0, // 幅を固定
+              width: Sizes.volumeBarText(context), // 幅を固定
               child: Text(
                 SoundNameText.soundName[soundType]!,
                 style: TextStyle(fontSize: Sizes.fontNormal(context)),

@@ -1,4 +1,5 @@
 import 'package:bocchi_guitar_hub_client/application/application_module.dart';
+import 'package:bocchi_guitar_hub_client/application/notifier/song_elements/song_elements_notifier.dart';
 import 'package:bocchi_guitar_hub_client/application/usecase/audio_player_usecase.dart';
 import 'package:bocchi_guitar_hub_client/presentation/notifier/selected_song.dart';
 import 'package:bocchi_guitar_hub_client/core/constant/size.dart';
@@ -10,7 +11,6 @@ import 'package:bocchi_guitar_hub_client/presentation/page/practice/component/be
 import 'package:bocchi_guitar_hub_client/presentation/page/practice/component/chord_diagram/chord_panel.dart';
 import 'package:bocchi_guitar_hub_client/presentation/page/practice/component/lyrics/lyric_panel.dart';
 import 'package:bocchi_guitar_hub_client/presentation/page/practice/component/navi_bar/navi_bar_panel.dart';
-import 'package:bocchi_guitar_hub_client/presentation/page/practice/component/section_box/section_box_panel.dart';
 import 'package:bocchi_guitar_hub_client/presentation/page/practice/component/settings/settings_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -22,6 +22,7 @@ class PracticePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedSong = ref.watch(selectedSongProvider)!;
+    ref.watch(chordNotifierProvider(selectedSong, 0));
     final audioPlayerUsecase =
         ref.watch(audioPlayerUsecaseProvider(selectedSong));
     const initTabType = SelectedTabType.guide;
@@ -101,8 +102,9 @@ class PracticePage extends ConsumerWidget {
             ),
           ],
         ),
-      SelectedTabType.setting => SettingsPanel(audioPlayerUsecase: state),
-      _ => const Center(child: Text("Unknown Tab")), // デフォルトケース
+      SelectedTabType.setting =>
+        SettingsPanel(song: song, audioPlayerUsecase: state),
+      _ => const Center(child: Text("Unknown Tab")),
     };
   }
 }

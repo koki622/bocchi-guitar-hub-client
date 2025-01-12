@@ -7,7 +7,7 @@ part of 'selected_section_notifier.dart';
 // **************************************************************************
 
 String _$selectedSectionNotifierHash() =>
-    r'45e295d8a5d24e93a340fcd0396b8b6ebe57b8b2';
+    r'd4d3fb5fc93c8d9e070620048f6ba9563e1d7103';
 
 /// Copied from Dart SDK
 class _SystemHash {

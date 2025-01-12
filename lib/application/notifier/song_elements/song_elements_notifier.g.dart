@@ -464,14 +464,16 @@ class _ChordSoundNotifierProviderElement
   Song get song => (origin as ChordSoundNotifierProvider).song;
 }
 
-String _$chordNotifierHash() => r'3e4fb9389b4b482c4e6f63cf794bbcb0f9ea6ad4';
+String _$chordNotifierHash() => r'd9a436436a491210303c3a3b3a8971eb1dc98cde';
 
 abstract class _$ChordNotifier
-    extends BuildlessAutoDisposeNotifier<List<Chord>> {
+    extends BuildlessAutoDisposeNotifier<ChordState> {
   late final Song song;
+  late final int? defaultCapo;
 
-  List<Chord> build(
+  ChordState build(
     Song song,
+    int? defaultCapo,
   );
 }
 
@@ -480,16 +482,18 @@ abstract class _$ChordNotifier
 const chordNotifierProvider = ChordNotifierFamily();
 
 /// See also [ChordNotifier].
-class ChordNotifierFamily extends Family<List<Chord>> {
+class ChordNotifierFamily extends Family<ChordState> {
   /// See also [ChordNotifier].
   const ChordNotifierFamily();
 
   /// See also [ChordNotifier].
   ChordNotifierProvider call(
     Song song,
+    int? defaultCapo,
   ) {
     return ChordNotifierProvider(
       song,
+      defaultCapo,
     );
   }
 
@@ -499,6 +503,7 @@ class ChordNotifierFamily extends Family<List<Chord>> {
   ) {
     return call(
       provider.song,
+      provider.defaultCapo,
     );
   }
 
@@ -519,12 +524,15 @@ class ChordNotifierFamily extends Family<List<Chord>> {
 
 /// See also [ChordNotifier].
 class ChordNotifierProvider
-    extends AutoDisposeNotifierProviderImpl<ChordNotifier, List<Chord>> {
+    extends AutoDisposeNotifierProviderImpl<ChordNotifier, ChordState> {
   /// See also [ChordNotifier].
   ChordNotifierProvider(
     Song song,
+    int? defaultCapo,
   ) : this._internal(
-          () => ChordNotifier()..song = song,
+          () => ChordNotifier()
+            ..song = song
+            ..defaultCapo = defaultCapo,
           from: chordNotifierProvider,
           name: r'chordNotifierProvider',
           debugGetCreateSourceHash:
@@ -535,6 +543,7 @@ class ChordNotifierProvider
           allTransitiveDependencies:
               ChordNotifierFamily._allTransitiveDependencies,
           song: song,
+          defaultCapo: defaultCapo,
         );
 
   ChordNotifierProvider._internal(
@@ -545,16 +554,19 @@ class ChordNotifierProvider
     required super.debugGetCreateSourceHash,
     required super.from,
     required this.song,
+    required this.defaultCapo,
   }) : super.internal();
 
   final Song song;
+  final int? defaultCapo;
 
   @override
-  List<Chord> runNotifierBuild(
+  ChordState runNotifierBuild(
     covariant ChordNotifier notifier,
   ) {
     return notifier.build(
       song,
+      defaultCapo,
     );
   }
 
@@ -563,49 +575,60 @@ class ChordNotifierProvider
     return ProviderOverride(
       origin: this,
       override: ChordNotifierProvider._internal(
-        () => create()..song = song,
+        () => create()
+          ..song = song
+          ..defaultCapo = defaultCapo,
         from: from,
         name: null,
         dependencies: null,
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
         song: song,
+        defaultCapo: defaultCapo,
       ),
     );
   }
 
   @override
-  AutoDisposeNotifierProviderElement<ChordNotifier, List<Chord>>
+  AutoDisposeNotifierProviderElement<ChordNotifier, ChordState>
       createElement() {
     return _ChordNotifierProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is ChordNotifierProvider && other.song == song;
+    return other is ChordNotifierProvider &&
+        other.song == song &&
+        other.defaultCapo == defaultCapo;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
     hash = _SystemHash.combine(hash, song.hashCode);
+    hash = _SystemHash.combine(hash, defaultCapo.hashCode);
 
     return _SystemHash.finish(hash);
   }
 }
 
-mixin ChordNotifierRef on AutoDisposeNotifierProviderRef<List<Chord>> {
+mixin ChordNotifierRef on AutoDisposeNotifierProviderRef<ChordState> {
   /// The parameter `song` of this provider.
   Song get song;
+
+  /// The parameter `defaultCapo` of this provider.
+  int? get defaultCapo;
 }
 
 class _ChordNotifierProviderElement
-    extends AutoDisposeNotifierProviderElement<ChordNotifier, List<Chord>>
+    extends AutoDisposeNotifierProviderElement<ChordNotifier, ChordState>
     with ChordNotifierRef {
   _ChordNotifierProviderElement(super.provider);
 
   @override
   Song get song => (origin as ChordNotifierProvider).song;
+  @override
+  int? get defaultCapo => (origin as ChordNotifierProvider).defaultCapo;
 }
 
 String _$beatNotifierHash() => r'30d1bd8ba8d2f258875df2fd2f52df159b402671';

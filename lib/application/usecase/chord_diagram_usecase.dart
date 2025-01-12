@@ -3,11 +3,10 @@ import 'package:bocchi_guitar_hub_client/application/notifier/chord_diagram/curr
 import 'package:flutter_guitar_chord/flutter_guitar_chord.dart';
 
 class ChordDiagramUsecase {
-  final ChordDiagramNotifier _chordDiagramNotifier;
   final CurrentChordDiagramNotifier _currentChordDiagramNotifier;
   final List<ChordDiagramState> _chordDiagramStates;
 
-  const ChordDiagramUsecase(this._chordDiagramNotifier,
+  const ChordDiagramUsecase(
       this._currentChordDiagramNotifier, this._chordDiagramStates);
 
   void updateCurrentChord(int newIndex) {

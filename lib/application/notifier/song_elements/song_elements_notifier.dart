@@ -8,10 +8,12 @@ import 'package:bocchi_guitar_hub_client/domain/entity/song_elements/lyric/lyric
 import 'package:bocchi_guitar_hub_client/domain/entity/song_elements/section/section.dart';
 import 'package:bocchi_guitar_hub_client/domain/entity/song_elements/separated_audio/separated_audio.dart';
 import 'package:bocchi_guitar_hub_client/infrastructure/infrastructure_module.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'dart:convert';
 
 part 'song_elements_notifier.g.dart';
+part 'song_elements_notifier.freezed.dart';
 
 @riverpod
 class SeparatedAudioNotifier extends _$SeparatedAudioNotifier {
@@ -43,17 +45,72 @@ class ChordSoundNotifier extends _$ChordSoundNotifier {
   }
 }
 
+@freezed
+class ChordState with _$ChordState {
+  factory ChordState({
+    required List<Chord> chords,
+    required int capo,
+  }) = _ChordState;
+}
+
 @riverpod
 class ChordNotifier extends _$ChordNotifier {
+  final _scales = [
+    'C',
+    'C#',
+    'D',
+    'D#',
+    'E',
+    'F',
+    'F#',
+    'G',
+    'G#',
+    'A',
+    'A#',
+    'B'
+  ];
+
   @override
-  List<Chord> build(Song song) {
+  ChordState build(Song song, int? defaultCapo) {
     List<Chord> chordList =
         ref.watch(songElementsRepositoryProvider).fetchChordList(song: song);
     if (chordList[0].time != 0) {
       chordList[0] =
           chordList[0].copyWith(time: 0, duration: chordList[1].time - 0);
     }
-    return chordList;
+
+    if (defaultCapo != null) {
+      chordList = _setCapo(chordList, defaultCapo);
+    }
+    return ChordState(chords: chordList, capo: defaultCapo ?? 0);
+  }
+
+  void changeCapo(int capo) {
+    state = ChordState(chords: _setCapo(state.chords, capo), capo: capo);
+  }
+
+  List<Chord> _setCapo(List<Chord> chords, int capo) {
+    final pattern = RegExp(r'([A-G][#]?)', caseSensitive: true);
+    List<Chord> newChords = [];
+    for (Chord chord in chords) {
+      final capoChordName = chord.chord.replaceAllMapped(pattern, (match) {
+        final matchedScale = match.group(0)!;
+
+        final index = _scales.indexOf(matchedScale);
+        if (index == -1) {
+          print('見つからなかった ${chord.chord} ,$matchedScale');
+          return matchedScale;
+        }
+        int capoIndex = (index - capo) % _scales.length;
+        if (capoIndex < 0) {
+          capoIndex += _scales.length;
+        }
+        return _scales[capoIndex];
+      });
+
+      newChords.add(chord.copyWith(chord: capoChordName));
+    }
+    return newChords;
   }
 }
 

@@ -1,7 +1,6 @@
 import 'package:bocchi_guitar_hub_client/application/application_module.dart';
 import 'package:bocchi_guitar_hub_client/application/notifier/beat_position/beat_position_notifier.dart';
 import 'package:bocchi_guitar_hub_client/application/notifier/song_elements/song_elements_notifier.dart';
-import 'package:bocchi_guitar_hub_client/application/usecase/audio_player_usecase.dart';
 import 'package:bocchi_guitar_hub_client/application/usecase/beat_position_usecase.dart';
 import 'package:bocchi_guitar_hub_client/core/constant/size.dart';
 import 'package:bocchi_guitar_hub_client/domain/entity/song/song.dart';
@@ -12,7 +11,6 @@ import 'package:bocchi_guitar_hub_client/presentation/notifier/current_beat_segm
 import 'package:bocchi_guitar_hub_client/presentation/router/app.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 class BeatPositionPanel extends ConsumerWidget {
   final Song song;
@@ -22,10 +20,10 @@ class BeatPositionPanel extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final beatPositionUsecase = ref.watch(BeatPositionUsecaseProvider(song));
-    final chords = ref.watch(ChordNotifierProvider(song));
+    final chordState = ref.watch(ChordNotifierProvider(song, 0));
     return BeatBoxCarousel(
       beatPositionUsecase: beatPositionUsecase,
-      chords: chords,
+      chords: chordState.chords,
     );
   }
 }
@@ -121,6 +119,7 @@ class BeatBox extends ConsumerWidget {
               Text(
                 chordName!,
                 style: TextStyle(fontSize: Sizes.fontLarge(context)),
+                overflow: TextOverflow.ellipsis,
               )
           ];
     return AnimatedContainer(

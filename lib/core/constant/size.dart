@@ -18,9 +18,17 @@ class Sizes {
   static double iconLarge(BuildContext context) =>
       _getSize(context, 42, 46, 50);
 
+  // ボリュームバーのラベルテキストの幅
+  static double volumeBarText(BuildContext context) =>
+      _getSize(context, 68, 80, 90);
+
   // ページビューで表示する範囲
   static double viewportFraction(BuildContext context) =>
       _getSize(context, 0.5, 0.3, 0.2);
+
+  // セクションボックスのサイズ
+  static double sectionBoxWidth(BuildContext context) =>
+      _getSize(context, 50, 110, 120);
 
   static double _getSize(
       BuildContext context, double mobile, double tablet, double desktop) {

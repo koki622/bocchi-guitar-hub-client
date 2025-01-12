@@ -9,7 +9,6 @@ import 'package:bocchi_guitar_hub_client/application/notifier/beat_position/beat
 import 'package:bocchi_guitar_hub_client/application/notifier/chord_diagram/chord_diagram_notifier.dart';
 import 'package:bocchi_guitar_hub_client/application/notifier/chord_diagram/current_chord_diagram_notifier.dart';
 import 'package:bocchi_guitar_hub_client/application/notifier/lyric_position/lyric_position_notifier.dart';
-import 'package:bocchi_guitar_hub_client/application/notifier/remote_job/remote_job_notifier.dart';
 import 'package:bocchi_guitar_hub_client/application/notifier/selected_section/selected_section_notifier.dart';
 import 'package:bocchi_guitar_hub_client/application/notifier/song_elements/song_elements_notifier.dart';
 import 'package:bocchi_guitar_hub_client/application/notifier/songs/songs_notifier.dart';
@@ -65,18 +64,15 @@ Future<AudioPlayerUsecase> audioPlayerUsecase(Ref ref, Song song) async {
 
 @riverpod
 Future<ChordDiagramUsecase> chordDiagramUsecase(Ref ref, Song song) async {
-  final chords = ref.watch(chordNotifierProvider(song));
-  final chordDiagramNotifier =
-      ref.watch(chordDiagramNotifierProvider(chords).notifier);
+  final chordState = ref.watch(chordNotifierProvider(song, 0));
   final chordChangeNotifier =
-      ref.watch(chordChangeNotifierProvider(chords).notifier);
+      ref.watch(chordChangeNotifierProvider(chordState.chords).notifier);
   final currentChordDiagramNotifier = ref.watch(
       currentChordDiagramNotifierProvider(chordChangeNotifier.getState)
           .notifier);
   final chordDiagramStates =
-      await ref.watch(chordDiagramNotifierProvider(chords).future);
-  return ChordDiagramUsecase(
-      chordDiagramNotifier, currentChordDiagramNotifier, chordDiagramStates);
+      await ref.watch(chordDiagramNotifierProvider(chordState.chords).future);
+  return ChordDiagramUsecase(currentChordDiagramNotifier, chordDiagramStates);
 }
 
 @riverpod

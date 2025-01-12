@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:bocchi_guitar_hub_client/domain/entity/song_elements/chord/chord.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_guitar_chord/flutter_guitar_chord.dart';
@@ -201,7 +200,6 @@ class ChordChangeNotifier extends _$ChordChangeNotifier {
 class ChordDiagramNotifier extends _$ChordDiagramNotifier {
   late ChordDiagramInfoCollection _mainChordInfos;
   late ChordDiagramInfoCollection _subChordInfos;
-
   @override
   Future<List<ChordDiagramState>> build(List<Chord> chords) async {
     _mainChordInfos = ChordDiagramInfoCollection.fromJson(
@@ -210,6 +208,7 @@ class ChordDiagramNotifier extends _$ChordDiagramNotifier {
     _subChordInfos = ChordDiagramInfoCollection.fromJson(
         json.decode(await _loadChordsJson(ChordJsonType.sub)),
         ChordJsonType.sub);
+
     return _convertChordToDiagram(chords);
   }
 
