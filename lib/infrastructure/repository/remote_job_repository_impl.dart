@@ -80,7 +80,7 @@ class RemoteJobRepositoryImpl implements RemoteJobRepository {
         ].contains(jobStatus.jobStatus)) {
           yield jobStatus;
           // データベースにジョブのステータスを随時記録
-          _jobStatusHive.create(jobStatusData, songId);
+          await _jobStatusHive.create(jobStatusData, songId);
         }
       }
     } on HttpException catch (e) {
@@ -124,7 +124,7 @@ class RemoteJobRepositoryImpl implements RemoteJobRepository {
         ].contains(jobStatus.jobStatus)) {
           yield jobStatus;
           // データベースにジョブのステータスを随時記録
-          _jobStatusHive.create(jobStatusData, song.songId);
+          await _jobStatusHive.create(jobStatusData, song.songId);
         }
       }
     } on HttpException catch (e) {

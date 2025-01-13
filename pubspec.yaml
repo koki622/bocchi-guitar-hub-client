@@ -97,4 +97,9 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
+  fonts:
+    - family: Noto Sans JP
+      fonts:
+        - asset: fonts/NotoSansJP-Regular.ttf
+
 

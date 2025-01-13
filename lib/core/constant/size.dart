@@ -20,7 +20,7 @@ class Sizes {
 
   // ボリュームバーのラベルテキストの幅
   static double volumeBarText(BuildContext context) =>
-      _getSize(context, 68, 80, 90);
+      _getSize(context, 83, 95, 110);
 
   // ページビューで表示する範囲
   static double viewportFraction(BuildContext context) =>

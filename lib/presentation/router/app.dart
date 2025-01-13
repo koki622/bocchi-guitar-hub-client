@@ -29,6 +29,7 @@ class MyApp extends ConsumerWidget {
                   title: 'Bocchi Guitar Hub',
                   theme: ThemeData(
                     primarySwatch: Colors.blue,
+                    fontFamily: "Noto Sans JP",
                   ),
                   routerConfig: router,
                 ),
