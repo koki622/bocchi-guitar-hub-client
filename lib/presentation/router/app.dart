@@ -26,7 +26,7 @@ class MyApp extends ConsumerWidget {
             child: Stack(
               children: [
                 MaterialApp.router(
-                  title: 'BocchiGuitarHub',
+                  title: 'Bocchi Guitar Hub',
                   theme: ThemeData(
                     primarySwatch: Colors.blue,
                   ),

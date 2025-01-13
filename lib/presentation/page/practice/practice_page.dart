@@ -15,12 +15,30 @@ import 'package:bocchi_guitar_hub_client/presentation/page/practice/component/se
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
-class PracticePage extends ConsumerWidget {
+class PracticePage extends ConsumerStatefulWidget {
   const PracticePage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  PracticePageState createState() => PracticePageState();
+}
+
+class PracticePageState extends ConsumerState<PracticePage> {
+  @override
+  void initState() {
+    super.initState();
+    WakelockPlus.enable(); // 画面スリープを防止
+  }
+
+  @override
+  void dispose() {
+    WakelockPlus.disable(); // 画面スリープ防止を解除
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final selectedSong = ref.watch(selectedSongProvider)!;
     ref.watch(chordNotifierProvider(selectedSong, 0));
     final audioPlayerUsecase =

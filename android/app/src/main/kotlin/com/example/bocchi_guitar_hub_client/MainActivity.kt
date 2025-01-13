@@ -1,4 +1,4 @@
-package com.example.bocchi_guitar_hub_client
+package net.tateko_san.bocchi_guitar_hub
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -28,7 +28,7 @@ class Sizes {
 
   // セクションボックスのサイズ
   static double sectionBoxWidth(BuildContext context) =>
-      _getSize(context, 50, 110, 120);
+      _getSize(context, 70, 110, 120);
 
   static double _getSize(
       BuildContext context, double mobile, double tablet, double desktop) {
