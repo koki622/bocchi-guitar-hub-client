@@ -79,7 +79,7 @@ class ChordNotifier extends _$ChordNotifier {
           chordList[0].copyWith(time: 0, duration: chordList[1].time - 0);
     }
 
-    if (defaultCapo != null) {
+    if (defaultCapo != null && defaultCapo != 0) {
       chordList = _setCapo(chordList, defaultCapo);
     }
     return ChordState(chords: chordList, capo: defaultCapo ?? 0);
@@ -92,6 +92,8 @@ class ChordNotifier extends _$ChordNotifier {
   List<Chord> _setCapo(List<Chord> chords, int capo) {
     final pattern = RegExp(r'([A-G][#]?)', caseSensitive: true);
     List<Chord> newChords = [];
+    int shift = capo - state.capo;
+
     for (Chord chord in chords) {
       final capoChordName = chord.chord.replaceAllMapped(pattern, (match) {
         final matchedScale = match.group(0)!;
@@ -101,9 +103,12 @@ class ChordNotifier extends _$ChordNotifier {
           print('見つからなかった ${chord.chord} ,$matchedScale');
           return matchedScale;
         }
-        int capoIndex = (index - capo) % _scales.length;
+        int capoIndex = index - shift;
+
         if (capoIndex < 0) {
           capoIndex += _scales.length;
+        } else if (capoIndex >= _scales.length) {
+          capoIndex -= _scales.length;
         }
         return _scales[capoIndex];
       });
